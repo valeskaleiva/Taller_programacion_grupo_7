@@ -35,7 +35,7 @@ El sistema se basa en una arquitectura **cliente-servidor**, donde:
 
 ##  Tecnologías Utilizadas
 
-* .NET
+
 * Base de datos SQL
 * HTML, CSS, JavaScript
 * Git y GitHub
