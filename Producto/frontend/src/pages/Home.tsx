@@ -1,51 +1,37 @@
 import Card from "../components/Card";
-import SalesChart from "../components/SalesChart";
+import SalesChart from "../components/SalesChart";|
 import TopProducts from "../components/TopProducts";
 import LowStock from "../components/LowStock";
 import LastSales from "../components/LastSales";
+import { mockProductos } from "../utils/mockData";
 
 export default function Home() {
-  const stats = {
-    ventas: 300000,
-    cambioVentas: 15,
-    stock: 6,
-    productos: 320,
-  };
+  const totalStock = mockProductos.reduce((acc, p) => acc + p.stock, 0);
+  const totalProductos = mockProductos.length;
+  const ventasHoy = 186220;
+  const valorInventario = mockProductos.reduce((acc, p) => acc + p.precio_base * p.stock, 0);
 
   return (
-    <div className="p-6 md:p-10 bg-gray-100 min-h-screen space-y-6">
-                        
-        n
-      {/* FILA 1: 3 Cards - Ventas, Stock, Productos */}
-<div className="grid grid-cols-3 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          <Card 
-          title="💰 Ventas" 
-          value={`$${stats.ventas.toLocaleString()}`} 
-          extra={`+${stats.cambioVentas}%`} 
-        />
-        <Card title="📦 Stock" value={stats.stock} />
-        <Card title="🧾 Productos" value={stats.productos} />
+    <div className="space-y-6 p-2 sm:p-4">
+      {/* FILA 1: 4 KPIs en una sola fila */}
+      <div className="grid grid-cols-4 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+        <Card title="💰 Ventas hoy" value={`$${ventasHoy.toLocaleString('es-CL')}`} extra="+12% vs ayer" />
+        <Card title="📦 Unidades en stock" value={totalStock} />
+        <Card title="🧾 Productos" value={totalProductos} />
+        <Card title="🏦 Valor inventario" value={`$${valorInventario.toLocaleString('es-CL')}`} />
       </div>
 
-      {/* FILA 2: Gráfico + Top Products (2 columnas) */}
-      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {/* FILA 2: Gráfico ancho completo */}
+      <SalesChart />
 
-        <SalesChart />
+      {/* FILA 3: Top Cartas + Stock Crítico */}
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
         <TopProducts />
-      </div>
-       <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-
-       
-      </div>
-
-      {/* FILA 3: Bajo Stock + Últimas Ventas + Total $5000 (3 columnas) */}
-      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6" >
         <LowStock />
-        <LastSales />
-        
-      
       </div>
 
+      {/* FILA 4: Últimas Ventas ancho completo */}
+      <LastSales />
     </div>
   );
 }

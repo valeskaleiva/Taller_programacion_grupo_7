@@ -1,58 +1,112 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 function Sidebar() {
-  const [open, setOpen] = useState(true);
+  const [desktopOpen, setDesktopOpen] = useState(true);
+  const [mobileOpen, setMobileOpen] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const sidebarWidth = desktopOpen ? "220px" : "78px";
+
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [location.pathname]);
+
+  const handleNavigate = (path: string) => {
+    navigate(path);
+    setMobileOpen(false);
+  };
+
+  const menuItems = [
+    { icon: "🏠", label: "Inicio", path: "/" },
+    { icon: "📦", label: "Inventario", path: "/inventario" },
+    { icon: "📊", label: "Reportes", path: "/reportes" },
+    { icon: "💰", label: "Ventas", path: "/ventas" },
+    { icon: "🔐", label: "Login", path: "/login" },
+    { icon: "👤", label: "Perfil", path: "/perfil" },
+    { icon: "🧑‍💼", label: "Usuarios", path: "/usuarios" },
+  ];
 
   return (
-    <aside
-      style={{
-        width: open ? "200px" : "70px",
-        minHeight: "100vh", // ← Cambiado de height a min-height
-        backgroundColor: "var(--primary-dark)",
-        color: "white",
-        transition: "0.3s",
-        paddingTop: "20px",
-      }}
-      className="shrink-0 sticky top-0" // ← sticky para que siga al scroll
-    >
+    <>
       <button
-        onClick={() => setOpen(!open)}
+        onClick={() => setMobileOpen((prev) => !prev)}
+        className="md:hidden fixed top-3 left-3 z-50 rounded-lg px-3 py-2 shadow"
         style={{
           backgroundColor: "var(--primary)",
           color: "black",
           border: "none",
-          padding: "10px",
-          borderRadius: "8px",
           cursor: "pointer",
-          margin: "10px",
         }}
       >
         ☰
       </button>
 
+      {mobileOpen && (
+        <button
+          type="button"
+          aria-label="Cerrar menú"
+          onClick={() => setMobileOpen(false)}
+          className="md:hidden fixed inset-0 z-40 bg-black/40"
+        />
+      )}
+
+      <aside
+        style={{
+          width: sidebarWidth,
+          minHeight: "100vh",
+          backgroundColor: "var(--primary-dark)",
+          color: "white",
+          transition: "transform 0.3s ease, width 0.3s ease",
+          paddingTop: "20px",
+        }}
+        className={`fixed top-0 left-0 z-50 h-screen shrink-0 md:sticky md:z-10 md:translate-x-0 ${
+          mobileOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
+      <div className="flex items-center justify-between px-2">
+        <button
+          onClick={() => setDesktopOpen(!desktopOpen)}
+          className="hidden md:block"
+          style={{
+            backgroundColor: "var(--primary)",
+            color: "black",
+            border: "none",
+            padding: "10px",
+            borderRadius: "8px",
+            cursor: "pointer",
+            margin: "10px",
+          }}
+        >
+          ☰
+        </button>
+
+        <button
+          onClick={() => setMobileOpen(false)}
+          className="md:hidden mr-3 text-xl leading-none"
+          type="button"
+          aria-label="Cerrar"
+        >
+          ×
+        </button>
+      </div>
+
       <ul style={{ listStyle: "none", padding: "0" }}>
-        <li style={{ padding: "15px", cursor: "pointer" }} onClick={() => navigate("/")}>
-          🏠 {open && "Inicio"}
-        </li>
-        <li style={{ padding: "15px", cursor: "pointer" }} onClick={() => navigate("/inventario")}>
-          📦 {open && "Inventario"}
-        </li>
-        <li style={{ padding: "15px", cursor: "pointer" }} onClick={() => navigate("/reportes")}>
-          📊 {open && "Reportes"}
-        </li>
-        <li style={{ padding: "15px", cursor: "pointer" }} onClick={() => navigate("/ventas")}>
-          💰 {open && "Ventas"}
-        </li>
-        <li style={{ padding: "15px", cursor: "pointer" }} onClick={() => navigate("/login")}>
-          🔐 {open && "Login"}
-        </li>
-        <li style={{ padding: "15px", cursor: "pointer" }} onClick={() => navigate("/perfil")}>
-          👤 {open && "Perfil"}
-        </li>
+        {menuItems.map((item) => (
+          <li
+            key={item.path}
+            style={{ padding: "15px", cursor: "pointer" }}
+            onClick={() => handleNavigate(item.path)}
+            className="hover:bg-black/10 transition-colors"
+          >
+            {item.icon} {desktopOpen && item.label}
+          </li>
+        ))}
       </ul>
-    </aside>
+
+      </aside>
+    </>
   );
 }
 
