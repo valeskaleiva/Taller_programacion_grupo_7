@@ -1,1 +1,22 @@
-import React from 'react';\n\ninterface ModalProps {\n    isOpen: boolean;\n    onClose: () => void;\n    children: React.ReactNode;\n}\n\nconst Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {\n    if (!isOpen) return null;\n\n    return (\n        <div className="modal">\n            <div className="modal-content">\n                <span className="close" onClick={onClose}>&times;</span>\n                {children}\n            </div>\n        </div>\n    );\n};\n\nexport default Modal;\n
+import React from 'react';
+
+interface ModalProps {
+	isOpen: boolean;
+	onClose: () => void;
+	children: React.ReactNode;
+}
+
+const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
+	if (!isOpen) return null;
+
+	return (
+		<div className="modal">
+			<div className="modal-content">
+				<span className="close" onClick={onClose}>&times;</span>
+				{children}
+			</div>
+		</div>
+	);
+};
+
+export default Modal;

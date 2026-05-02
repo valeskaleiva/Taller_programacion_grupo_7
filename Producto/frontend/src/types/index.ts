@@ -7,6 +7,47 @@ export interface User {
   creado_en: string;
 }
 
+export interface UserProfile extends User {
+  nombre_usuario: string;
+  puesto: string;
+  fecha_nacimiento: string;
+  telefono?: string;
+  direccion?: string;
+  bio?: string;
+}
+
+export interface Vendedor {
+  id: number;
+  nombre: string;
+  nombre_usuario: string;
+  email: string;
+  telefono?: string;
+  estado: 'activo' | 'inactivo';
+  creado_en: string;
+}
+
+// Mapeado de la tabla PRODUCTO
+export interface Producto {
+  id_producto: number;
+  codigo_barras: string;
+  nombre: string;
+  descripcion: string;
+  stock: number;
+  precio_base: number;
+  categoria: 'Carta' | 'Sobre' | 'Caja';
+  // Subtipo Carta (PRODUCTO_CARTA)
+  rareza?: string;
+  edicion?: string;
+  estado?: string;
+  precio_mercado?: number;
+  // Subtipo Sobre (PRODUCTO_SOBRE)
+  cant_cartas?: number;
+  serie?: string;
+  // Subtipo Caja (PRODUCTO_CAJA)
+  cant_sobres?: number;
+}
+
+// Alias para compatibilidad con el resto del sistema
 export interface Product {
   id: number;
   nombre: string;
