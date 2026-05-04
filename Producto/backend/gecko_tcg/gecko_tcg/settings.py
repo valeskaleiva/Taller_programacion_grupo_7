@@ -9,24 +9,30 @@ https://docs.djangoproject.com/en/6.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
-import oracledb
+import oracledb 
 oracledb.init_oracle_client()
 from pathlib import Path
+from decouple import config, Csv 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent #Aqui tiene que ir direccion del proyecto 
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-a4+vd!(i-gy*q4xso-7rqn#ml_fb+sz%54%b046v0hm-%6cfoa'
+#SECRET_KEY = 'django-insecure-a4+vd!(i-gy*q4xso-7rqn#ml_fb+sz%54%b046v0hm-%6cfoa'
+#Aqui debe de ir la variable de entorno 
+
+SECRET_KEY = config('SECRET_KEY', 
+    default='django-insecure-a4+vd!(i-gy*q4xso-7rqn#ml_fb+sz%54%b046v0hm-%6cfoa') 
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG', default=True, cast=bool)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost', cast=Csv())
 
 
 # Application definition
@@ -39,10 +45,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'core',
+    'rest_framework',#Hacer Api
+    'corsheaders',# Utilizae React
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -51,7 +60,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'gecko_tcg.urls'
+ROOT_URLCONF = 'gecko_tcg.urls' #este archivo tiene las rutas de la app
 
 TEMPLATES = [
     {
@@ -77,11 +86,14 @@ WSGI_APPLICATION = 'gecko_tcg.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.oracle',
-        'NAME': 'dbproyecto_low',
-        'USER': 'ADMIN',
-        'PASSWORD': 'Proyecto2026#',
+        'NAME': config('DB_NAME', default='dbproyecto_low'),
+        'USER': config('DB_USER', default='ADMIN'),
+        'PASSWORD': config('DB_PASSWORD', default='Proyecto2026#'),
+        'HOST': config('DB_HOST', default='localhost'),
+        'PORT': config('DB_PORT', default='1521'),
         'OPTIONS': {
-            'config_dir': r'C:/Users/GeckoTcgV2/Wallet_DBPROYECTO'
+            'config_dir': config('ORACLE_WALLET_PATH',
+                 default=r'C:/Users/practicainformatica2/Desktop/Wallet_DBPROYECTO'),
         }
     }
 }
@@ -109,9 +121,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'en-es'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Santiago'
 
 USE_I18N = True
 
@@ -121,4 +133,97 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = 'static/'  ## aqui se debe poner los archivos estaticos de css
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+REST_FRAMEWORK ={
+    'DEFAULT_AUTHENTICATION_CLASSES':[
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ],
+
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 20, #carga hasta 20 y para continuar se da al siguiente
+
+    'DEFAULT_FILTER_BACKENDS': [
+    'rest_framework.filters.SearchFilter', 
+    'rest_framework.filters.OrderingFilter',  
+    ],
+
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.renderers.JSORenderer'
+    ],
+}
+
+CORS_ALLOWED_ORIGINS = config('CORS_ALLOWED_ORIGINS', 
+        default='http://localhost:3000,http://localhost:8000', cast=Csv())
+
+
+CORS_ALLOW_CREDENTIALS = True  
+
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization', #JWT
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+]
+
+# confi del token de autenticacion 
+
+from datetime import timedelta
+
+SIMPLE_JWT = {
+
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=8),#tiempo para que auto se cierre la sesion
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=30), #tiempo para que se relogee nuevamente
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True
+}
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters':{
+        'verbose': {
+            'format': '{levelname} {asctime} {module}{process:d}{thread:d}{message}',
+            'style': '{',
+        },
+        'simple': {
+            'format': '{levelname} {message}',
+            'style': '{',
+        },
+    },
+
+    'handlers':{
+        'file':{
+                'level': 'INFO',
+                'class': 'logging.FileHandler',
+                'filename': BASE_DIR / 'logs' / 'debug.log',
+                'formatter': 'verbose',
+        }, 
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple',
+        }
+    },
+
+    'root' : {
+        'handlers': ['file', 'console'],
+        'level': 'INFO',
+    }
+}
+
+LOG_DIR  = BASE_DIR/'logs'
+LOG_DIR.mkdir(exist_ok=True)
