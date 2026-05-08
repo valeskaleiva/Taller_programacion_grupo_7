@@ -16,7 +16,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from core import views as core_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/precio-carta/', core_views.search_card_price, name='precio-carta'),
 ]

@@ -9,19 +9,21 @@ https://docs.djangoproject.com/en/6.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
-import oracledb
-oracledb.init_oracle_client()
 from pathlib import Path
+from dotenv import load_dotenv
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+load_dotenv(BASE_DIR / '.env')
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-a4+vd!(i-gy*q4xso-7rqn#ml_fb+sz%54%b046v0hm-%6cfoa'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -77,11 +79,13 @@ WSGI_APPLICATION = 'gecko_tcg.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.oracle',
-        'NAME': 'dbproyecto_low',
-        'USER': 'ADMIN',
-        'PASSWORD': 'Proyecto2026#',
+        'NAME': os.getenv('DB_NAME'),
+        'USER': os.getenv('DB_USER'),
+        'PASSWORD': os.getenv('DB_PASSWORD'),
         'OPTIONS': {
-            'config_dir': r'C:/Users/GeckoTcgV2/Wallet_DBPROYECTO'
+            'config_dir': os.getenv('DB_WALLET_DIR'),
+            'wallet_location': os.getenv('DB_WALLET_DIR'),
+            'wallet_password': os.getenv('DB_WALLET_PASSWORD'),
         }
     }
 }
