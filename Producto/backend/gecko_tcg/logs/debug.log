@@ -1,0 +1,46 @@
+INFO 2026-05-08 02:15:14,353 autoreload2087214956Watching for file changes with StatReloader
+INFO 2026-05-08 02:16:57,538 autoreload2087214956C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\gecko_tcg\settings.py changed, reloading.
+INFO 2026-05-08 02:16:58,693 autoreload386810372Watching for file changes with StatReloader
+INFO 2026-05-08 02:27:36,779 autoreload386810372C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\apps\productos\apps.py changed, reloading.
+INFO 2026-05-08 02:27:38,090 autoreload1496817800Watching for file changes with StatReloader
+INFO 2026-05-08 02:28:54,346 autoreload1496817800C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\apps\usuarios\apps.py changed, reloading.
+INFO 2026-05-08 02:28:55,894 autoreload187082944Watching for file changes with StatReloader
+INFO 2026-05-08 02:43:31,993 autoreload1997620088Watching for file changes with StatReloader
+INFO 2026-05-08 02:49:06,598 autoreload1997620088C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\gecko_tcg\settings.py changed, reloading.
+INFO 2026-05-08 02:49:08,000 autoreload196010576Watching for file changes with StatReloader
+INFO 2026-05-08 03:04:06,192 autoreload111889656Watching for file changes with StatReloader
+INFO 2026-05-08 03:10:56,292 autoreload111889656C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\gecko_tcg\settings.py changed, reloading.
+INFO 2026-05-08 03:10:57,649 autoreload349614276Watching for file changes with StatReloader
+INFO 2026-05-08 03:19:09,755 autoreload349614276C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\gecko_tcg\settings.py changed, reloading.
+INFO 2026-05-08 03:19:11,049 autoreload148409956Watching for file changes with StatReloader
+INFO 2026-05-08 03:39:23,052 autoreload148409956C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\gecko_tcg\settings.py changed, reloading.
+INFO 2026-05-08 03:39:24,536 autoreload12368172Watching for file changes with StatReloader
+INFO 2026-05-08 03:39:59,964 autoreload12368172C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\gecko_tcg\settings.py changed, reloading.
+INFO 2026-05-08 03:40:01,271 autoreload896813032Watching for file changes with StatReloader
+INFO 2026-05-08 03:46:30,412 autoreload896813032C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\gecko_tcg\settings.py changed, reloading.
+INFO 2026-05-08 03:46:31,739 autoreload684418760Watching for file changes with StatReloader
+INFO 2026-05-08 03:51:13,416 autoreload684418760C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\gecko_tcg\settings.py changed, reloading.
+INFO 2026-05-08 03:51:14,905 autoreload1839613792Watching for file changes with StatReloader
+ERROR 2026-05-08 03:54:06,058 log1839611416Invalid HTTP_HOST header: '127.0.0.1:8000'. You may need to add '127.0.0.1' to ALLOWED_HOSTS.
+Traceback (most recent call last):
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\django\utils\deprecation.py", line 308, in __call__
+    response = self.process_request(request)
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\django\middleware\common.py", line 48, in process_request
+    host = request.get_host()
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\django\http\request.py", line 206, in get_host
+    raise DisallowedHost(msg)
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: '127.0.0.1:8000'. You may need to add '127.0.0.1' to ALLOWED_HOSTS.
+ERROR 2026-05-08 03:54:06,208 log1839618948Invalid HTTP_HOST header: '127.0.0.1:8000'. You may need to add '127.0.0.1' to ALLOWED_HOSTS.
+Traceback (most recent call last):
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\django\utils\deprecation.py", line 308, in __call__
+    response = self.process_request(request)
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\django\middleware\common.py", line 48, in process_request
+    host = request.get_host()
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\django\http\request.py", line 206, in get_host
+    raise DisallowedHost(msg)
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: '127.0.0.1:8000'. You may need to add '127.0.0.1' to ALLOWED_HOSTS.
+WARNING 2026-05-08 03:56:44,321 log183967580Not Found: /favicon.ico

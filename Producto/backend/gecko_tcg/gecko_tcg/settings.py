@@ -9,14 +9,16 @@ https://docs.djangoproject.com/en/6.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
-import oracledb 
-oracledb.init_oracle_client()
 from pathlib import Path
-from decouple import config, Csv 
+import os 
+from dotenv import load_dotenv
+
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent #Aqui tiene que ir direccion del proyecto 
 
+load_dotenv(BASE_DIR / '.env')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
@@ -25,14 +27,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent #Aqui tiene que ir direccion d
 #SECRET_KEY = 'django-insecure-a4+vd!(i-gy*q4xso-7rqn#ml_fb+sz%54%b046v0hm-%6cfoa'
 #Aqui debe de ir la variable de entorno 
 
-SECRET_KEY = config('SECRET_KEY', 
-    default='django-insecure-a4+vd!(i-gy*q4xso-7rqn#ml_fb+sz%54%b046v0hm-%6cfoa') 
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config('DEBUG', default=True, cast=bool)
+DEBUG = os.getenv('DEBUG', 'True').lower() == 'true'
 
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost', cast=Csv())
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost').split(',')
 
 
 # Application definition
@@ -44,7 +45,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'core',
     'rest_framework',#Hacer Api
     'corsheaders',# Utilizae React,
     'apps.productos',
@@ -90,14 +90,15 @@ WSGI_APPLICATION = 'gecko_tcg.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.oracle',
-        'NAME': config('DB_NAME', default='dbproyecto_low'),
-        'USER': config('DB_USER', default='ADMIN'),
-        'PASSWORD': config('DB_PASSWORD', default='Proyecto2026#'),
-        'HOST': config('DB_HOST', default='localhost'),
-        'PORT': config('DB_PORT', default='1521'),
+        'NAME': os.getenv('DB_NAME'),
+        'USER': os.getenv('DB_USER'),
+        'PASSWORD': os.getenv('DB_PASSWORD'),
+        'HOST': os.getenv('DB_HOST'),
+        'PORT': os.getenv('DB_PORT','1521'),
         'OPTIONS': {
-            'config_dir': config('ORACLE_WALLET_PATH',
-                 default=r'C:/Users/practicainformatica2/Desktop/Wallet_DBPROYECTO'),
+            'config_dir': os.getenv('DB_WALLET_DIR'),
+            'wallet_location': os.getenv('DB_WALLET_DIR'),
+            'wallet_password': os.getenv('DB_WALLET_PASSWORD'),
         }
     }
 }
@@ -165,8 +166,7 @@ REST_FRAMEWORK ={
     ],
 }
 
-CORS_ALLOWED_ORIGINS = config('CORS_ALLOWED_ORIGINS', 
-        default='http://localhost:3000,http://localhost:8000', cast=Csv())
+CORS_ALLOWED_ORIGINS = os.getenv('CORS_ALLOWED_ORIGINS', 'http://localhost:3000,http://localhost:8000').split(',')
 
 
 CORS_ALLOW_CREDENTIALS = True  

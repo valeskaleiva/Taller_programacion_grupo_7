@@ -29,6 +29,7 @@ class Reporte(models.Model):
     
     class Meta:
         db_table = 'REPORTE'
+        managed = False
         verbose_name = 'Reporte'
         verbose_name_plural = 'Reportes'
         ordering = ['-fecha_reporte'] 

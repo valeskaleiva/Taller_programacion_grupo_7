@@ -20,6 +20,7 @@ class Producto(models.Model):
     
     class Meta:
         db_table = 'PRODUCTO'
+        managed = False
         verbose_name = 'Producto' #admin
         verbose_name_plural = 'Productos'
     
@@ -59,6 +60,7 @@ class ProductoCarta(models.Model):
     
     class Meta:
         db_table = 'PRODUCTO_CARTA'
+        managed = False
         verbose_name = 'Producto Carta'
         verbose_name_plural = 'Productos Cartas'
     
@@ -79,6 +81,7 @@ class ProductoSobre(models.Model):
     
     class Meta:
         db_table = 'PRODUCTO_SOBRE'
+        managed = False
         verbose_name = 'Producto Sobre'
         verbose_name_plural = 'Productos Sobres'
     
@@ -98,6 +101,7 @@ class ProductoCaja(models.Model):
     
     class Meta:
         db_table = 'PRODUCTO_CAJA'
+        managed = False
         verbose_name = 'Producto Caja'
         verbose_name_plural = 'Productos Cajas'
     
