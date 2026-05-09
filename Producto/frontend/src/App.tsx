@@ -8,6 +8,7 @@ import Perfil from "./pages/Perfil"
 import Inventario from "./pages/Inventario"
 import Ventas from "./pages/Ventas"
 import Usuarios from "./pages/Usuarios"
+import Busqueda from "./pages/Busqueda"
 import { Routes, Route, useLocation } from "react-router-dom"
 
 function App() {
@@ -38,6 +39,7 @@ function App() {
           <Route path="/reportes" element={<Reportes />} />
           <Route path="/perfil" element={<Perfil />} />
           <Route path="/usuarios" element={<Usuarios />} />
+          <Route path="/busqueda" element={<Busqueda />} />
         </Routes>
       </div>
         </div>

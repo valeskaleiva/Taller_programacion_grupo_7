@@ -21,6 +21,7 @@ function Sidebar() {
   const menuItems = [
     { icon: "🏠", label: "Inicio", path: "/" },
     { icon: "📦", label: "Inventario", path: "/inventario" },
+    { icon: "🔎", label: "Busqueda", path: "/busqueda" },
     { icon: "📊", label: "Reportes", path: "/reportes" },
     { icon: "💰", label: "Ventas", path: "/ventas" },
     { icon: "🔐", label: "Login", path: "/login" },
