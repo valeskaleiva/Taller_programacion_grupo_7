@@ -44,3 +44,475 @@ Traceback (most recent call last):
     raise DisallowedHost(msg)
 django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: '127.0.0.1:8000'. You may need to add '127.0.0.1' to ALLOWED_HOSTS.
 WARNING 2026-05-08 03:56:44,321 log183967580Not Found: /favicon.ico
+INFO 2026-05-09 17:34:05,626 autoreload34084512Watching for file changes with StatReloader
+INFO 2026-05-09 17:36:49,448 autoreload1818810800Watching for file changes with StatReloader
+INFO 2026-05-09 17:38:45,835 autoreload2121213248Watching for file changes with StatReloader
+INFO 2026-05-09 17:45:37,924 autoreload193207312Watching for file changes with StatReloader
+INFO 2026-05-09 17:48:27,578 autoreload187449996Watching for file changes with StatReloader
+INFO 2026-05-09 17:57:40,336 autoreload1163210876Watching for file changes with StatReloader
+INFO 2026-05-09 18:05:11,288 autoreload1256015832Watching for file changes with StatReloader
+INFO 2026-05-09 18:06:39,287 autoreload1678820000Watching for file changes with StatReloader
+INFO 2026-05-09 18:08:04,279 autoreload1678820000C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\gecko_tcg\settings.py changed, reloading.
+INFO 2026-05-09 18:08:05,560 autoreload33848324Watching for file changes with StatReloader
+INFO 2026-05-09 18:11:05,912 autoreload33848324C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\apps\productos\views.py changed, reloading.
+INFO 2026-05-09 18:11:07,390 autoreload114444000Watching for file changes with StatReloader
+INFO 2026-05-09 18:19:17,985 autoreload146687084Watching for file changes with StatReloader
+INFO 2026-05-09 18:26:58,812 autoreload160815000Watching for file changes with StatReloader
+INFO 2026-05-09 18:30:13,381 autoreload2058016956Watching for file changes with StatReloader
+INFO 2026-05-09 18:32:05,063 autoreload2058016956C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\apps\productos\urls.py changed, reloading.
+INFO 2026-05-09 18:32:06,398 autoreload1079621208Watching for file changes with StatReloader
+WARNING 2026-05-09 18:34:10,156 log107968764Unauthorized: /api/productos/
+WARNING 2026-05-09 18:37:33,994 log1079614104Unauthorized: /api/productos/
+INFO 2026-05-09 18:40:19,482 autoreload1079621208C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\gecko_tcg\settings.py changed, reloading.
+INFO 2026-05-09 18:40:21,166 autoreload204687524Watching for file changes with StatReloader
+INFO 2026-05-09 18:40:46,039 autoreload2013617520Watching for file changes with StatReloader
+ERROR 2026-05-09 18:41:42,811 log2013621236Internal Server Error: /api/productos/
+Traceback (most recent call last):
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\django\core\handlers\base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\rest_framework\viewsets.py", line 125, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\rest_framework\views.py", line 497, in dispatch
+    self.initial(request, *args, **kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\rest_framework\views.py", line 416, in initial
+    self.check_throttles(request)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\rest_framework\views.py", line 359, in check_throttles
+    if not throttle.allow_request(request, self):
+           ^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'JSONRenderer' object has no attribute 'allow_request'
+ERROR 2026-05-09 18:42:16,541 log2013621236Internal Server Error: /api/productos/
+Traceback (most recent call last):
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\django\core\handlers\base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\rest_framework\viewsets.py", line 125, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\rest_framework\views.py", line 497, in dispatch
+    self.initial(request, *args, **kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\rest_framework\views.py", line 416, in initial
+    self.check_throttles(request)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\rest_framework\views.py", line 359, in check_throttles
+    if not throttle.allow_request(request, self):
+           ^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'JSONRenderer' object has no attribute 'allow_request'
+INFO 2026-05-09 18:47:02,657 autoreload2013617520C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\gecko_tcg\settings.py changed, reloading.
+INFO 2026-05-09 18:47:04,196 autoreload1966015656Watching for file changes with StatReloader
+INFO 2026-05-09 18:47:29,037 autoreload937212928Watching for file changes with StatReloader
+ERROR 2026-05-09 18:47:50,998 log937211116Internal Server Error: /api/productos/
+Traceback (most recent call last):
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\django\db\backends\oracle\base.py", line 628, in execute
+    return self.cursor.execute(query, self._param_generator(params))
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\oracledb\cursor.py", line 859, in execute
+    impl.execute(self)
+    ~~~~~~~~~~~~^^^^^^
+  File "src/oracledb/impl/thin/cursor.pyx", line 279, in oracledb.thin_impl.ThinCursorImpl.execute
+  File "src/oracledb/impl/thin/protocol.pyx", line 501, in oracledb.thin_impl.Protocol._process_single_message
+  File "src/oracledb/impl/thin/protocol.pyx", line 502, in oracledb.thin_impl.Protocol._process_single_message
+  File "src/oracledb/impl/thin/protocol.pyx", line 494, in oracledb.thin_impl.Protocol._process_message
+  File "src/oracledb/impl/thin/messages/base.pyx", line 102, in oracledb.thin_impl.Message._check_and_raise_exception
+oracledb.exceptions.IntegrityError: ORA-01400: cannot insert NULL into ("ADMIN"."PRODUCTO"."ID_PRODUCTO")
+Help: https://docs.oracle.com/error-help/db/ora-01400/
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\django\core\handlers\base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\rest_framework\viewsets.py", line 125, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\rest_framework\mixins.py", line 19, in create
+    self.perform_create(serializer)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\rest_framework\mixins.py", line 24, in perform_create
+    serializer.save()
+    ~~~~~~~~~~~~~~~^^
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\rest_framework\serializers.py", line 212, in save
+    self.instance = self.create(validated_data)
+                    ~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\rest_framework\serializers.py", line 962, in create
+    instance = ModelClass._default_manager.create(**validated_data)
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\django\db\models\query.py", line 669, in create
+    obj.save(force_insert=True, using=self.db)
+    ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\django\db\models\base.py", line 874, in save
+    self.save_base(
+    ~~~~~~~~~~~~~~^
+        using=using,
+        ^^^^^^^^^^^^
+    ...<2 lines>...
+        update_fields=update_fields,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\django\db\models\base.py", line 966, in save_base
+    updated = self._save_table(
+        raw,
+    ...<4 lines>...
+        update_fields,
+    )
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\django\db\models\base.py", line 1169, in _save_table
+    results = self._do_insert(
+        cls._base_manager, using, insert_fields, returning_fields, raw
+    )
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\django\db\models\base.py", line 1220, in _do_insert
+    return manager._insert(
+           ~~~~~~~~~~~~~~~^
+        [self],
+        ^^^^^^^
+    ...<3 lines>...
+        raw=raw,
+        ^^^^^^^^
+    )
+    ^
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\django\db\models\query.py", line 1918, in _insert
+    return query.get_compiler(using=using).execute_sql(returning_fields)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1925, in execute_sql
+    cursor.execute(sql, params)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sql, params, many=False, executor=self._execute
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\django\db\utils.py", line 94, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\django\db\backends\oracle\base.py", line 628, in execute
+    return self.cursor.execute(query, self._param_generator(params))
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\oracledb\cursor.py", line 859, in execute
+    impl.execute(self)
+    ~~~~~~~~~~~~^^^^^^
+  File "src/oracledb/impl/thin/cursor.pyx", line 279, in oracledb.thin_impl.ThinCursorImpl.execute
+  File "src/oracledb/impl/thin/protocol.pyx", line 501, in oracledb.thin_impl.Protocol._process_single_message
+  File "src/oracledb/impl/thin/protocol.pyx", line 502, in oracledb.thin_impl.Protocol._process_single_message
+  File "src/oracledb/impl/thin/protocol.pyx", line 494, in oracledb.thin_impl.Protocol._process_message
+  File "src/oracledb/impl/thin/messages/base.pyx", line 102, in oracledb.thin_impl.Message._check_and_raise_exception
+django.db.utils.IntegrityError: ORA-01400: cannot insert NULL into ("ADMIN"."PRODUCTO"."ID_PRODUCTO")
+Help: https://docs.oracle.com/error-help/db/ora-01400/
+INFO 2026-05-09 18:50:55,787 autoreload937212928C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\apps\ventas\models.py changed, reloading.
+INFO 2026-05-09 18:50:57,309 autoreload1458016724Watching for file changes with StatReloader
+ERROR 2026-05-09 18:51:11,241 log145806256Internal Server Error: /api/productos/
+Traceback (most recent call last):
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\django\db\backends\oracle\base.py", line 628, in execute
+    return self.cursor.execute(query, self._param_generator(params))
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\oracledb\cursor.py", line 859, in execute
+    impl.execute(self)
+    ~~~~~~~~~~~~^^^^^^
+  File "src/oracledb/impl/thin/cursor.pyx", line 279, in oracledb.thin_impl.ThinCursorImpl.execute
+  File "src/oracledb/impl/thin/protocol.pyx", line 501, in oracledb.thin_impl.Protocol._process_single_message
+  File "src/oracledb/impl/thin/protocol.pyx", line 502, in oracledb.thin_impl.Protocol._process_single_message
+  File "src/oracledb/impl/thin/protocol.pyx", line 494, in oracledb.thin_impl.Protocol._process_message
+  File "src/oracledb/impl/thin/messages/base.pyx", line 102, in oracledb.thin_impl.Message._check_and_raise_exception
+oracledb.exceptions.IntegrityError: ORA-01400: cannot insert NULL into ("ADMIN"."PRODUCTO"."ID_PRODUCTO")
+Help: https://docs.oracle.com/error-help/db/ora-01400/
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\django\core\handlers\base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\rest_framework\viewsets.py", line 125, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\rest_framework\mixins.py", line 19, in create
+    self.perform_create(serializer)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\rest_framework\mixins.py", line 24, in perform_create
+    serializer.save()
+    ~~~~~~~~~~~~~~~^^
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\rest_framework\serializers.py", line 212, in save
+    self.instance = self.create(validated_data)
+                    ~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\rest_framework\serializers.py", line 962, in create
+    instance = ModelClass._default_manager.create(**validated_data)
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\django\db\models\query.py", line 669, in create
+    obj.save(force_insert=True, using=self.db)
+    ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\django\db\models\base.py", line 874, in save
+    self.save_base(
+    ~~~~~~~~~~~~~~^
+        using=using,
+        ^^^^^^^^^^^^
+    ...<2 lines>...
+        update_fields=update_fields,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\django\db\models\base.py", line 966, in save_base
+    updated = self._save_table(
+        raw,
+    ...<4 lines>...
+        update_fields,
+    )
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\django\db\models\base.py", line 1169, in _save_table
+    results = self._do_insert(
+        cls._base_manager, using, insert_fields, returning_fields, raw
+    )
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\django\db\models\base.py", line 1220, in _do_insert
+    return manager._insert(
+           ~~~~~~~~~~~~~~~^
+        [self],
+        ^^^^^^^
+    ...<3 lines>...
+        raw=raw,
+        ^^^^^^^^
+    )
+    ^
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\django\db\models\query.py", line 1918, in _insert
+    return query.get_compiler(using=using).execute_sql(returning_fields)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1925, in execute_sql
+    cursor.execute(sql, params)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sql, params, many=False, executor=self._execute
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\django\db\utils.py", line 94, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\django\db\backends\oracle\base.py", line 628, in execute
+    return self.cursor.execute(query, self._param_generator(params))
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\oracledb\cursor.py", line 859, in execute
+    impl.execute(self)
+    ~~~~~~~~~~~~^^^^^^
+  File "src/oracledb/impl/thin/cursor.pyx", line 279, in oracledb.thin_impl.ThinCursorImpl.execute
+  File "src/oracledb/impl/thin/protocol.pyx", line 501, in oracledb.thin_impl.Protocol._process_single_message
+  File "src/oracledb/impl/thin/protocol.pyx", line 502, in oracledb.thin_impl.Protocol._process_single_message
+  File "src/oracledb/impl/thin/protocol.pyx", line 494, in oracledb.thin_impl.Protocol._process_message
+  File "src/oracledb/impl/thin/messages/base.pyx", line 102, in oracledb.thin_impl.Message._check_and_raise_exception
+django.db.utils.IntegrityError: ORA-01400: cannot insert NULL into ("ADMIN"."PRODUCTO"."ID_PRODUCTO")
+Help: https://docs.oracle.com/error-help/db/ora-01400/
+INFO 2026-05-09 18:54:19,540 autoreload1458016724C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\apps\ventas\models.py changed, reloading.
+INFO 2026-05-09 18:54:21,054 autoreload753214604Watching for file changes with StatReloader
+ERROR 2026-05-09 18:54:37,115 log753213356Internal Server Error: /api/productos/
+Traceback (most recent call last):
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\django\db\backends\oracle\base.py", line 628, in execute
+    return self.cursor.execute(query, self._param_generator(params))
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\oracledb\cursor.py", line 859, in execute
+    impl.execute(self)
+    ~~~~~~~~~~~~^^^^^^
+  File "src/oracledb/impl/thin/cursor.pyx", line 279, in oracledb.thin_impl.ThinCursorImpl.execute
+  File "src/oracledb/impl/thin/protocol.pyx", line 501, in oracledb.thin_impl.Protocol._process_single_message
+  File "src/oracledb/impl/thin/protocol.pyx", line 502, in oracledb.thin_impl.Protocol._process_single_message
+  File "src/oracledb/impl/thin/protocol.pyx", line 494, in oracledb.thin_impl.Protocol._process_message
+  File "src/oracledb/impl/thin/messages/base.pyx", line 102, in oracledb.thin_impl.Message._check_and_raise_exception
+oracledb.exceptions.IntegrityError: ORA-01400: cannot insert NULL into ("ADMIN"."PRODUCTO"."ID_PRODUCTO")
+Help: https://docs.oracle.com/error-help/db/ora-01400/
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\django\core\handlers\base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\rest_framework\viewsets.py", line 125, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\rest_framework\mixins.py", line 19, in create
+    self.perform_create(serializer)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\rest_framework\mixins.py", line 24, in perform_create
+    serializer.save()
+    ~~~~~~~~~~~~~~~^^
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\rest_framework\serializers.py", line 212, in save
+    self.instance = self.create(validated_data)
+                    ~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\rest_framework\serializers.py", line 962, in create
+    instance = ModelClass._default_manager.create(**validated_data)
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\django\db\models\query.py", line 669, in create
+    obj.save(force_insert=True, using=self.db)
+    ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\django\db\models\base.py", line 874, in save
+    self.save_base(
+    ~~~~~~~~~~~~~~^
+        using=using,
+        ^^^^^^^^^^^^
+    ...<2 lines>...
+        update_fields=update_fields,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\django\db\models\base.py", line 966, in save_base
+    updated = self._save_table(
+        raw,
+    ...<4 lines>...
+        update_fields,
+    )
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\django\db\models\base.py", line 1169, in _save_table
+    results = self._do_insert(
+        cls._base_manager, using, insert_fields, returning_fields, raw
+    )
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\django\db\models\base.py", line 1220, in _do_insert
+    return manager._insert(
+           ~~~~~~~~~~~~~~~^
+        [self],
+        ^^^^^^^
+    ...<3 lines>...
+        raw=raw,
+        ^^^^^^^^
+    )
+    ^
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\django\db\models\query.py", line 1918, in _insert
+    return query.get_compiler(using=using).execute_sql(returning_fields)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1925, in execute_sql
+    cursor.execute(sql, params)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sql, params, many=False, executor=self._execute
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\django\db\utils.py", line 94, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\django\db\backends\oracle\base.py", line 628, in execute
+    return self.cursor.execute(query, self._param_generator(params))
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\oracledb\cursor.py", line 859, in execute
+    impl.execute(self)
+    ~~~~~~~~~~~~^^^^^^
+  File "src/oracledb/impl/thin/cursor.pyx", line 279, in oracledb.thin_impl.ThinCursorImpl.execute
+  File "src/oracledb/impl/thin/protocol.pyx", line 501, in oracledb.thin_impl.Protocol._process_single_message
+  File "src/oracledb/impl/thin/protocol.pyx", line 502, in oracledb.thin_impl.Protocol._process_single_message
+  File "src/oracledb/impl/thin/protocol.pyx", line 494, in oracledb.thin_impl.Protocol._process_message
+  File "src/oracledb/impl/thin/messages/base.pyx", line 102, in oracledb.thin_impl.Message._check_and_raise_exception
+django.db.utils.IntegrityError: ORA-01400: cannot insert NULL into ("ADMIN"."PRODUCTO"."ID_PRODUCTO")
+Help: https://docs.oracle.com/error-help/db/ora-01400/

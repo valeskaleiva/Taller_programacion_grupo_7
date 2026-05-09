@@ -15,8 +15,19 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+from rest_framework.documentation import include_docs_urls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+
+    #este es del swagger 
+   # path('docs/', include_docs_urls(title='Gecko TCG API')),
+
+    #APIs de cada app bajo /api/
+    path('api/', include('apps.productos.urls')),
+    path('api/', include('apps.ventas.urls')),
+    path('api/', include('apps.reportes.urls')),
+
+    path('api/auth/', include('rest_framework.urls'))
 ]

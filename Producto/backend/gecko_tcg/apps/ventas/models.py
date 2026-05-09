@@ -5,7 +5,7 @@ from apps.productos.models import Producto
 
 #VENTA
 class Venta(models.Model):
-    id_venta = models.AutoField(primary_key=True)
+    id_venta = models.BigAutoField(primary_key=True)
     fecha_venta = models.DateTimeField(auto_now_add=True)  # Se asigna automáticamente
     total_pagado = models.DecimalField(
         max_digits=10,
@@ -20,7 +20,7 @@ class Venta(models.Model):
     
     class Meta:
         db_table = 'VENTA'
-        managed = False
+        managed = True
         verbose_name = 'Venta'
         verbose_name_plural = 'Ventas'
         ordering = ['-fecha_venta'] 
@@ -32,7 +32,7 @@ class Venta(models.Model):
 #Detalle venta 
 class DetalleVenta(models.Model):
     
-    id_detalle = models.AutoField(primary_key=True)
+    id_detalle = models.BigAutoField(primary_key=True)
     id_venta = models.ForeignKey(
         Venta,
         on_delete=models.CASCADE,  
@@ -48,7 +48,7 @@ class DetalleVenta(models.Model):
     
     class Meta:
         db_table = 'DETALLE_VENTA'
-        managed = False
+        managed = True
         verbose_name = 'Detalle Venta'
         verbose_name_plural = 'Detalles Venta'
         unique_together = ['id_venta', 'id_producto']  # No duplicar producto en misma venta
