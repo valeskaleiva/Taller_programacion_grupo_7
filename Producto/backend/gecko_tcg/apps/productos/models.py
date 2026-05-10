@@ -10,7 +10,7 @@ class Producto(models.Model):
         ('Caja', 'Caja de Sobres'),
     ]
     
-    id_producto = models.BigAutoField(primary_key=True)
+    id_producto = models.BigIntegerField(primary_key=True)
     codigo_barras = models.CharField(max_length=50, unique=True)
     nombre = models.CharField(max_length=200)
     descripcion = models.CharField(max_length=500, blank=True)
@@ -20,7 +20,7 @@ class Producto(models.Model):
     
     class Meta:
         db_table = 'PRODUCTO'
-        managed = True
+        managed = False
         verbose_name = 'Producto' #admin
         verbose_name_plural = 'Productos'
     
@@ -60,7 +60,7 @@ class ProductoCarta(models.Model):
     
     class Meta:
         db_table = 'PRODUCTO_CARTA'
-        managed = True
+        managed = False
         verbose_name = 'Producto Carta'
         verbose_name_plural = 'Productos Cartas'
     
@@ -81,7 +81,7 @@ class ProductoSobre(models.Model):
     
     class Meta:
         db_table = 'PRODUCTO_SOBRE'
-        managed = True
+        managed = False
         verbose_name = 'Producto Sobre'
         verbose_name_plural = 'Productos Sobres'
     
