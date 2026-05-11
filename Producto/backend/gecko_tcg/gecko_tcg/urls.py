@@ -15,10 +15,9 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
-from core import views as core_views
+from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/precio-carta/', core_views.search_card_price, name='precio-carta'),
+    path('api/tcgplayer/', include('apps.tcgplayer.urls')),
 ]
