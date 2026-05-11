@@ -28,6 +28,7 @@ urlpatterns = [
     path('api/', include('apps.productos.urls')),
     path('api/', include('apps.ventas.urls')),
     path('api/', include('apps.reportes.urls')),
+    path('api/tcgplayer/', include('apps.tcgplayer.urls')),
 
     path('api/auth/', include('rest_framework.urls'))
 ]

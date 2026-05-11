@@ -1,5 +1,7 @@
 from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
+from django.shortcuts import get_object_or_404
+from django.contrib.auth.models import User
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -11,6 +13,18 @@ from bs4 import BeautifulSoup
 from urllib.parse import quote_plus
 import re
 import time
+
+
+def json_response(data, status=200):
+    return JsonResponse(
+        data,
+        status=status,
+        headers={
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET, OPTIONS",
+            "Access-Control-Allow-Headers": "Content-Type",
+        },
+    )
 
 
 def get_chrome_driver():
@@ -29,8 +43,10 @@ def get_chrome_driver():
     return driver
 
 
-@require_http_methods(["GET"])
+@require_http_methods(["GET", "OPTIONS"])
 def search_card_price(request):
+    if request.method == "OPTIONS":
+        return json_response({}, status=200)
     card_name = request.GET.get("nombre") or request.GET.get("name")
     if not card_name:
         return JsonResponse(
@@ -117,21 +133,33 @@ def search_card_price(request):
                         url = "https://www.tcgplayer.com" + href
                     else:
                         url = href
+
+                # Imagen
+                image = None
+                img_elem = product.find("img", src=True)
+                if img_elem and img_elem["src"]:
+                    image = img_elem["src"]
+                elif img_elem and img_elem.get("data-src"):
+                    image = img_elem.get("data-src")
                 
+                if image and image.startswith("//"):
+                    image = "https:" + image
+
                 cards.append({
                     "name": name,
                     "price": price,
                     "currency": "USD",
                     "set": set_name,
                     "source": "TCGplayer",
-                    "url": url or search_url
+                    "url": url or search_url,
+                    "image": image,
                 })
                 
             except Exception as e:
                 continue
         
         if cards:
-            return JsonResponse({
+            return json_response({
                 "query": card_name,
                 "cards": cards[:5],
                 "count": len(cards[:5]),
@@ -139,7 +167,7 @@ def search_card_price(request):
                 "success": True
             })
         else:
-            return JsonResponse({
+            return json_response({
                 "query": card_name,
                 "cards": [],
                 "count": 0,
@@ -149,7 +177,7 @@ def search_card_price(request):
             }, status=200)
     
     except Exception as e:
-        return JsonResponse({
+        return json_response({
             "error": "Error al buscar precios",
             "message": str(e),
             "success": False

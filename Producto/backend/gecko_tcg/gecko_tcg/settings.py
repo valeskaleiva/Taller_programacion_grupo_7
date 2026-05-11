@@ -14,7 +14,6 @@ import os
 from dotenv import load_dotenv
 
 
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent #Aqui tiene que ir direccion del proyecto 
 
@@ -24,11 +23,7 @@ load_dotenv(BASE_DIR / '.env')
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-#SECRET_KEY = 'django-insecure-a4+vd!(i-gy*q4xso-7rqn#ml_fb+sz%54%b046v0hm-%6cfoa'
-#Aqui debe de ir la variable de entorno 
-
 SECRET_KEY = os.getenv('SECRET_KEY')
-
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'True').lower() == 'true'
@@ -45,20 +40,21 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+<<<<<<< HEAD
     'rest_framework',#Hacer Api
     'corsheaders',# Utilizae React,
     'apps.productos',
     'apps.ventas',
     'apps.reportes',
     'apps.usuarios',
-]
-
-MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+=======
+    'rest_framework',#Hacer Api
+    'corsheaders',# Utilizae React,
+    'apps.productos',
+    'apps.ventas',
+    'apps.reportes',
+    'apps.usuarios',
+    'apps.tcgplayer',middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -93,11 +89,11 @@ DATABASES = {
         'NAME': os.getenv('DB_NAME'),
         'USER': os.getenv('DB_USER'),
         'PASSWORD': os.getenv('DB_PASSWORD'),
+<<<<<<< HEAD
         'HOST': os.getenv('DB_HOST'),
         'PORT': os.getenv('DB_PORT','1521'),
-        'OPTIONS': {
-            'config_dir': os.getenv('DB_WALLET_DIR'),
-            'wallet_location': os.getenv('DB_WALLET_DIR'),
+        'HOST': os.getenv('DB_HOST'),
+        'PORT': os.getenv('DB_PORT','1521'),'wallet_location': os.getenv('DB_WALLET_DIR'),
             'wallet_password': os.getenv('DB_WALLET_PASSWORD'),
         }
     }
@@ -138,9 +134,6 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
-STATIC_URL = 'static/'  ## aqui se debe poner los archivos estaticos de css
-
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 REST_FRAMEWORK ={
@@ -237,3 +230,6 @@ LOGGING = {
 
 LOG_DIR  = BASE_DIR/'logs'
 LOG_DIR.mkdir(exist_ok=True)
+=======
+STATIC_URL = 'static/'
+>>>>>>> main
