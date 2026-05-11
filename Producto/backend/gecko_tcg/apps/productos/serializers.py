@@ -7,7 +7,6 @@ class ProductoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Producto
         fields = [
-            'id_producto',
             'codigo_barras',
             'nombre',
             'descripcion',
@@ -15,7 +14,16 @@ class ProductoSerializer(serializers.ModelSerializer):
             'precio_base',
             'categoria'
         ]
-        read_only_fields = ['id_producto']  # No se puede editar
+    def  create(self, validated_data):
+        from django.db.models import Max
+        
+        # Obtener el máximo ID actual y sumar 1
+        max_id = Producto.objects.aggregate(Max('id_producto'))['id_producto__max'] or 0
+        validated_data['id_producto'] = max_id + 1
+        
+        return super().create(validated_data)
+        
+ # No se puede editar
 
 
 
@@ -41,7 +49,6 @@ class ProductoCartaSerializer(serializers.ModelSerializer):
             'estado',
             'precio_mercado'
         ]
-        read_only_fields = ['id_producto']
 
 
 
@@ -65,7 +72,7 @@ class ProductoSobreSerializer(serializers.ModelSerializer):
             'cant_cartas',
             'serie'
         ]
-        read_only_fields = ['id_producto']
+
 
 
 class ProductoCajaSerializer(serializers.ModelSerializer):
@@ -85,4 +92,3 @@ class ProductoCajaSerializer(serializers.ModelSerializer):
             'producto_id',
             'cant_sobres'
         ]
-        read_only_fields = ['id_producto']

@@ -13,7 +13,7 @@ class Reporte(models.Model):
         ('Ganancias', 'Reporte de Ganancias'),
     ]
     
-    id_reporte = models.BigAutoField(primary_key=True)
+    id_reporte = models.BigIntegerField(primary_key=True)
     fecha_reporte = models.DateTimeField(auto_now_add=True)
     tipo_reporte = models.CharField(
         max_length=50,
@@ -29,7 +29,7 @@ class Reporte(models.Model):
     
     class Meta:
         db_table = 'REPORTE'
-        managed = True
+        managed = False
         verbose_name = 'Reporte'
         verbose_name_plural = 'Reportes'
         ordering = ['-fecha_reporte'] 
