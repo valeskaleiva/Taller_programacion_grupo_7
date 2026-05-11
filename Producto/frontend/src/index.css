@@ -289,6 +289,34 @@ code {
   }
 }
 
+button {
+  cursor: pointer;
+}
+
+@layer components {
+  .btn-primary {
+    background-color: var(--primary);
+    color: #ffffff;
+    border: 1px solid var(--primary);
+    cursor: pointer;
+    transition: background-color 0.2s ease, opacity 0.2s ease, transform 0.02s ease;
+  }
+
+  .btn-primary:hover:not(:disabled) {
+    background-color: var(--primary-dark);
+    opacity: 0.9;
+  }
+
+  .btn-primary:active:not(:disabled) {
+    transform: translateY(1px);
+  }
+
+  .btn-primary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
 #spacer {
   height: 88px;
   border-top: 1px solid var(--border);

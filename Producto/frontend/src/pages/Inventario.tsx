@@ -1,5 +1,12 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { mockProductos } from '../utils/mockData';
+import { createPortal } from 'react-dom';
+import { useNavigate } from 'react-router-dom';
+import {
+  actualizarProducto,
+  crearProducto,
+  eliminarProducto,
+  getProductos,
+} from '../services/api';
 import type { Producto } from '../types';
 
 type CategoriaFiltro = 'Todos' | 'Carta' | 'Sobre' | 'Caja';
@@ -23,7 +30,8 @@ const productoVacio: Omit<Producto, 'id_producto'> = {
 };
 
 const Inventario: React.FC = () => {
-  const [productos, setProductos] = useState<Producto[]>(mockProductos);
+  const navigate = useNavigate();
+  const [productos, setProductos] = useState<Producto[]>([]);
   const [filtroCategoria, setFiltroCategoria] = useState<CategoriaFiltro>('Todos');
   const [busqueda, setBusqueda] = useState('');
   const [codigoEscaneado, setCodigoEscaneado] = useState('');
@@ -34,9 +42,45 @@ const Inventario: React.FC = () => {
   const [form, setForm] = useState<Omit<Producto, 'id_producto'>>(productoVacio);
   const [idEditando, setIdEditando] = useState<number | null>(null);
   const [mensajeEscaner, setMensajeEscaner] = useState('');
+  const [cargando, setCargando] = useState(true);
+  const [errorGuardado, setErrorGuardado] = useState('');
+  const [tipoEliminacion, setTipoEliminacion] = useState<'stock' | 'completo'>('stock');
+  const [cantidadEliminar, setCantidadEliminar] = useState(1);
+  const [errorEliminar, setErrorEliminar] = useState('');
+  const [procesandoEliminar, setProcesandoEliminar] = useState(false);
 
   const inputEscanerRef = useRef<HTMLInputElement>(null);
   const filaResaltadaRef = useRef<HTMLTableRowElement>(null);
+
+  const cargarProductos = useCallback(async () => {
+    setCargando(true);
+    try {
+      const data = await getProductos();
+      setProductos(data);
+    } finally {
+      setCargando(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    void cargarProductos();
+  }, [cargarProductos]);
+
+  useEffect(() => {
+    const onFocus = () => {
+      void cargarProductos();
+    };
+
+    if (typeof window !== 'undefined') {
+      window.addEventListener('focus', onFocus);
+    }
+
+    return () => {
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('focus', onFocus);
+      }
+    };
+  }, [cargarProductos]);
 
   // Mantener el foco en el input del escáner cuando no hay modal abierto
   useEffect(() => {
@@ -93,38 +137,106 @@ const Inventario: React.FC = () => {
     setForm(productoVacio);
     setModoEdicion(false);
     setIdEditando(null);
+    setErrorGuardado('');
     setModalAbierto(true);
+  };
+
+  const abrirAgregarEnVentana = () => {
+    const destino = '/inventario/agregar';
+    if (typeof window === 'undefined') {
+      navigate(destino);
+      return;
+    }
+
+    const popup = window.open(destino, '_blank', 'noopener,noreferrer');
+    if (!popup) {
+      navigate(destino);
+    }
   };
 
   const abrirEditar = (producto: Producto) => {
-    const { id_producto, ...resto } = producto;
-    setForm(resto);
-    setIdEditando(id_producto);
-    setModoEdicion(true);
-    setModalAbierto(true);
+    const destino = `/inventario/editar/${producto.id_producto}`;
+    if (typeof window === 'undefined') {
+      navigate(destino);
+      return;
+    }
+
+    const popup = window.open(
+      destino,
+      `editar_producto_${producto.id_producto}`,
+      'popup=yes,width=980,height=760,resizable=yes,scrollbars=yes'
+    );
+
+    if (!popup) {
+      navigate(destino);
+    }
   };
 
   const confirmarEliminar = (producto: Producto) => {
+    setTipoEliminacion(producto.stock > 0 ? 'stock' : 'completo');
+    setCantidadEliminar(1);
+    setErrorEliminar('');
     setModalEliminar(producto);
   };
 
-  const eliminarProducto = () => {
+  const eliminarProductoConfirmado = async () => {
     if (!modalEliminar) return;
-    setProductos((prev) => prev.filter((p) => p.id_producto !== modalEliminar.id_producto));
-    setModalEliminar(null);
+
+    try {
+      setProcesandoEliminar(true);
+      setErrorEliminar('');
+
+      if (tipoEliminacion === 'completo') {
+        await eliminarProducto(modalEliminar.id_producto);
+      } else {
+        const cantidad = Number(cantidadEliminar);
+        if (!Number.isInteger(cantidad) || cantidad <= 0) {
+          setErrorEliminar('Ingresa una cantidad válida mayor a 0.');
+          return;
+        }
+
+        if (cantidad > modalEliminar.stock) {
+          setErrorEliminar(`La cantidad no puede ser mayor al stock actual (${modalEliminar.stock}).`);
+          return;
+        }
+
+        const nuevoStock = modalEliminar.stock - cantidad;
+        const { id_producto, ...resto } = modalEliminar;
+        void id_producto;
+
+        await actualizarProducto(modalEliminar.id_producto, {
+          ...resto,
+          stock: nuevoStock,
+        });
+      }
+
+      await cargarProductos();
+      setModalEliminar(null);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'No se pudo completar la eliminación.';
+      setErrorEliminar(message);
+    } finally {
+      setProcesandoEliminar(false);
+    }
   };
 
-  const guardarProducto = () => {
+  const guardarProducto = async () => {
     if (!form.codigo_barras || !form.nombre) return;
-    if (modoEdicion && idEditando !== null) {
-      setProductos((prev) =>
-        prev.map((p) => (p.id_producto === idEditando ? { ...form, id_producto: idEditando } : p))
-      );
-    } else {
-      const nuevoId = Math.max(...productos.map((p) => p.id_producto), 0) + 1;
-      setProductos((prev) => [...prev, { ...form, id_producto: nuevoId }]);
+
+    try {
+      setErrorGuardado('');
+      if (modoEdicion && idEditando !== null) {
+        await actualizarProducto(idEditando, form);
+      } else {
+        await crearProducto(form);
+      }
+
+      await cargarProductos();
+      setModalAbierto(false);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'No se pudo guardar el producto.';
+      setErrorGuardado(message);
     }
-    setModalAbierto(false);
   };
 
   const badgeStock = (stock: number) => {
@@ -148,6 +260,13 @@ const Inventario: React.FC = () => {
     );
   };
 
+  const renderInBody = (node: React.ReactNode) => {
+    if (typeof document === 'undefined') {
+      return node;
+    }
+    return createPortal(node, document.body);
+  };
+
   return (
     <div className="p-3 sm:p-6 space-y-4">
       {/* Encabezado */}
@@ -157,9 +276,13 @@ const Inventario: React.FC = () => {
           <p className="text-sm text-gray-500">{productos.length} productos en total</p>
         </div>
         <button
-          onClick={abrirAgregar}
-          style={{ backgroundColor: 'var(--primary)' }}
-          className="w-full sm:w-auto flex items-center justify-center gap-2 text-white text-sm font-medium px-4 py-2 rounded-lg transition hover:opacity-90"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            abrirAgregarEnVentana();
+          }}
+          type="button"
+          className="btn-primary w-full sm:w-auto flex items-center justify-center gap-2 text-sm font-medium px-4 py-2 rounded-lg"
         >
           + Agregar producto
         </button>
@@ -254,7 +377,13 @@ const Inventario: React.FC = () => {
             </tr>
           </thead>
           <tbody>
-            {productosFiltrados.length === 0 ? (
+            {cargando ? (
+              <tr>
+                <td colSpan={20} className="text-center py-10 text-gray-400">
+                  Cargando productos...
+                </td>
+              </tr>
+            ) : productosFiltrados.length === 0 ? (
               <tr>
                 <td colSpan={20} className="text-center py-10 text-gray-400">
                   No se encontraron productos.
@@ -338,8 +467,8 @@ const Inventario: React.FC = () => {
       </div>
 
       {/* Modal Agregar / Editar */}
-      {modalAbierto && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
+      {modalAbierto && renderInBody(
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-[9999] p-4">
           <div className="bg-white rounded-2xl shadow-xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between px-6 py-4 border-b">
               <h2 className="text-lg font-bold text-gray-800">
@@ -348,6 +477,11 @@ const Inventario: React.FC = () => {
               <button onClick={() => setModalAbierto(false)} className="text-gray-400 hover:text-gray-600 text-xl">✕</button>
             </div>
             <div className="px-6 py-4 space-y-3">
+              {errorGuardado && (
+                <div className="text-sm px-3 py-2 rounded-lg border border-red-200 bg-red-50 text-red-700">
+                  {errorGuardado}
+                </div>
+              )}
               {/* Campos base */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
@@ -478,8 +612,7 @@ const Inventario: React.FC = () => {
               <button
                 onClick={guardarProducto}
                 disabled={!form.codigo_barras || !form.nombre}
-                style={{ backgroundColor: 'var(--primary)' }}
-                className="px-5 py-2 text-sm font-semibold text-white disabled:opacity-50 rounded-lg transition hover:opacity-90"
+                className="btn-primary px-5 py-2 text-sm font-semibold rounded-lg"
               >
                 {modoEdicion ? 'Guardar cambios' : 'Agregar'}
               </button>
@@ -489,19 +622,106 @@ const Inventario: React.FC = () => {
       )}
 
       {/* Modal Confirmar Eliminar */}
-      {modalEliminar && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-xl w-full max-w-sm p-6 space-y-4">
-            <h2 className="text-lg font-bold text-gray-800">Eliminar producto</h2>
-            <p className="text-sm text-gray-600">
-              ¿Estás seguro que deseas eliminar <strong>{modalEliminar.nombre}</strong>? Esta acción no se puede deshacer.
-            </p>
-            <div className="flex justify-end gap-3">
-              <button onClick={() => setModalEliminar(null)} className="px-4 py-2 text-sm border border-gray-300 rounded-lg text-gray-600 hover:text-gray-800">
+      {modalEliminar && renderInBody(
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-[9999] p-4">
+          <div className="bg-white rounded-2xl shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto">
+            <div className="p-6 space-y-4">
+              <h2 className="text-lg font-bold text-gray-800">Eliminar producto</h2>
+              <p className="text-sm text-gray-600">
+                Producto: <strong>{modalEliminar.nombre}</strong> (stock actual: {modalEliminar.stock})
+              </p>
+
+              <div className="space-y-3">
+                <label
+                  className={`block border rounded-xl p-3 cursor-pointer transition ${
+                    tipoEliminacion === 'stock'
+                      ? 'border-emerald-600 bg-emerald-50 ring-2 ring-emerald-200'
+                      : 'border-gray-200 bg-white hover:bg-gray-50'
+                  }`}
+                >
+                  <div className="flex items-start gap-2">
+                    <input
+                      type="radio"
+                      name="tipo-eliminacion"
+                      checked={tipoEliminacion === 'stock'}
+                      onChange={() => setTipoEliminacion('stock')}
+                      disabled={procesandoEliminar}
+                      className="mt-1"
+                    />
+                    <div>
+                      <p className="text-sm font-semibold text-gray-800">Descontar por cantidad de stock</p>
+                      <p className="text-xs text-gray-600">Reduce unidades y mantiene el producto en inventario.</p>
+                    </div>
+                  </div>
+
+                  {tipoEliminacion === 'stock' && (
+                    <div className="mt-3">
+                      <label className="text-xs font-medium text-gray-600">Cantidad a descontar</label>
+                      <input
+                        type="number"
+                        min={1}
+                        max={Math.max(1, modalEliminar.stock)}
+                        value={cantidadEliminar}
+                        onChange={(e) => setCantidadEliminar(Number(e.target.value))}
+                        disabled={procesandoEliminar}
+                        className="w-full mt-1 border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primaryLight"
+                      />
+                      <p className="mt-1 text-xs text-gray-500">
+                        Stock después de aceptar: {Math.max(0, modalEliminar.stock - Number(cantidadEliminar || 0))}
+                      </p>
+                    </div>
+                  )}
+                </label>
+
+                <label
+                  className={`block border rounded-xl p-3 cursor-pointer transition ${
+                    tipoEliminacion === 'completo'
+                      ? 'border-red-600 bg-red-50 ring-2 ring-red-200'
+                      : 'border-gray-200 bg-white hover:bg-gray-50'
+                  }`}
+                >
+                  <div className="flex items-start gap-2">
+                    <input
+                      type="radio"
+                      name="tipo-eliminacion"
+                      checked={tipoEliminacion === 'completo'}
+                      onChange={() => setTipoEliminacion('completo')}
+                      disabled={procesandoEliminar}
+                      className="mt-1"
+                    />
+                    <div>
+                      <p className="text-sm font-semibold text-gray-800">Eliminar producto completo</p>
+                      <p className="text-xs text-red-700">Borra el producto de forma permanente.</p>
+                    </div>
+                  </div>
+                </label>
+              </div>
+
+              {errorEliminar && (
+                <div className="text-sm px-3 py-2 rounded-lg border border-red-200 bg-red-50 text-red-700">
+                  {errorEliminar}
+                </div>
+              )}
+            </div>
+
+            <div className="sticky bottom-0 bg-white border-t rounded-b-2xl px-6 py-4 flex justify-end gap-3">
+              <button
+                onClick={() => setModalEliminar(null)}
+                disabled={procesandoEliminar}
+                className="px-4 py-2 text-sm border border-gray-300 rounded-lg text-gray-600 hover:text-gray-800"
+              >
                 Cancelar
               </button>
-              <button onClick={eliminarProducto} className="px-4 py-2 text-sm font-semibold text-white bg-red-600 hover:bg-red-700 rounded-lg transition">
-                Eliminar
+              <button
+                onClick={() => void eliminarProductoConfirmado()}
+                disabled={procesandoEliminar}
+                className="px-4 py-2 text-sm font-semibold text-white bg-red-600 hover:bg-red-700 rounded-lg transition disabled:opacity-60"
+              >
+                {procesandoEliminar
+                  ? 'Procesando...'
+                  : tipoEliminacion === 'stock'
+                    ? 'Descontar stock'
+                    : 'Eliminar producto'}
               </button>
             </div>
           </div>

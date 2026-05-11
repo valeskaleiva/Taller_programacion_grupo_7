@@ -5,7 +5,7 @@ from apps.productos.models import Producto
 
 #VENTA
 class Venta(models.Model):
-    id_venta = models.BigIntegerField(primary_key=True)
+    id_venta = models.BigAutoField(primary_key=True)
     fecha_venta = models.DateTimeField(auto_now_add=True)  # Se asigna automáticamente
     total_pagado = models.DecimalField(
         max_digits=10,
@@ -15,7 +15,8 @@ class Venta(models.Model):
     id_usuario = models.ForeignKey(
         User,
         on_delete=models.PROTECT,  
-        related_name='ventas'
+        related_name='ventas',
+        db_column='ID_USUARIO'
     )
     
     class Meta:
@@ -32,16 +33,18 @@ class Venta(models.Model):
 #Detalle venta 
 class DetalleVenta(models.Model):
     
-    id_detalle = models.BigIntegerField(primary_key=True)
+    id_detalle = models.BigAutoField(primary_key=True)
     id_venta = models.ForeignKey(
         Venta,
         on_delete=models.CASCADE,  
-        related_name='detalles'
+        related_name='detalles',
+        db_column='ID_VENTA'
     )
     id_producto = models.ForeignKey(
         Producto,
         on_delete=models.PROTECT,  
-        related_name='detalles_venta'
+        related_name='detalles_venta',
+        db_column='ID_PRODUCTO'
     )
     cantidad = models.IntegerField(validators=[MinValueValidator(1)])
     precio_unitario = models.DecimalField(max_digits=10, decimal_places=2)

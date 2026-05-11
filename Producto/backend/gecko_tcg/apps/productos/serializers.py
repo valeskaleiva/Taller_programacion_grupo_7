@@ -7,6 +7,7 @@ class ProductoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Producto
         fields = [
+            'id_producto',
             'codigo_barras',
             'nombre',
             'descripcion',
@@ -14,6 +15,7 @@ class ProductoSerializer(serializers.ModelSerializer):
             'precio_base',
             'categoria'
         ]
+        read_only_fields = ['id_producto']
     def  create(self, validated_data):
         from django.db.models import Max
         

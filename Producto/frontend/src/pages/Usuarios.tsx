@@ -224,7 +224,6 @@ export default function Usuarios() {
             setForm(EMPTY_FORM);
           }}
           className={BTN_PRIMARY}
-          style={{ backgroundColor: 'var(--primary)', border: '1px solid var(--primary-dark)', color: '#fff' }}
         >
           + Agregar vendedor
         </button>
@@ -409,7 +408,6 @@ export default function Usuarios() {
                 onClick={() => void handleGuardar()}
                 disabled={saving}
                 className={`${BTN_PRIMARY} px-5`}
-                style={{ backgroundColor: 'var(--primary)', border: '1px solid var(--primary-dark)', color: '#fff' }}
               >
                 {saving ? 'Guardando...' : editingId === null ? 'Agregar' : 'Guardar cambios'}
               </button>

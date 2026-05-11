@@ -1,4 +1,9 @@
-import { mockProductos } from "../utils/mockData";
+type BajoStockProducto = {
+  id_producto: number;
+  nombre: string;
+  categoria: string;
+  stock: number;
+};
 
 function stockBadge(stock: number) {
   if (stock === 0) return "bg-red-100 text-red-700 font-bold";
@@ -6,10 +11,12 @@ function stockBadge(stock: number) {
   return "bg-yellow-100 text-yellow-700";
 }
 
-export default function LowStock() {
-  const bajoStock = mockProductos
-    .filter((p) => p.stock <= 5)
-    .sort((a, b) => a.stock - b.stock);
+type Props = {
+  productos?: BajoStockProducto[];
+};
+
+export default function LowStock({ productos = [] }: Props) {
+  const bajoStock = [...productos].sort((a, b) => a.stock - b.stock);
 
   return (
     <div className="bg-white p-5 rounded-xl shadow h-full">

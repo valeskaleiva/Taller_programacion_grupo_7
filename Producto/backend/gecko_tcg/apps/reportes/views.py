@@ -1,11 +1,11 @@
 from django.shortcuts import render
-
+from django.db import models
 from rest_framework import viewsets, filters
 from .models import Reporte
 from .serializers import ReporteSerializer
 from apps.ventas.models import Venta, DetalleVenta
 from apps.productos.models import Producto
-from django.db.models import Sum, Count, Q
+from django.db.models import Sum, Count, Q, F
 from django.utils import timezone
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -52,7 +52,7 @@ class ReporteViewSet(viewsets.ModelViewSet): # gestionar reportes
         ingresos = DetalleVenta.objects.values(
             'id_producto__categoria'
         ).annotate(
-                total_ingresos=Sum('precio_unitario') * Sum('precio_unitario'),
+                total_ingresos=Sum(F('cantidad') * F('precio_unitario'), output_field=models.DecimalField()),
                 cantidad_productos =Count('id_producto', distinct=True)
         ).order_by('-total_ingresos')
 

@@ -1,25 +1,44 @@
+import type { VentaResumen } from "../services/api";
+
 const METODO_BADGE: Record<string, string> = {
   Efectivo: "bg-green-100 text-green-700",
   Tarjeta: "bg-blue-100 text-blue-700",
   Transferencia: "bg-purple-100 text-purple-700",
 };
 
-const ventas = [
-  { cliente: "Carlos Muñoz", producto: "Charizard EX", total: 32000, metodo: "Tarjeta", hora: "09:14" },
-  { cliente: "Valentina P.", producto: "Sobre Paldea Evolved", total: 7000, metodo: "Efectivo", hora: "10:02" },
-  { cliente: "Diego Rojas", producto: "Caja Elite Trainer", total: 45000, metodo: "Transferencia", hora: "11:38" },
-  { cliente: "Camila Ávila", producto: "Pikachu V", total: 7500, metodo: "Tarjeta", hora: "13:50" },
-  { cliente: "Lucas Torres", producto: "Mewtwo VSTAR", total: 22000, metodo: "Efectivo", hora: "15:22" },
-];
+type VentaTabla = {
+  cliente: string;
+  producto: string;
+  total: number;
+  metodo: string;
+  hora: string;
+};
 
 const COLS = ["#", "Hora", "Cliente", "Producto", "Método", "Total"];
 
-export default function LastSales() {
+type Props = {
+  ventas?: VentaResumen[];
+};
+
+export default function LastSales({ ventas = [] }: Props) {
+  const ventasTabla: VentaTabla[] = ventas.map((v) => {
+    const firstDetail = v.detalles?.[0];
+    const total = typeof v.total_pagado === 'string' ? Number(v.total_pagado) : v.total_pagado;
+
+    return {
+      cliente: v.usuario?.username || 'Cliente',
+      producto: firstDetail?.producto?.nombre || 'Producto',
+      total: Number.isFinite(total) ? total : 0,
+      metodo: 'Tarjeta',
+      hora: new Date(v.fecha_venta).toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' }),
+    };
+  });
+
   return (
     <div className="bg-white p-5 rounded-xl shadow">
       <div className="flex items-center justify-between mb-4">
         <h4 className="font-bold text-gray-800">🧾 Últimas Ventas</h4>
-        <span className="text-xs text-gray-400">Hoy · {ventas.length} transacciones</span>
+        <span className="text-xs text-gray-400">Hoy · {ventasTabla.length} transacciones</span>
       </div>
 
       <div className="overflow-x-auto">
@@ -37,7 +56,7 @@ export default function LastSales() {
             </tr>
           </thead>
           <tbody>
-            {ventas.map((v, i) => (
+            {ventasTabla.map((v, i) => (
               <tr
                 key={i}
                 className="border-b border-gray-50 hover:bg-gray-50 transition-colors"
@@ -85,7 +104,7 @@ export default function LastSales() {
                 Total del día
               </td>
               <td className="pt-3 text-right font-bold text-emerald-700 text-sm">
-                ${ventas.reduce((s, v) => s + v.total, 0).toLocaleString("es-CL")}
+                ${ventasTabla.reduce((s, v) => s + v.total, 0).toLocaleString("es-CL")}
               </td>
             </tr>
           </tfoot>

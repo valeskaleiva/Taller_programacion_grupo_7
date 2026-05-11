@@ -9,8 +9,24 @@ class ProductoViewSet(viewsets.ModelViewSet):
     queryset = Producto.objects.all()
     serializer_class = ProductoSerializer
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
-    search_fields = ['nombre', 'descripcion']
+    search_fields = ['nombre', 'descripcion', 'codigo_barras']
     ordering_fields = ['precio', 'fecha_lanzamiento']
+
+    @action(detail=False, methods=['get'])
+    def por_codigo(self, request):
+        """Buscar producto por código de barras - IDEAL PARA LECTORES"""
+        codigo = request.query_params.get('codigo')
+        if not codigo:
+            return Response({'error': 'Parámetro codigo requerido'},
+                          status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            producto = Producto.objects.get(codigo_barras=codigo)
+            serializer = self.get_serializer(producto)
+            return Response(serializer.data)
+        except Producto.DoesNotExist:
+            return Response({'error': 'Producto no encontrado'},
+                          status=status.HTTP_404_NOT_FOUND)
 
     @action(detail=False, methods=['get'])
     def bajo_stock(self, request):

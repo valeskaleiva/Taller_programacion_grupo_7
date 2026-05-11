@@ -43,11 +43,29 @@ def get_chrome_driver():
     return driver
 
 
+def normalize_serial(value):
+    if not value:
+        return ""
+    return str(value).replace("#", "").replace("-", "/").strip()
+
+
+def has_serial_match(text, target_serial):
+    if not text or not target_serial:
+        return False
+    serials = re.findall(r"#?(\d{1,3}[/-]\d{1,3})", text)
+    normalized_target = normalize_serial(target_serial)
+    return any(normalize_serial(item) == normalized_target for item in serials)
+
+
 @require_http_methods(["GET", "OPTIONS"])
 def search_card_price(request):
     if request.method == "OPTIONS":
         return json_response({}, status=200)
     card_name = request.GET.get("nombre") or request.GET.get("name")
+    serial_number = request.GET.get("numero")
+    if not card_name and serial_number:
+        card_name = serial_number
+
     if not card_name:
         return JsonResponse(
             {"error": "Falta el parámetro 'nombre' en la query string."}, status=400
@@ -57,7 +75,15 @@ def search_card_price(request):
     try:
         driver = get_chrome_driver()
         
-        search_url = f"https://www.tcgplayer.com/search/pokemon/product?productName={quote_plus(card_name)}"
+        normalized_serial = normalize_serial(serial_number)
+        is_serial_query = bool(normalized_serial)
+
+        search_term = card_name
+        if is_serial_query:
+            serial_dash = normalized_serial.replace("/", "-")
+            search_term = f"pokemon {serial_dash}"
+
+        search_url = f"https://www.tcgplayer.com/search/pokemon/product?productName={quote_plus(search_term)}"
         driver.get(search_url)
         
         # Esperar a que cargue al menos un producto
@@ -87,7 +113,7 @@ def search_card_price(request):
         if not products:
             products = soup.find_all("div", {"class": re.compile("product", re.I)})
         
-        for product in products[:15]:
+        for product in products[:60]:
             try:
                 # Nombre
                 name = None
@@ -158,21 +184,37 @@ def search_card_price(request):
             except Exception as e:
                 continue
         
+        if serial_number:
+            cards = [
+                card
+                for card in cards
+                if has_serial_match(
+                    f"{card.get('name', '')} {card.get('set', '')} {card.get('url', '')}",
+                    serial_number,
+                )
+            ]
+
         if cards:
+            limit = 25 if serial_number else 10
+            cards_limited = cards[:limit]
             return json_response({
                 "query": card_name,
-                "cards": cards[:5],
-                "count": len(cards[:5]),
+                "serial": normalize_serial(serial_number) if serial_number else None,
+                "search_term": search_term,
+                "cards": cards_limited,
+                "count": len(cards_limited),
                 "source": "TCGplayer",
                 "success": True
             })
         else:
             return json_response({
                 "query": card_name,
+                "serial": normalize_serial(serial_number) if serial_number else None,
+                "search_term": search_term,
                 "cards": [],
                 "count": 0,
                 "source": "TCGplayer",
-                "message": "No se encontraron resultados. Intenta con otro nombre.",
+                "message": "No se encontraron resultados. Intenta con otro nombre o número de serie.",
                 "success": False
             }, status=200)
     

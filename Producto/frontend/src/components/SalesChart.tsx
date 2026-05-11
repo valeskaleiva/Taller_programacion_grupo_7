@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import {
   BarChart,
   Bar,
@@ -7,21 +8,30 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
+import type { VentaResumen } from "../services/api";
 
-const data = [
-  { mes: "Oct", ventas: 320000 },
-  { mes: "Nov", ventas: 485000 },
-  { mes: "Dic", ventas: 710000 },
-  { mes: "Ene", ventas: 395000 },
-  { mes: "Feb", ventas: 460000 },
-  { mes: "Mar", ventas: 528000 },
-  { mes: "Abr", ventas: 186220 },
-];
+type Props = {
+  ventas?: VentaResumen[];
+};
 
 const formatCLP = (v: number) =>
   v >= 1000 ? `$${(v / 1000).toFixed(0)}k` : `$${v}`;
 
-export default function SalesChart() {
+export default function SalesChart({ ventas = [] }: Props) {
+  const data = useMemo(() => {
+    const map = new Map<string, number>();
+
+    ventas.forEach((v) => {
+      const d = new Date(v.fecha_venta);
+      if (Number.isNaN(d.getTime())) return;
+      const mes = d.toLocaleString("es-CL", { month: "short" });
+      const value = typeof v.total_pagado === "string" ? Number(v.total_pagado) : v.total_pagado;
+      map.set(mes, (map.get(mes) ?? 0) + (Number.isFinite(value) ? value : 0));
+    });
+
+    return Array.from(map.entries()).map(([mes, total]) => ({ mes, ventas: total }));
+  }, [ventas]);
+
   return (
     <div className="bg-white p-4 sm:p-6 rounded-xl shadow h-full">
       <div className="flex items-center justify-between mb-4">
@@ -45,7 +55,10 @@ export default function SalesChart() {
             width={48}
           />
           <Tooltip
-            formatter={(v: number) => [`$${v.toLocaleString("es-CL")}`, "Ventas"]}
+            formatter={(v) => {
+              const value = typeof v === 'number' ? v : Number(v ?? 0);
+              return [`$${value.toLocaleString("es-CL")}`, "Ventas"];
+            }}
             contentStyle={{ borderRadius: "8px", border: "none", boxShadow: "0 4px 12px rgba(0,0,0,.1)" }}
           />
           <Bar dataKey="ventas" fill="#0B3D2E" radius={[4, 4, 0, 0]} maxBarSize={40} />

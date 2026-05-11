@@ -1,178 +1,352 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import {
+  crearVenta,
+  getProductoPorCodigo,
+  getUsuariosVenta,
+  type CrearVentaPayload,
+  type UsuarioVenta,
+} from '../services/api';
+import type { Producto } from '../types';
 
-type SaleItem = {
-    id: number;
-    fecha: string;
-    cliente: string;
-    vendedor: string;
-    metodo_pago: 'Efectivo' | 'Tarjeta' | 'Transferencia';
-    total: number;
+type MetodoPago = 'Efectivo' | 'Tarjeta' | 'Transferencia';
+
+type CartItem = {
+  producto: Producto;
+  cantidad: number;
+  precio_unitario: number;
 };
 
-const TODAY = new Date().toISOString().slice(0, 10);
-
-const initialSales: SaleItem[] = [
-    {
-        id: 1,
-        fecha: TODAY,
-        cliente: 'Camila Soto',
-        vendedor: 'Valentina',
-        metodo_pago: 'Tarjeta',
-        total: 28990,
-    },
-    {
-        id: 2,
-        fecha: TODAY,
-        cliente: 'Diego Rojas',
-        vendedor: 'Martina',
-        metodo_pago: 'Efectivo',
-        total: 15990,
-    },
-    {
-        id: 3,
-        fecha: TODAY,
-        cliente: 'Nicolás Pérez',
-        vendedor: 'Valentina',
-        metodo_pago: 'Transferencia',
-        total: 44990,
-    },
-];
+const USUARIO_VENTA_DEFAULT = 1;
 
 function Ventas() {
-    const [sales, setSales] = useState<SaleItem[]>(initialSales);
-    const [cliente, setCliente] = useState('');
-    const [vendedor, setVendedor] = useState('');
-    const [metodoPago, setMetodoPago] = useState<SaleItem['metodo_pago']>('Efectivo');
-    const [total, setTotal] = useState('');
+  const [codigo, setCodigo] = useState('');
+  const [metodoPago, setMetodoPago] = useState<MetodoPago>('Efectivo');
+  const [items, setItems] = useState<CartItem[]>([]);
+  const [mensaje, setMensaje] = useState('');
+  const [error, setError] = useState('');
+  const [guardando, setGuardando] = useState(false);
+  const [usuarios, setUsuarios] = useState<UsuarioVenta[]>([]);
+  const [usuarioVentaId, setUsuarioVentaId] = useState<number>(USUARIO_VENTA_DEFAULT);
 
-    const salesToday = useMemo(
-        () => sales.filter((sale) => sale.fecha === TODAY),
-        [sales]
-    );
+  const inputScannerRef = useRef<HTMLInputElement>(null);
 
-    const totalHoy = useMemo(
-        () => salesToday.reduce((acc, sale) => acc + sale.total, 0),
-        [salesToday]
-    );
+  useEffect(() => {
+    void (async () => {
+      try {
+        const data = await getUsuariosVenta();
+        const activos = data.filter((u) => u.is_active);
+        setUsuarios(activos);
 
-    const ticketPromedio = useMemo(
-        () => (salesToday.length > 0 ? Math.round(totalHoy / salesToday.length) : 0),
-        [totalHoy, salesToday]
-    );
-
-    const handleAddSale = () => {
-        if (!cliente.trim() || !vendedor.trim() || !total.trim()) {
-            return;
+        if (activos.length > 0) {
+          const existeDefault = activos.some((u) => u.id === USUARIO_VENTA_DEFAULT);
+          setUsuarioVentaId(existeDefault ? USUARIO_VENTA_DEFAULT : activos[0].id);
         }
+      } catch {
+        setUsuarios([]);
+      }
+    })();
 
-        const parsedTotal = Number(total);
-        if (Number.isNaN(parsedTotal) || parsedTotal <= 0) {
-            return;
+    enfocarScanner();
+  }, []);
+
+  const totalItems = useMemo(
+    () => items.reduce((acc, item) => acc + item.cantidad, 0),
+    [items]
+  );
+
+  const totalVenta = useMemo(
+    () => items.reduce((acc, item) => acc + item.cantidad * Number(item.precio_unitario), 0),
+    [items]
+  );
+
+  const enfocarScanner = () => {
+    inputScannerRef.current?.focus();
+  };
+
+  const agregarPorCodigo = async (codigoRaw: string) => {
+    const codigoNormalizado = codigoRaw.trim();
+    if (!codigoNormalizado) return;
+
+    setError('');
+    setMensaje('');
+
+    const producto = await getProductoPorCodigo(codigoNormalizado);
+    if (!producto) {
+      setError(`No se encontró producto para el código ${codigoNormalizado}.`);
+      return;
+    }
+
+    if (producto.stock <= 0) {
+      setError(`Sin stock para ${producto.nombre}.`);
+      return;
+    }
+
+    setItems((prev) => {
+      const existente = prev.find((x) => x.producto.id_producto === producto.id_producto);
+      if (!existente) {
+        return [
+          ...prev,
+          {
+            producto,
+            cantidad: 1,
+            precio_unitario: Number(producto.precio_base),
+          },
+        ];
+      }
+
+      const nuevaCantidad = existente.cantidad + 1;
+      if (nuevaCantidad > producto.stock) {
+        setError(`Stock insuficiente para ${producto.nombre}. Disponible: ${producto.stock}.`);
+        return prev;
+      }
+
+      return prev.map((item) =>
+        item.producto.id_producto === producto.id_producto
+          ? { ...item, cantidad: nuevaCantidad }
+          : item
+      );
+    });
+
+    setMensaje(`Agregado: ${producto.nombre}`);
+  };
+
+  const handleScannerEnter = async (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key !== 'Enter') return;
+
+    const scanned = codigo;
+    setCodigo('');
+    await agregarPorCodigo(scanned);
+    enfocarScanner();
+  };
+
+  const actualizarCantidad = (idProducto: number, cantidadNueva: number) => {
+    if (cantidadNueva <= 0) {
+      setItems((prev) => prev.filter((item) => item.producto.id_producto !== idProducto));
+      return;
+    }
+
+    setItems((prev) =>
+      prev.map((item) => {
+        if (item.producto.id_producto !== idProducto) return item;
+        if (cantidadNueva > item.producto.stock) {
+          setError(`Stock insuficiente para ${item.producto.nombre}. Disponible: ${item.producto.stock}.`);
+          return item;
         }
+        return { ...item, cantidad: cantidadNueva };
+      })
+    );
+  };
 
-        const newSale: SaleItem = {
-            id: Math.max(0, ...sales.map((sale) => sale.id)) + 1,
-            fecha: TODAY,
-            cliente: cliente.trim(),
-            vendedor: vendedor.trim(),
-            metodo_pago: metodoPago,
-            total: parsedTotal,
-        };
+  const quitarItem = (idProducto: number) => {
+    setItems((prev) => prev.filter((item) => item.producto.id_producto !== idProducto));
+  };
 
-        setSales((prev) => [newSale, ...prev]);
-        setCliente('');
-        setVendedor('');
-        setMetodoPago('Efectivo');
-        setTotal('');
+  const confirmarVenta = async () => {
+    if (items.length === 0) {
+      setError('Debes escanear al menos un producto para vender.');
+      return;
+    }
+
+    setGuardando(true);
+    setError('');
+    setMensaje('');
+
+    const payload: CrearVentaPayload = {
+      usuario_id: usuarioVentaId,
+      detalles: items.map((item) => ({
+        producto_id: item.producto.id_producto,
+        cantidad: item.cantidad,
+        precio_unitario: Number(item.precio_unitario),
+      })),
     };
 
-    return (
-        <div className="space-y-6 text-left">
-            <section className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="bg-white border rounded-xl p-4 shadow-sm">
-                    <p className="text-xs uppercase tracking-wide text-gray-500">Ventas del día</p>
-                    <p className="text-2xl font-bold text-gray-900 mt-2">${totalHoy.toLocaleString('es-CL')}</p>
-                </div>
-                <div className="bg-white border rounded-xl p-4 shadow-sm">
-                    <p className="text-xs uppercase tracking-wide text-gray-500">Transacciones hoy</p>
-                    <p className="text-2xl font-bold text-gray-900 mt-2">{salesToday.length}</p>
-                </div>
-                <div className="bg-white border rounded-xl p-4 shadow-sm">
-                    <p className="text-xs uppercase tracking-wide text-gray-500">Ticket promedio</p>
-                    <p className="text-2xl font-bold text-gray-900 mt-2">${ticketPromedio.toLocaleString('es-CL')}</p>
-                </div>
-            </section>
+    try {
+      const venta = await crearVenta(payload);
+      setItems([]);
+      setMensaje(`Venta #${venta.id_venta} registrada correctamente (${metodoPago}).`);
+      enfocarScanner();
+    } catch (e) {
+      const message = e instanceof Error ? e.message : 'No se pudo registrar la venta.';
+      setError(message);
+    } finally {
+      setGuardando(false);
+    }
+  };
 
-            <section className="bg-white border rounded-xl p-5 shadow-sm">
-                <h2 className="text-lg font-semibold text-gray-900">Registrar venta diaria</h2>
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-3 mt-4">
-                    <input
-                        className="border rounded-lg px-3 py-2"
-                        placeholder="Cliente"
-                        value={cliente}
-                        onChange={(e) => setCliente(e.target.value)}
-                    />
-                    <input
-                        className="border rounded-lg px-3 py-2"
-                        placeholder="Vendedor"
-                        value={vendedor}
-                        onChange={(e) => setVendedor(e.target.value)}
-                    />
-                    <select
-                        className="border rounded-lg px-3 py-2"
-                        value={metodoPago}
-                        onChange={(e) => setMetodoPago(e.target.value as SaleItem['metodo_pago'])}
-                    >
-                        <option value="Efectivo">Efectivo</option>
-                        <option value="Tarjeta">Tarjeta</option>
-                        <option value="Transferencia">Transferencia</option>
-                    </select>
-                    <input
-                        className="border rounded-lg px-3 py-2"
-                        placeholder="Total"
-                        type="number"
-                        min={0}
-                        value={total}
-                        onChange={(e) => setTotal(e.target.value)}
-                    />
-                </div>
-                <button
-                    onClick={handleAddSale}
-                    className="mt-4 bg-emerald-700 hover:bg-emerald-800 text-white font-semibold px-4 py-2 rounded-lg"
-                >
-                    Guardar venta
-                </button>
-            </section>
-
-            <section className="bg-white border rounded-xl p-5 shadow-sm">
-                <h2 className="text-lg font-semibold text-gray-900">Últimas ventas</h2>
-                <div className="overflow-x-auto mt-4">
-                    <table className="w-full text-sm">
-                        <thead>
-                            <tr className="border-b bg-gray-50">
-                                <th className="text-left px-3 py-2">Fecha</th>
-                                <th className="text-left px-3 py-2">Cliente</th>
-                                <th className="text-left px-3 py-2">Vendedor</th>
-                                <th className="text-left px-3 py-2">Pago</th>
-                                <th className="text-right px-3 py-2">Total</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {sales.map((sale) => (
-                                <tr key={sale.id} className="border-b">
-                                    <td className="px-3 py-2">{sale.fecha}</td>
-                                    <td className="px-3 py-2">{sale.cliente}</td>
-                                    <td className="px-3 py-2">{sale.vendedor}</td>
-                                    <td className="px-3 py-2">{sale.metodo_pago}</td>
-                                    <td className="px-3 py-2 text-right font-semibold">${sale.total.toLocaleString('es-CL')}</td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-            </section>
+  return (
+    <div className="space-y-6 text-left">
+      <section className="bg-white border rounded-xl p-5 shadow-sm space-y-4">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">Caja / Ventas</h1>
+          <p className="text-sm text-gray-500">
+            Escanea con lector USB (simula teclado + Enter) para agregar productos al carrito.
+          </p>
         </div>
-    );
+
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+          <input
+            ref={inputScannerRef}
+            className="border rounded-lg px-3 py-2 md:col-span-2"
+            placeholder="Escanear código de barras y presionar Enter"
+            value={codigo}
+            onChange={(e) => setCodigo(e.target.value)}
+            onKeyDown={(e) => void handleScannerEnter(e)}
+          />
+
+          <button
+            type="button"
+            onClick={() => void (async () => {
+              const scanned = codigo;
+              setCodigo('');
+              await agregarPorCodigo(scanned);
+              enfocarScanner();
+            })()}
+            className="px-4 py-2 rounded-lg text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-60"
+            disabled={!codigo.trim()}
+          >
+            Agregar
+          </button>
+
+          <select
+            className="border rounded-lg px-3 py-2"
+            value={metodoPago}
+            onChange={(e) => setMetodoPago(e.target.value as MetodoPago)}
+          >
+            <option value="Efectivo">Efectivo</option>
+            <option value="Tarjeta">Tarjeta</option>
+            <option value="Transferencia">Transferencia</option>
+          </select>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div>
+            <label className="text-xs font-medium text-gray-600">Cajero/Vendedor</label>
+            <select
+              className="w-full mt-1 border rounded-lg px-3 py-2"
+              value={usuarioVentaId}
+              onChange={(e) => setUsuarioVentaId(Number(e.target.value))}
+              disabled={usuarios.length === 0}
+            >
+              {usuarios.length === 0 ? (
+                <option value={USUARIO_VENTA_DEFAULT}>Usuario #1 (por defecto)</option>
+              ) : (
+                usuarios.map((u) => (
+                  <option key={u.id} value={u.id}>
+                    {u.first_name || u.last_name
+                      ? `${u.first_name} ${u.last_name}`.trim()
+                      : u.username}{' '}
+                    (ID {u.id})
+                  </option>
+                ))
+              )}
+            </select>
+          </div>
+        </div>
+
+        <div className="flex flex-wrap gap-4 text-sm">
+          <span className="text-gray-600">Items: <strong>{totalItems}</strong></span>
+          <span className="text-gray-600">Total: <strong>${totalVenta.toLocaleString('es-CL')}</strong></span>
+          <button
+            type="button"
+            onClick={enfocarScanner}
+            className="text-blue-700 hover:underline"
+          >
+            Enfocar escáner
+          </button>
+        </div>
+
+        {mensaje && (
+          <div className="text-sm px-3 py-2 rounded-lg border border-green-200 bg-green-50 text-green-700">
+            {mensaje}
+          </div>
+        )}
+
+        {error && (
+          <div className="text-sm px-3 py-2 rounded-lg border border-red-200 bg-red-50 text-red-700">
+            {error}
+          </div>
+        )}
+      </section>
+
+      <section className="bg-white border rounded-xl p-5 shadow-sm">
+        <h2 className="text-lg font-semibold text-gray-900">Carrito</h2>
+
+        <div className="overflow-x-auto mt-4">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b bg-gray-50">
+                <th className="text-left px-3 py-2">Código</th>
+                <th className="text-left px-3 py-2">Producto</th>
+                <th className="text-right px-3 py-2">Precio</th>
+                <th className="text-center px-3 py-2">Cantidad</th>
+                <th className="text-right px-3 py-2">Subtotal</th>
+                <th className="text-center px-3 py-2">Acción</th>
+              </tr>
+            </thead>
+            <tbody>
+              {items.length === 0 ? (
+                <tr>
+                  <td colSpan={6} className="px-3 py-6 text-center text-gray-500">
+                    Carrito vacío. Escanea productos para comenzar.
+                  </td>
+                </tr>
+              ) : (
+                items.map((item) => {
+                  const subtotal = item.cantidad * Number(item.precio_unitario);
+                  return (
+                    <tr key={item.producto.id_producto} className="border-b">
+                      <td className="px-3 py-2 font-mono text-xs">{item.producto.codigo_barras}</td>
+                      <td className="px-3 py-2">{item.producto.nombre}</td>
+                      <td className="px-3 py-2 text-right">${Number(item.precio_unitario).toLocaleString('es-CL')}</td>
+                      <td className="px-3 py-2 text-center">
+                        <input
+                          type="number"
+                          min={1}
+                          max={item.producto.stock}
+                          value={item.cantidad}
+                          onChange={(e) => actualizarCantidad(item.producto.id_producto, Number(e.target.value))}
+                          className="w-20 border rounded px-2 py-1 text-center"
+                        />
+                      </td>
+                      <td className="px-3 py-2 text-right font-semibold">${subtotal.toLocaleString('es-CL')}</td>
+                      <td className="px-3 py-2 text-center">
+                        <button
+                          type="button"
+                          onClick={() => quitarItem(item.producto.id_producto)}
+                          className="text-red-600 hover:text-red-800"
+                        >
+                          Quitar
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })
+              )}
+            </tbody>
+          </table>
+        </div>
+
+        <div className="mt-4 flex justify-end gap-3">
+          <button
+            type="button"
+            onClick={() => setItems([])}
+            className="px-4 py-2 border rounded-lg text-gray-600 hover:text-gray-800"
+            disabled={guardando || items.length === 0}
+          >
+            Vaciar carrito
+          </button>
+          <button
+            type="button"
+            onClick={() => void confirmarVenta()}
+            disabled={guardando || items.length === 0}
+            className="px-5 py-2 rounded-lg text-white bg-emerald-700 hover:bg-emerald-800 disabled:opacity-60"
+          >
+            {guardando ? 'Registrando...' : 'Confirmar venta'}
+          </button>
+        </div>
+      </section>
+    </div>
+  );
 }
 
 export default Ventas;

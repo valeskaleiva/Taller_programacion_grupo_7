@@ -1715,3 +1715,1383 @@ Traceback (most recent call last):
   File "src/oracledb/impl/thin/messages/base.pyx", line 102, in oracledb.thin_impl.Message._check_and_raise_exception
 django.db.utils.DatabaseError: ORA-00904: "PRODUCTO_CARTA"."ID_PRODUCTO_ID": invalid identifier
 Help: https://docs.oracle.com/error-help/db/ora-00904/
+INFO 2026-05-11 02:22:12,726 autoreload1891224776Watching for file changes with StatReloader
+INFO 2026-05-11 02:27:12,254 logger1891210060====== WebDriver manager ======
+INFO 2026-05-11 02:27:13,366 logger1891210060Get LATEST chromedriver version for google-chrome
+INFO 2026-05-11 02:27:13,443 logger1891210060Get LATEST chromedriver version for google-chrome
+INFO 2026-05-11 02:27:13,486 logger1891210060Driver [C:\Users\valei\.wdm\drivers\chromedriver\win64\147.0.7727.117\chromedriver-win32/chromedriver.exe] found in cache
+INFO 2026-05-11 02:40:33,723 autoreload1891224776C:\Proyecto\Producto\backend\gecko_tcg\apps\productos\serializers.py changed, reloading.
+INFO 2026-05-11 02:40:34,657 autoreload300685244Watching for file changes with StatReloader
+INFO 2026-05-11 02:41:26,212 logger3006828100====== WebDriver manager ======
+INFO 2026-05-11 02:41:27,419 logger3006828100Get LATEST chromedriver version for google-chrome
+INFO 2026-05-11 02:41:27,476 logger3006828100Get LATEST chromedriver version for google-chrome
+INFO 2026-05-11 02:41:27,520 logger3006828100Driver [C:\Users\valei\.wdm\drivers\chromedriver\win64\147.0.7727.117\chromedriver-win32/chromedriver.exe] found in cache
+INFO 2026-05-11 02:43:03,757 logger3006823128====== WebDriver manager ======
+INFO 2026-05-11 02:43:04,733 logger3006823128Get LATEST chromedriver version for google-chrome
+INFO 2026-05-11 02:43:04,796 logger3006823128Get LATEST chromedriver version for google-chrome
+INFO 2026-05-11 02:43:04,858 logger3006823128Driver [C:\Users\valei\.wdm\drivers\chromedriver\win64\147.0.7727.117\chromedriver-win32/chromedriver.exe] found in cache
+INFO 2026-05-11 02:45:32,646 logger3006814536====== WebDriver manager ======
+INFO 2026-05-11 02:45:33,799 logger3006814536Get LATEST chromedriver version for google-chrome
+INFO 2026-05-11 02:45:33,853 logger3006814536Get LATEST chromedriver version for google-chrome
+INFO 2026-05-11 02:45:33,906 logger3006814536Driver [C:\Users\valei\.wdm\drivers\chromedriver\win64\147.0.7727.117\chromedriver-win32/chromedriver.exe] found in cache
+INFO 2026-05-11 02:47:06,750 logger3006819820====== WebDriver manager ======
+INFO 2026-05-11 02:47:08,114 logger3006819820Get LATEST chromedriver version for google-chrome
+INFO 2026-05-11 02:47:08,176 logger3006819820Get LATEST chromedriver version for google-chrome
+INFO 2026-05-11 02:47:08,243 logger3006819820Driver [C:\Users\valei\.wdm\drivers\chromedriver\win64\147.0.7727.117\chromedriver-win32/chromedriver.exe] found in cache
+INFO 2026-05-11 02:56:51,106 logger3006829524====== WebDriver manager ======
+INFO 2026-05-11 02:56:52,117 logger3006829524Get LATEST chromedriver version for google-chrome
+INFO 2026-05-11 02:56:52,166 logger3006829524Get LATEST chromedriver version for google-chrome
+INFO 2026-05-11 02:56:52,214 logger3006829524Driver [C:\Users\valei\.wdm\drivers\chromedriver\win64\147.0.7727.117\chromedriver-win32/chromedriver.exe] found in cache
+INFO 2026-05-11 03:17:36,533 logger3006828688====== WebDriver manager ======
+INFO 2026-05-11 03:17:38,077 logger3006828688Get LATEST chromedriver version for google-chrome
+INFO 2026-05-11 03:17:38,156 logger3006828688Get LATEST chromedriver version for google-chrome
+INFO 2026-05-11 03:17:38,218 logger3006828688Driver [C:\Users\valei\.wdm\drivers\chromedriver\win64\147.0.7727.117\chromedriver-win32/chromedriver.exe] found in cache
+INFO 2026-05-11 03:18:51,816 logger30068640====== WebDriver manager ======
+INFO 2026-05-11 03:18:52,852 logger30068640Get LATEST chromedriver version for google-chrome
+INFO 2026-05-11 03:18:52,899 logger30068640Get LATEST chromedriver version for google-chrome
+INFO 2026-05-11 03:18:52,957 logger30068640Driver [C:\Users\valei\.wdm\drivers\chromedriver\win64\147.0.7727.117\chromedriver-win32/chromedriver.exe] found in cache
+INFO 2026-05-11 03:19:12,711 logger3006821976====== WebDriver manager ======
+INFO 2026-05-11 03:19:13,662 logger3006821976Get LATEST chromedriver version for google-chrome
+INFO 2026-05-11 03:19:13,708 logger3006821976Get LATEST chromedriver version for google-chrome
+INFO 2026-05-11 03:19:13,745 logger3006821976Driver [C:\Users\valei\.wdm\drivers\chromedriver\win64\147.0.7727.117\chromedriver-win32/chromedriver.exe] found in cache
+INFO 2026-05-11 03:19:55,846 logger3006818396====== WebDriver manager ======
+INFO 2026-05-11 03:19:56,787 logger3006818396Get LATEST chromedriver version for google-chrome
+INFO 2026-05-11 03:19:56,853 logger3006818396Get LATEST chromedriver version for google-chrome
+INFO 2026-05-11 03:19:56,897 logger3006818396Driver [C:\Users\valei\.wdm\drivers\chromedriver\win64\147.0.7727.117\chromedriver-win32/chromedriver.exe] found in cache
+INFO 2026-05-11 03:20:31,318 logger3006831260====== WebDriver manager ======
+INFO 2026-05-11 03:20:32,256 logger3006831260Get LATEST chromedriver version for google-chrome
+INFO 2026-05-11 03:20:32,319 logger3006831260Get LATEST chromedriver version for google-chrome
+INFO 2026-05-11 03:20:32,380 logger3006831260Driver [C:\Users\valei\.wdm\drivers\chromedriver\win64\147.0.7727.117\chromedriver-win32/chromedriver.exe] found in cache
+INFO 2026-05-11 03:20:40,430 logger3006816252====== WebDriver manager ======
+INFO 2026-05-11 03:20:41,381 logger3006816252Get LATEST chromedriver version for google-chrome
+INFO 2026-05-11 03:20:41,428 logger3006816252Get LATEST chromedriver version for google-chrome
+INFO 2026-05-11 03:20:41,480 logger3006816252Driver [C:\Users\valei\.wdm\drivers\chromedriver\win64\147.0.7727.117\chromedriver-win32/chromedriver.exe] found in cache
+INFO 2026-05-11 03:20:57,150 logger3006822868====== WebDriver manager ======
+INFO 2026-05-11 03:20:58,078 logger3006822868Get LATEST chromedriver version for google-chrome
+INFO 2026-05-11 03:20:58,154 logger3006822868Get LATEST chromedriver version for google-chrome
+INFO 2026-05-11 03:20:58,204 logger3006822868Driver [C:\Users\valei\.wdm\drivers\chromedriver\win64\147.0.7727.117\chromedriver-win32/chromedriver.exe] found in cache
+INFO 2026-05-11 03:21:08,430 logger3006834092====== WebDriver manager ======
+INFO 2026-05-11 03:21:09,397 logger3006834092Get LATEST chromedriver version for google-chrome
+INFO 2026-05-11 03:21:09,467 logger3006834092Get LATEST chromedriver version for google-chrome
+INFO 2026-05-11 03:21:09,507 logger3006834092Driver [C:\Users\valei\.wdm\drivers\chromedriver\win64\147.0.7727.117\chromedriver-win32/chromedriver.exe] found in cache
+INFO 2026-05-11 03:21:53,688 logger3006821928====== WebDriver manager ======
+INFO 2026-05-11 03:21:54,616 logger3006821928Get LATEST chromedriver version for google-chrome
+INFO 2026-05-11 03:21:54,694 logger3006821928Get LATEST chromedriver version for google-chrome
+INFO 2026-05-11 03:21:54,803 logger3006821928Driver [C:\Users\valei\.wdm\drivers\chromedriver\win64\147.0.7727.117\chromedriver-win32/chromedriver.exe] found in cache
+INFO 2026-05-11 03:22:04,052 logger300689036====== WebDriver manager ======
+INFO 2026-05-11 03:22:05,000 logger300689036Get LATEST chromedriver version for google-chrome
+INFO 2026-05-11 03:22:05,062 logger300689036Get LATEST chromedriver version for google-chrome
+INFO 2026-05-11 03:22:05,106 logger300689036Driver [C:\Users\valei\.wdm\drivers\chromedriver\win64\147.0.7727.117\chromedriver-win32/chromedriver.exe] found in cache
+INFO 2026-05-11 03:23:24,108 autoreload300685244C:\Proyecto\Producto\backend\gecko_tcg\apps\tcgplayer\views.py changed, reloading.
+INFO 2026-05-11 03:23:25,251 autoreload363219184Watching for file changes with StatReloader
+INFO 2026-05-11 03:24:07,580 logger363210416====== WebDriver manager ======
+INFO 2026-05-11 03:24:08,535 logger363210416Get LATEST chromedriver version for google-chrome
+INFO 2026-05-11 03:24:08,596 logger363210416Get LATEST chromedriver version for google-chrome
+INFO 2026-05-11 03:24:08,648 logger363210416Driver [C:\Users\valei\.wdm\drivers\chromedriver\win64\147.0.7727.117\chromedriver-win32/chromedriver.exe] found in cache
+INFO 2026-05-11 03:24:18,007 logger363226456====== WebDriver manager ======
+INFO 2026-05-11 03:24:18,968 logger363226456Get LATEST chromedriver version for google-chrome
+INFO 2026-05-11 03:24:19,025 logger363226456Get LATEST chromedriver version for google-chrome
+INFO 2026-05-11 03:24:19,062 logger363226456Driver [C:\Users\valei\.wdm\drivers\chromedriver\win64\147.0.7727.117\chromedriver-win32/chromedriver.exe] found in cache
+INFO 2026-05-11 03:24:35,875 logger363210608====== WebDriver manager ======
+INFO 2026-05-11 03:24:36,810 logger363210608Get LATEST chromedriver version for google-chrome
+INFO 2026-05-11 03:24:36,867 logger363210608Get LATEST chromedriver version for google-chrome
+INFO 2026-05-11 03:24:36,915 logger363210608Driver [C:\Users\valei\.wdm\drivers\chromedriver\win64\147.0.7727.117\chromedriver-win32/chromedriver.exe] found in cache
+INFO 2026-05-11 03:25:05,822 logger363217424====== WebDriver manager ======
+INFO 2026-05-11 03:25:06,766 logger363217424Get LATEST chromedriver version for google-chrome
+INFO 2026-05-11 03:25:06,815 logger363217424Get LATEST chromedriver version for google-chrome
+INFO 2026-05-11 03:25:06,879 logger363217424Driver [C:\Users\valei\.wdm\drivers\chromedriver\win64\147.0.7727.117\chromedriver-win32/chromedriver.exe] found in cache
+INFO 2026-05-11 03:25:23,711 logger363220836====== WebDriver manager ======
+INFO 2026-05-11 03:25:24,825 logger363220836Get LATEST chromedriver version for google-chrome
+INFO 2026-05-11 03:25:24,923 logger363220836Get LATEST chromedriver version for google-chrome
+INFO 2026-05-11 03:25:24,965 logger363220836Driver [C:\Users\valei\.wdm\drivers\chromedriver\win64\147.0.7727.117\chromedriver-win32/chromedriver.exe] found in cache
+INFO 2026-05-11 03:26:01,153 autoreload363219184C:\Proyecto\Producto\backend\gecko_tcg\apps\tcgplayer\views.py changed, reloading.
+INFO 2026-05-11 03:26:01,968 autoreload1254022036Watching for file changes with StatReloader
+INFO 2026-05-11 03:26:19,776 logger1254033796====== WebDriver manager ======
+INFO 2026-05-11 03:26:20,873 logger1254033796Get LATEST chromedriver version for google-chrome
+INFO 2026-05-11 03:26:20,915 logger1254033796Get LATEST chromedriver version for google-chrome
+INFO 2026-05-11 03:26:20,956 logger1254033796Driver [C:\Users\valei\.wdm\drivers\chromedriver\win64\147.0.7727.117\chromedriver-win32/chromedriver.exe] found in cache
+INFO 2026-05-11 03:26:42,394 logger1254026172====== WebDriver manager ======
+INFO 2026-05-11 03:26:43,455 logger1254026172Get LATEST chromedriver version for google-chrome
+INFO 2026-05-11 03:26:43,498 logger1254026172Get LATEST chromedriver version for google-chrome
+INFO 2026-05-11 03:26:43,547 logger1254026172Driver [C:\Users\valei\.wdm\drivers\chromedriver\win64\147.0.7727.117\chromedriver-win32/chromedriver.exe] found in cache
+INFO 2026-05-11 03:26:51,612 logger1254033636====== WebDriver manager ======
+INFO 2026-05-11 03:26:52,712 logger1254033636Get LATEST chromedriver version for google-chrome
+INFO 2026-05-11 03:26:52,751 logger1254033636Get LATEST chromedriver version for google-chrome
+INFO 2026-05-11 03:26:52,801 logger1254033636Driver [C:\Users\valei\.wdm\drivers\chromedriver\win64\147.0.7727.117\chromedriver-win32/chromedriver.exe] found in cache
+INFO 2026-05-11 03:27:00,421 logger125405884====== WebDriver manager ======
+INFO 2026-05-11 03:27:01,509 logger125405884Get LATEST chromedriver version for google-chrome
+INFO 2026-05-11 03:27:01,547 logger125405884Get LATEST chromedriver version for google-chrome
+INFO 2026-05-11 03:27:01,586 logger125405884Driver [C:\Users\valei\.wdm\drivers\chromedriver\win64\147.0.7727.117\chromedriver-win32/chromedriver.exe] found in cache
+INFO 2026-05-11 03:27:10,653 logger12540180====== WebDriver manager ======
+INFO 2026-05-11 03:27:11,707 logger12540180Get LATEST chromedriver version for google-chrome
+INFO 2026-05-11 03:27:11,805 logger12540180Get LATEST chromedriver version for google-chrome
+INFO 2026-05-11 03:27:11,834 logger12540180Driver [C:\Users\valei\.wdm\drivers\chromedriver\win64\147.0.7727.117\chromedriver-win32/chromedriver.exe] found in cache
+INFO 2026-05-11 03:27:19,895 logger1254018192====== WebDriver manager ======
+INFO 2026-05-11 03:27:20,987 logger1254018192Get LATEST chromedriver version for google-chrome
+INFO 2026-05-11 03:27:21,029 logger1254018192Get LATEST chromedriver version for google-chrome
+INFO 2026-05-11 03:27:21,067 logger1254018192Driver [C:\Users\valei\.wdm\drivers\chromedriver\win64\147.0.7727.117\chromedriver-win32/chromedriver.exe] found in cache
+INFO 2026-05-11 03:27:29,220 logger1254025048====== WebDriver manager ======
+INFO 2026-05-11 03:27:30,298 logger1254025048Get LATEST chromedriver version for google-chrome
+INFO 2026-05-11 03:27:30,342 logger1254025048Get LATEST chromedriver version for google-chrome
+INFO 2026-05-11 03:27:30,384 logger1254025048Driver [C:\Users\valei\.wdm\drivers\chromedriver\win64\147.0.7727.117\chromedriver-win32/chromedriver.exe] found in cache
+INFO 2026-05-11 03:30:17,409 logger1254020040====== WebDriver manager ======
+INFO 2026-05-11 03:30:18,342 logger1254020040Get LATEST chromedriver version for google-chrome
+INFO 2026-05-11 03:30:18,402 logger1254020040Get LATEST chromedriver version for google-chrome
+INFO 2026-05-11 03:30:18,466 logger1254020040Driver [C:\Users\valei\.wdm\drivers\chromedriver\win64\147.0.7727.117\chromedriver-win32/chromedriver.exe] found in cache
+INFO 2026-05-11 03:30:26,712 logger1254021788====== WebDriver manager ======
+INFO 2026-05-11 03:30:27,693 logger1254021788Get LATEST chromedriver version for google-chrome
+INFO 2026-05-11 03:30:27,736 logger1254021788Get LATEST chromedriver version for google-chrome
+INFO 2026-05-11 03:30:27,800 logger1254021788Driver [C:\Users\valei\.wdm\drivers\chromedriver\win64\147.0.7727.117\chromedriver-win32/chromedriver.exe] found in cache
+INFO 2026-05-11 03:30:35,573 logger1254029844====== WebDriver manager ======
+INFO 2026-05-11 03:30:36,557 logger1254029844Get LATEST chromedriver version for google-chrome
+INFO 2026-05-11 03:30:36,621 logger1254029844Get LATEST chromedriver version for google-chrome
+INFO 2026-05-11 03:30:36,677 logger1254029844Driver [C:\Users\valei\.wdm\drivers\chromedriver\win64\147.0.7727.117\chromedriver-win32/chromedriver.exe] found in cache
+INFO 2026-05-11 03:31:07,615 logger1254021752====== WebDriver manager ======
+INFO 2026-05-11 03:31:08,530 logger1254021752Get LATEST chromedriver version for google-chrome
+INFO 2026-05-11 03:31:08,591 logger1254021752Get LATEST chromedriver version for google-chrome
+INFO 2026-05-11 03:31:08,635 logger1254021752Driver [C:\Users\valei\.wdm\drivers\chromedriver\win64\147.0.7727.117\chromedriver-win32/chromedriver.exe] found in cache
+INFO 2026-05-11 03:31:25,375 logger1254021440====== WebDriver manager ======
+INFO 2026-05-11 03:31:26,308 logger1254021440Get LATEST chromedriver version for google-chrome
+INFO 2026-05-11 03:31:26,387 logger1254021440Get LATEST chromedriver version for google-chrome
+INFO 2026-05-11 03:31:26,434 logger1254021440Driver [C:\Users\valei\.wdm\drivers\chromedriver\win64\147.0.7727.117\chromedriver-win32/chromedriver.exe] found in cache
+INFO 2026-05-11 03:31:35,766 logger1254028900====== WebDriver manager ======
+INFO 2026-05-11 03:31:36,713 logger1254028900Get LATEST chromedriver version for google-chrome
+INFO 2026-05-11 03:31:36,760 logger1254028900Get LATEST chromedriver version for google-chrome
+INFO 2026-05-11 03:31:36,822 logger1254028900Driver [C:\Users\valei\.wdm\drivers\chromedriver\win64\147.0.7727.117\chromedriver-win32/chromedriver.exe] found in cache
+INFO 2026-05-11 03:31:45,332 logger1254021028====== WebDriver manager ======
+INFO 2026-05-11 03:31:46,288 logger1254021028Get LATEST chromedriver version for google-chrome
+INFO 2026-05-11 03:31:46,348 logger1254021028Get LATEST chromedriver version for google-chrome
+INFO 2026-05-11 03:31:46,402 logger1254021028Driver [C:\Users\valei\.wdm\drivers\chromedriver\win64\147.0.7727.117\chromedriver-win32/chromedriver.exe] found in cache
+INFO 2026-05-11 03:32:16,962 logger125409540====== WebDriver manager ======
+INFO 2026-05-11 03:32:17,887 logger125409540Get LATEST chromedriver version for google-chrome
+INFO 2026-05-11 03:32:17,965 logger125409540Get LATEST chromedriver version for google-chrome
+INFO 2026-05-11 03:32:18,017 logger125409540Driver [C:\Users\valei\.wdm\drivers\chromedriver\win64\147.0.7727.117\chromedriver-win32/chromedriver.exe] found in cache
+INFO 2026-05-11 03:32:30,503 logger125406368====== WebDriver manager ======
+INFO 2026-05-11 03:32:31,437 logger125406368Get LATEST chromedriver version for google-chrome
+INFO 2026-05-11 03:32:31,495 logger125406368Get LATEST chromedriver version for google-chrome
+INFO 2026-05-11 03:32:31,542 logger125406368Driver [C:\Users\valei\.wdm\drivers\chromedriver\win64\147.0.7727.117\chromedriver-win32/chromedriver.exe] found in cache
+INFO 2026-05-11 03:32:40,335 logger1254022832====== WebDriver manager ======
+INFO 2026-05-11 03:32:41,502 logger1254022832Get LATEST chromedriver version for google-chrome
+INFO 2026-05-11 03:32:41,568 logger1254022832Get LATEST chromedriver version for google-chrome
+INFO 2026-05-11 03:32:41,730 logger1254022832Driver [C:\Users\valei\.wdm\drivers\chromedriver\win64\147.0.7727.117\chromedriver-win32/chromedriver.exe] found in cache
+INFO 2026-05-11 03:32:50,151 logger1254010280====== WebDriver manager ======
+INFO 2026-05-11 03:32:51,126 logger1254010280Get LATEST chromedriver version for google-chrome
+INFO 2026-05-11 03:32:51,189 logger1254010280Get LATEST chromedriver version for google-chrome
+INFO 2026-05-11 03:32:51,253 logger1254010280Driver [C:\Users\valei\.wdm\drivers\chromedriver\win64\147.0.7727.117\chromedriver-win32/chromedriver.exe] found in cache
+INFO 2026-05-11 03:39:33,309 autoreload1254022036C:\Proyecto\Producto\backend\gecko_tcg\apps\ventas\serializers.py changed, reloading.
+INFO 2026-05-11 03:39:34,151 autoreload178166664Watching for file changes with StatReloader
+WARNING 2026-05-11 03:40:28,832 log178169820Not Found: /api/ventas/ventas/
+WARNING 2026-05-11 03:45:56,115 log1781635256Forbidden: /api/ventas/
+WARNING 2026-05-11 03:46:00,531 log1781613444Forbidden: /api/ventas/
+WARNING 2026-05-11 03:51:45,953 log1781621460Forbidden: /api/ventas/
+WARNING 2026-05-11 03:53:00,085 log178166656Forbidden: /api/ventas/
+WARNING 2026-05-11 03:53:15,224 log1781633816Forbidden: /api/ventas/
+INFO 2026-05-11 03:53:38,734 autoreload178166664C:\Proyecto\Producto\backend\gecko_tcg\gecko_tcg\settings.py changed, reloading.
+INFO 2026-05-11 03:53:39,607 autoreload90642368Watching for file changes with StatReloader
+INFO 2026-05-11 03:55:09,108 autoreload1012812332Watching for file changes with StatReloader
+WARNING 2026-05-11 03:56:11,362 log906435364Forbidden: /api/ventas/
+INFO 2026-05-11 03:56:36,906 autoreload90642368C:\Proyecto\Producto\backend\gecko_tcg\gecko_tcg\settings.py changed, reloading.
+INFO 2026-05-11 03:56:37,991 autoreload1012812332C:\Proyecto\Producto\backend\gecko_tcg\gecko_tcg\settings.py changed, reloading.
+INFO 2026-05-11 03:56:37,991 autoreload2954831480Watching for file changes with StatReloader
+INFO 2026-05-11 03:56:38,900 autoreload846434692Watching for file changes with StatReloader
+INFO 2026-05-11 03:56:56,769 autoreload3209225736Watching for file changes with StatReloader
+WARNING 2026-05-11 03:57:19,094 log2954811300Bad Request: /api/ventas/
+ERROR 2026-05-11 10:55:45,234 log2954832544Internal Server Error: /api/productos/
+Traceback (most recent call last):
+  File "C:\Proyecto\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\rest_framework\viewsets.py", line 125, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Proyecto\.venv\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "C:\Proyecto\.venv\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\rest_framework\mixins.py", line 40, in list
+    page = self.paginate_queryset(queryset)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\rest_framework\generics.py", line 175, in paginate_queryset
+    return self.paginator.paginate_queryset(queryset, self.request, view=self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\rest_framework\pagination.py", line 202, in paginate_queryset
+    self.page = paginator.page(page_number)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\core\paginator.py", line 89, in page
+    number = self.validate_number(number)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\core\paginator.py", line 70, in validate_number
+    if number > self.num_pages:
+                ^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\utils\functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+                                         ^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\core\paginator.py", line 116, in num_pages
+    if self.count == 0 and not self.allow_empty_first_page:
+       ^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\utils\functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+                                         ^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\core\paginator.py", line 110, in count
+    return c()
+           ^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\models\query.py", line 606, in count
+    return self.query.get_count(using=self.db)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\models\sql\query.py", line 646, in get_count
+    return obj.get_aggregation(using, {"__count": Count("*")})["__count"]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\models\sql\query.py", line 628, in get_aggregation
+    result = compiler.execute_sql(SINGLE)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1621, in execute_sql
+    cursor = self.connection.cursor()
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\backends\base\base.py", line 320, in cursor
+    return self._cursor()
+           ^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\backends\base\base.py", line 296, in _cursor
+    self.ensure_connection()
+  File "C:\Proyecto\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\backends\base\base.py", line 279, in ensure_connection
+    self.connect()
+  File "C:\Proyecto\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\backends\base\base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\backends\oracle\base.py", line 303, in get_new_connection
+    return Database.connect(
+           ^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\oracledb\connection.py", line 1768, in connect
+    return conn_class(dsn=dsn, pool=pool, params=params, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\oracledb\connection.py", line 892, in __init__
+    impl.connect(params_impl)
+  File "src/oracledb/impl/thin/connection.pyx", line 544, in oracledb.thin_impl.ThinConnImpl.connect
+  File "src/oracledb/impl/thin/connection.pyx", line 540, in oracledb.thin_impl.ThinConnImpl.connect
+  File "src/oracledb/impl/thin/connection.pyx", line 478, in oracledb.thin_impl.ThinConnImpl._connect_with_params
+  File "src/oracledb/impl/base/connect_params.pyx", line 1061, in oracledb.base_impl.DescriptionList.set_active_children
+  File "src/oracledb/impl/base/connect_params.pyx", line 623, in oracledb.base_impl.ConnectParamsNode._set_active_children
+  File "src/oracledb/impl/base/connect_params.pyx", line 623, in oracledb.base_impl.ConnectParamsNode._set_active_children
+  File "src/oracledb/impl/base/connect_params.pyx", line 744, in oracledb.base_impl.AddressList._set_active_children
+  File "src/oracledb/impl/base/connect_params.pyx", line 690, in oracledb.base_impl.Address.resolve_host_name
+  File "C:\Users\valei\AppData\Local\Programs\Python\Python311\Lib\socket.py", line 962, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+socket.gaierror: [Errno 11001] getaddrinfo failed
+ERROR 2026-05-11 10:55:48,758 log2954833216Internal Server Error: /api/productos/
+Traceback (most recent call last):
+  File "C:\Proyecto\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\rest_framework\viewsets.py", line 125, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Proyecto\.venv\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "C:\Proyecto\.venv\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\rest_framework\mixins.py", line 40, in list
+    page = self.paginate_queryset(queryset)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\rest_framework\generics.py", line 175, in paginate_queryset
+    return self.paginator.paginate_queryset(queryset, self.request, view=self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\rest_framework\pagination.py", line 202, in paginate_queryset
+    self.page = paginator.page(page_number)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\core\paginator.py", line 89, in page
+    number = self.validate_number(number)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\core\paginator.py", line 70, in validate_number
+    if number > self.num_pages:
+                ^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\utils\functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+                                         ^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\core\paginator.py", line 116, in num_pages
+    if self.count == 0 and not self.allow_empty_first_page:
+       ^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\utils\functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+                                         ^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\core\paginator.py", line 110, in count
+    return c()
+           ^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\models\query.py", line 606, in count
+    return self.query.get_count(using=self.db)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\models\sql\query.py", line 646, in get_count
+    return obj.get_aggregation(using, {"__count": Count("*")})["__count"]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\models\sql\query.py", line 628, in get_aggregation
+    result = compiler.execute_sql(SINGLE)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1621, in execute_sql
+    cursor = self.connection.cursor()
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\backends\base\base.py", line 320, in cursor
+    return self._cursor()
+           ^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\backends\base\base.py", line 296, in _cursor
+    self.ensure_connection()
+  File "C:\Proyecto\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\backends\base\base.py", line 279, in ensure_connection
+    self.connect()
+  File "C:\Proyecto\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\backends\base\base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\backends\oracle\base.py", line 303, in get_new_connection
+    return Database.connect(
+           ^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\oracledb\connection.py", line 1768, in connect
+    return conn_class(dsn=dsn, pool=pool, params=params, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\oracledb\connection.py", line 892, in __init__
+    impl.connect(params_impl)
+  File "src/oracledb/impl/thin/connection.pyx", line 544, in oracledb.thin_impl.ThinConnImpl.connect
+  File "src/oracledb/impl/thin/connection.pyx", line 540, in oracledb.thin_impl.ThinConnImpl.connect
+  File "src/oracledb/impl/thin/connection.pyx", line 478, in oracledb.thin_impl.ThinConnImpl._connect_with_params
+  File "src/oracledb/impl/base/connect_params.pyx", line 1061, in oracledb.base_impl.DescriptionList.set_active_children
+  File "src/oracledb/impl/base/connect_params.pyx", line 623, in oracledb.base_impl.ConnectParamsNode._set_active_children
+  File "src/oracledb/impl/base/connect_params.pyx", line 623, in oracledb.base_impl.ConnectParamsNode._set_active_children
+  File "src/oracledb/impl/base/connect_params.pyx", line 744, in oracledb.base_impl.AddressList._set_active_children
+  File "src/oracledb/impl/base/connect_params.pyx", line 690, in oracledb.base_impl.Address.resolve_host_name
+  File "C:\Users\valei\AppData\Local\Programs\Python\Python311\Lib\socket.py", line 962, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+socket.gaierror: [Errno 11001] getaddrinfo failed
+ERROR 2026-05-11 10:55:48,812 log2954810064Internal Server Error: /api/productos/
+Traceback (most recent call last):
+  File "C:\Proyecto\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\rest_framework\viewsets.py", line 125, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Proyecto\.venv\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "C:\Proyecto\.venv\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\rest_framework\mixins.py", line 40, in list
+    page = self.paginate_queryset(queryset)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\rest_framework\generics.py", line 175, in paginate_queryset
+    return self.paginator.paginate_queryset(queryset, self.request, view=self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\rest_framework\pagination.py", line 202, in paginate_queryset
+    self.page = paginator.page(page_number)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\core\paginator.py", line 89, in page
+    number = self.validate_number(number)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\core\paginator.py", line 70, in validate_number
+    if number > self.num_pages:
+                ^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\utils\functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+                                         ^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\core\paginator.py", line 116, in num_pages
+    if self.count == 0 and not self.allow_empty_first_page:
+       ^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\utils\functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+                                         ^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\core\paginator.py", line 110, in count
+    return c()
+           ^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\models\query.py", line 606, in count
+    return self.query.get_count(using=self.db)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\models\sql\query.py", line 646, in get_count
+    return obj.get_aggregation(using, {"__count": Count("*")})["__count"]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\models\sql\query.py", line 628, in get_aggregation
+    result = compiler.execute_sql(SINGLE)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1621, in execute_sql
+    cursor = self.connection.cursor()
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\backends\base\base.py", line 320, in cursor
+    return self._cursor()
+           ^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\backends\base\base.py", line 296, in _cursor
+    self.ensure_connection()
+  File "C:\Proyecto\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\backends\base\base.py", line 279, in ensure_connection
+    self.connect()
+  File "C:\Proyecto\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\backends\base\base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\backends\oracle\base.py", line 303, in get_new_connection
+    return Database.connect(
+           ^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\oracledb\connection.py", line 1768, in connect
+    return conn_class(dsn=dsn, pool=pool, params=params, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\oracledb\connection.py", line 892, in __init__
+    impl.connect(params_impl)
+  File "src/oracledb/impl/thin/connection.pyx", line 544, in oracledb.thin_impl.ThinConnImpl.connect
+  File "src/oracledb/impl/thin/connection.pyx", line 540, in oracledb.thin_impl.ThinConnImpl.connect
+  File "src/oracledb/impl/thin/connection.pyx", line 478, in oracledb.thin_impl.ThinConnImpl._connect_with_params
+  File "src/oracledb/impl/base/connect_params.pyx", line 1061, in oracledb.base_impl.DescriptionList.set_active_children
+  File "src/oracledb/impl/base/connect_params.pyx", line 623, in oracledb.base_impl.ConnectParamsNode._set_active_children
+  File "src/oracledb/impl/base/connect_params.pyx", line 623, in oracledb.base_impl.ConnectParamsNode._set_active_children
+  File "src/oracledb/impl/base/connect_params.pyx", line 744, in oracledb.base_impl.AddressList._set_active_children
+  File "src/oracledb/impl/base/connect_params.pyx", line 690, in oracledb.base_impl.Address.resolve_host_name
+  File "C:\Users\valei\AppData\Local\Programs\Python\Python311\Lib\socket.py", line 962, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+socket.gaierror: [Errno 11001] getaddrinfo failed
+ERROR 2026-05-11 10:55:58,878 log2954818796Internal Server Error: /api/productos/
+Traceback (most recent call last):
+  File "C:\Proyecto\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\rest_framework\viewsets.py", line 125, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Proyecto\.venv\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "C:\Proyecto\.venv\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\rest_framework\mixins.py", line 40, in list
+    page = self.paginate_queryset(queryset)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\rest_framework\generics.py", line 175, in paginate_queryset
+    return self.paginator.paginate_queryset(queryset, self.request, view=self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\rest_framework\pagination.py", line 202, in paginate_queryset
+    self.page = paginator.page(page_number)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\core\paginator.py", line 89, in page
+    number = self.validate_number(number)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\core\paginator.py", line 70, in validate_number
+    if number > self.num_pages:
+                ^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\utils\functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+                                         ^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\core\paginator.py", line 116, in num_pages
+    if self.count == 0 and not self.allow_empty_first_page:
+       ^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\utils\functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+                                         ^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\core\paginator.py", line 110, in count
+    return c()
+           ^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\models\query.py", line 606, in count
+    return self.query.get_count(using=self.db)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\models\sql\query.py", line 646, in get_count
+    return obj.get_aggregation(using, {"__count": Count("*")})["__count"]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\models\sql\query.py", line 628, in get_aggregation
+    result = compiler.execute_sql(SINGLE)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1621, in execute_sql
+    cursor = self.connection.cursor()
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\backends\base\base.py", line 320, in cursor
+    return self._cursor()
+           ^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\backends\base\base.py", line 296, in _cursor
+    self.ensure_connection()
+  File "C:\Proyecto\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\backends\base\base.py", line 279, in ensure_connection
+    self.connect()
+  File "C:\Proyecto\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\backends\base\base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\backends\oracle\base.py", line 303, in get_new_connection
+    return Database.connect(
+           ^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\oracledb\connection.py", line 1768, in connect
+    return conn_class(dsn=dsn, pool=pool, params=params, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\oracledb\connection.py", line 892, in __init__
+    impl.connect(params_impl)
+  File "src/oracledb/impl/thin/connection.pyx", line 544, in oracledb.thin_impl.ThinConnImpl.connect
+  File "src/oracledb/impl/thin/connection.pyx", line 540, in oracledb.thin_impl.ThinConnImpl.connect
+  File "src/oracledb/impl/thin/connection.pyx", line 478, in oracledb.thin_impl.ThinConnImpl._connect_with_params
+  File "src/oracledb/impl/base/connect_params.pyx", line 1061, in oracledb.base_impl.DescriptionList.set_active_children
+  File "src/oracledb/impl/base/connect_params.pyx", line 623, in oracledb.base_impl.ConnectParamsNode._set_active_children
+  File "src/oracledb/impl/base/connect_params.pyx", line 623, in oracledb.base_impl.ConnectParamsNode._set_active_children
+  File "src/oracledb/impl/base/connect_params.pyx", line 744, in oracledb.base_impl.AddressList._set_active_children
+  File "src/oracledb/impl/base/connect_params.pyx", line 690, in oracledb.base_impl.Address.resolve_host_name
+  File "C:\Users\valei\AppData\Local\Programs\Python\Python311\Lib\socket.py", line 962, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+socket.gaierror: [Errno 11001] getaddrinfo failed
+ERROR 2026-05-11 10:55:58,914 log2954823068Internal Server Error: /api/ventas/
+Traceback (most recent call last):
+  File "C:\Proyecto\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\rest_framework\viewsets.py", line 125, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Proyecto\.venv\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "C:\Proyecto\.venv\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\rest_framework\mixins.py", line 40, in list
+    page = self.paginate_queryset(queryset)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\rest_framework\generics.py", line 175, in paginate_queryset
+    return self.paginator.paginate_queryset(queryset, self.request, view=self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\rest_framework\pagination.py", line 202, in paginate_queryset
+    self.page = paginator.page(page_number)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\core\paginator.py", line 89, in page
+    number = self.validate_number(number)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\core\paginator.py", line 70, in validate_number
+    if number > self.num_pages:
+                ^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\utils\functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+                                         ^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\core\paginator.py", line 116, in num_pages
+    if self.count == 0 and not self.allow_empty_first_page:
+       ^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\utils\functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+                                         ^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\core\paginator.py", line 110, in count
+    return c()
+           ^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\models\query.py", line 606, in count
+    return self.query.get_count(using=self.db)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\models\sql\query.py", line 646, in get_count
+    return obj.get_aggregation(using, {"__count": Count("*")})["__count"]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\models\sql\query.py", line 628, in get_aggregation
+    result = compiler.execute_sql(SINGLE)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1621, in execute_sql
+    cursor = self.connection.cursor()
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\backends\base\base.py", line 320, in cursor
+    return self._cursor()
+           ^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\backends\base\base.py", line 296, in _cursor
+    self.ensure_connection()
+  File "C:\Proyecto\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\backends\base\base.py", line 279, in ensure_connection
+    self.connect()
+  File "C:\Proyecto\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\backends\base\base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\backends\oracle\base.py", line 303, in get_new_connection
+    return Database.connect(
+           ^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\oracledb\connection.py", line 1768, in connect
+    return conn_class(dsn=dsn, pool=pool, params=params, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\oracledb\connection.py", line 892, in __init__
+    impl.connect(params_impl)
+  File "src/oracledb/impl/thin/connection.pyx", line 544, in oracledb.thin_impl.ThinConnImpl.connect
+  File "src/oracledb/impl/thin/connection.pyx", line 540, in oracledb.thin_impl.ThinConnImpl.connect
+  File "src/oracledb/impl/thin/connection.pyx", line 478, in oracledb.thin_impl.ThinConnImpl._connect_with_params
+  File "src/oracledb/impl/base/connect_params.pyx", line 1061, in oracledb.base_impl.DescriptionList.set_active_children
+  File "src/oracledb/impl/base/connect_params.pyx", line 623, in oracledb.base_impl.ConnectParamsNode._set_active_children
+  File "src/oracledb/impl/base/connect_params.pyx", line 623, in oracledb.base_impl.ConnectParamsNode._set_active_children
+  File "src/oracledb/impl/base/connect_params.pyx", line 744, in oracledb.base_impl.AddressList._set_active_children
+  File "src/oracledb/impl/base/connect_params.pyx", line 690, in oracledb.base_impl.Address.resolve_host_name
+  File "C:\Users\valei\AppData\Local\Programs\Python\Python311\Lib\socket.py", line 962, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+socket.gaierror: [Errno 11001] getaddrinfo failed
+ERROR 2026-05-11 10:55:59,141 log2954828912Internal Server Error: /api/reportes/top_productos_vendidos/
+Traceback (most recent call last):
+  File "C:\Proyecto\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\rest_framework\viewsets.py", line 125, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Proyecto\.venv\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "C:\Proyecto\.venv\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\Producto\backend\gecko_tcg\apps\reportes\views.py", line 30, in top_productos_vendidos
+    'datos' : list(detalles)
+              ^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\models\query.py", line 386, in __iter__
+    self._fetch_all()
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\models\query.py", line 1954, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\models\query.py", line 218, in __iter__
+    for row in compiler.results_iter(
+               ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1572, in results_iter
+    results = self.execute_sql(
+              ^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1610, in execute_sql
+    sql, params = self.as_sql()
+                  ^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 766, in as_sql
+    extra_select, order_by, group_by = self.pre_sql_setup(
+                                       ^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 86, in pre_sql_setup
+    order_by = self.get_order_by()
+               ^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 527, in get_order_by
+    sql, params = self.compile(resolved)
+                  ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 575, in compile
+    sql, params = vendor_impl(self, self.connection)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\models\expressions.py", line 1890, in as_oracle
+    not connection.features.supports_boolean_expr_in_select_clause
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\utils\functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+                                         ^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\backends\oracle\features.py", line 211, in supports_boolean_expr_in_select_clause
+    return self.connection.oracle_version >= (23,)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\utils\functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+                                         ^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\backends\oracle\base.py", line 402, in oracle_version
+    with self.temporary_connection():
+  File "C:\Users\valei\AppData\Local\Programs\Python\Python311\Lib\contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\backends\base\base.py", line 695, in temporary_connection
+    with self.cursor() as cursor:
+         ^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\backends\base\base.py", line 320, in cursor
+    return self._cursor()
+           ^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\backends\base\base.py", line 296, in _cursor
+    self.ensure_connection()
+  File "C:\Proyecto\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\backends\base\base.py", line 279, in ensure_connection
+    self.connect()
+  File "C:\Proyecto\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\backends\base\base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\backends\oracle\base.py", line 303, in get_new_connection
+    return Database.connect(
+           ^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\oracledb\connection.py", line 1768, in connect
+    return conn_class(dsn=dsn, pool=pool, params=params, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\oracledb\connection.py", line 892, in __init__
+    impl.connect(params_impl)
+  File "src/oracledb/impl/thin/connection.pyx", line 544, in oracledb.thin_impl.ThinConnImpl.connect
+  File "src/oracledb/impl/thin/connection.pyx", line 540, in oracledb.thin_impl.ThinConnImpl.connect
+  File "src/oracledb/impl/thin/connection.pyx", line 478, in oracledb.thin_impl.ThinConnImpl._connect_with_params
+  File "src/oracledb/impl/base/connect_params.pyx", line 1061, in oracledb.base_impl.DescriptionList.set_active_children
+  File "src/oracledb/impl/base/connect_params.pyx", line 623, in oracledb.base_impl.ConnectParamsNode._set_active_children
+  File "src/oracledb/impl/base/connect_params.pyx", line 623, in oracledb.base_impl.ConnectParamsNode._set_active_children
+  File "src/oracledb/impl/base/connect_params.pyx", line 744, in oracledb.base_impl.AddressList._set_active_children
+  File "src/oracledb/impl/base/connect_params.pyx", line 690, in oracledb.base_impl.Address.resolve_host_name
+  File "C:\Users\valei\AppData\Local\Programs\Python\Python311\Lib\socket.py", line 962, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+socket.gaierror: [Errno 11001] getaddrinfo failed
+ERROR 2026-05-11 10:55:59,215 log29548268Internal Server Error: /api/reportes/productos_bajo_stock/
+Traceback (most recent call last):
+  File "C:\Proyecto\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\rest_framework\viewsets.py", line 125, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Proyecto\.venv\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "C:\Proyecto\.venv\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\Producto\backend\gecko_tcg\apps\reportes\views.py", line 45, in productos_bajo_stock
+    'cantidad_productos':len(list (productos)),
+                             ^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\models\query.py", line 386, in __iter__
+    self._fetch_all()
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\models\query.py", line 1954, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\models\query.py", line 218, in __iter__
+    for row in compiler.results_iter(
+               ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1572, in results_iter
+    results = self.execute_sql(
+              ^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1610, in execute_sql
+    sql, params = self.as_sql()
+                  ^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 766, in as_sql
+    extra_select, order_by, group_by = self.pre_sql_setup(
+                                       ^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 86, in pre_sql_setup
+    order_by = self.get_order_by()
+               ^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 527, in get_order_by
+    sql, params = self.compile(resolved)
+                  ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 575, in compile
+    sql, params = vendor_impl(self, self.connection)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\models\expressions.py", line 1890, in as_oracle
+    not connection.features.supports_boolean_expr_in_select_clause
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\utils\functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+                                         ^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\backends\oracle\features.py", line 211, in supports_boolean_expr_in_select_clause
+    return self.connection.oracle_version >= (23,)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\utils\functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+                                         ^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\backends\oracle\base.py", line 402, in oracle_version
+    with self.temporary_connection():
+  File "C:\Users\valei\AppData\Local\Programs\Python\Python311\Lib\contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\backends\base\base.py", line 695, in temporary_connection
+    with self.cursor() as cursor:
+         ^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\backends\base\base.py", line 320, in cursor
+    return self._cursor()
+           ^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\backends\base\base.py", line 296, in _cursor
+    self.ensure_connection()
+  File "C:\Proyecto\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\backends\base\base.py", line 279, in ensure_connection
+    self.connect()
+  File "C:\Proyecto\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\backends\base\base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\backends\oracle\base.py", line 303, in get_new_connection
+    return Database.connect(
+           ^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\oracledb\connection.py", line 1768, in connect
+    return conn_class(dsn=dsn, pool=pool, params=params, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\oracledb\connection.py", line 892, in __init__
+    impl.connect(params_impl)
+  File "src/oracledb/impl/thin/connection.pyx", line 544, in oracledb.thin_impl.ThinConnImpl.connect
+  File "src/oracledb/impl/thin/connection.pyx", line 540, in oracledb.thin_impl.ThinConnImpl.connect
+  File "src/oracledb/impl/thin/connection.pyx", line 478, in oracledb.thin_impl.ThinConnImpl._connect_with_params
+  File "src/oracledb/impl/base/connect_params.pyx", line 1061, in oracledb.base_impl.DescriptionList.set_active_children
+  File "src/oracledb/impl/base/connect_params.pyx", line 623, in oracledb.base_impl.ConnectParamsNode._set_active_children
+  File "src/oracledb/impl/base/connect_params.pyx", line 623, in oracledb.base_impl.ConnectParamsNode._set_active_children
+  File "src/oracledb/impl/base/connect_params.pyx", line 744, in oracledb.base_impl.AddressList._set_active_children
+  File "src/oracledb/impl/base/connect_params.pyx", line 690, in oracledb.base_impl.Address.resolve_host_name
+  File "C:\Users\valei\AppData\Local\Programs\Python\Python311\Lib\socket.py", line 962, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+socket.gaierror: [Errno 11001] getaddrinfo failed
+ERROR 2026-05-11 10:55:59,402 log295488068Internal Server Error: /api/productos/
+Traceback (most recent call last):
+  File "C:\Proyecto\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\rest_framework\viewsets.py", line 125, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Proyecto\.venv\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "C:\Proyecto\.venv\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\rest_framework\mixins.py", line 40, in list
+    page = self.paginate_queryset(queryset)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\rest_framework\generics.py", line 175, in paginate_queryset
+    return self.paginator.paginate_queryset(queryset, self.request, view=self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\rest_framework\pagination.py", line 202, in paginate_queryset
+    self.page = paginator.page(page_number)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\core\paginator.py", line 89, in page
+    number = self.validate_number(number)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\core\paginator.py", line 70, in validate_number
+    if number > self.num_pages:
+                ^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\utils\functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+                                         ^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\core\paginator.py", line 116, in num_pages
+    if self.count == 0 and not self.allow_empty_first_page:
+       ^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\utils\functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+                                         ^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\core\paginator.py", line 110, in count
+    return c()
+           ^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\models\query.py", line 606, in count
+    return self.query.get_count(using=self.db)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\models\sql\query.py", line 646, in get_count
+    return obj.get_aggregation(using, {"__count": Count("*")})["__count"]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\models\sql\query.py", line 628, in get_aggregation
+    result = compiler.execute_sql(SINGLE)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1621, in execute_sql
+    cursor = self.connection.cursor()
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\backends\base\base.py", line 320, in cursor
+    return self._cursor()
+           ^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\backends\base\base.py", line 296, in _cursor
+    self.ensure_connection()
+  File "C:\Proyecto\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\backends\base\base.py", line 279, in ensure_connection
+    self.connect()
+  File "C:\Proyecto\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\backends\base\base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\backends\oracle\base.py", line 303, in get_new_connection
+    return Database.connect(
+           ^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\oracledb\connection.py", line 1768, in connect
+    return conn_class(dsn=dsn, pool=pool, params=params, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\oracledb\connection.py", line 892, in __init__
+    impl.connect(params_impl)
+  File "src/oracledb/impl/thin/connection.pyx", line 544, in oracledb.thin_impl.ThinConnImpl.connect
+  File "src/oracledb/impl/thin/connection.pyx", line 540, in oracledb.thin_impl.ThinConnImpl.connect
+  File "src/oracledb/impl/thin/connection.pyx", line 478, in oracledb.thin_impl.ThinConnImpl._connect_with_params
+  File "src/oracledb/impl/base/connect_params.pyx", line 1061, in oracledb.base_impl.DescriptionList.set_active_children
+  File "src/oracledb/impl/base/connect_params.pyx", line 623, in oracledb.base_impl.ConnectParamsNode._set_active_children
+  File "src/oracledb/impl/base/connect_params.pyx", line 623, in oracledb.base_impl.ConnectParamsNode._set_active_children
+  File "src/oracledb/impl/base/connect_params.pyx", line 744, in oracledb.base_impl.AddressList._set_active_children
+  File "src/oracledb/impl/base/connect_params.pyx", line 690, in oracledb.base_impl.Address.resolve_host_name
+  File "C:\Users\valei\AppData\Local\Programs\Python\Python311\Lib\socket.py", line 962, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+socket.gaierror: [Errno 11001] getaddrinfo failed
+ERROR 2026-05-11 10:55:59,483 log2954818504Internal Server Error: /api/ventas/
+Traceback (most recent call last):
+  File "C:\Proyecto\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\rest_framework\viewsets.py", line 125, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Proyecto\.venv\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "C:\Proyecto\.venv\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\rest_framework\mixins.py", line 40, in list
+    page = self.paginate_queryset(queryset)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\rest_framework\generics.py", line 175, in paginate_queryset
+    return self.paginator.paginate_queryset(queryset, self.request, view=self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\rest_framework\pagination.py", line 202, in paginate_queryset
+    self.page = paginator.page(page_number)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\core\paginator.py", line 89, in page
+    number = self.validate_number(number)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\core\paginator.py", line 70, in validate_number
+    if number > self.num_pages:
+                ^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\utils\functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+                                         ^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\core\paginator.py", line 116, in num_pages
+    if self.count == 0 and not self.allow_empty_first_page:
+       ^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\utils\functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+                                         ^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\core\paginator.py", line 110, in count
+    return c()
+           ^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\models\query.py", line 606, in count
+    return self.query.get_count(using=self.db)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\models\sql\query.py", line 646, in get_count
+    return obj.get_aggregation(using, {"__count": Count("*")})["__count"]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\models\sql\query.py", line 628, in get_aggregation
+    result = compiler.execute_sql(SINGLE)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1621, in execute_sql
+    cursor = self.connection.cursor()
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\backends\base\base.py", line 320, in cursor
+    return self._cursor()
+           ^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\backends\base\base.py", line 296, in _cursor
+    self.ensure_connection()
+  File "C:\Proyecto\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\backends\base\base.py", line 279, in ensure_connection
+    self.connect()
+  File "C:\Proyecto\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\backends\base\base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\backends\oracle\base.py", line 303, in get_new_connection
+    return Database.connect(
+           ^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\oracledb\connection.py", line 1768, in connect
+    return conn_class(dsn=dsn, pool=pool, params=params, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\oracledb\connection.py", line 892, in __init__
+    impl.connect(params_impl)
+  File "src/oracledb/impl/thin/connection.pyx", line 544, in oracledb.thin_impl.ThinConnImpl.connect
+  File "src/oracledb/impl/thin/connection.pyx", line 540, in oracledb.thin_impl.ThinConnImpl.connect
+  File "src/oracledb/impl/thin/connection.pyx", line 478, in oracledb.thin_impl.ThinConnImpl._connect_with_params
+  File "src/oracledb/impl/base/connect_params.pyx", line 1061, in oracledb.base_impl.DescriptionList.set_active_children
+  File "src/oracledb/impl/base/connect_params.pyx", line 623, in oracledb.base_impl.ConnectParamsNode._set_active_children
+  File "src/oracledb/impl/base/connect_params.pyx", line 623, in oracledb.base_impl.ConnectParamsNode._set_active_children
+  File "src/oracledb/impl/base/connect_params.pyx", line 744, in oracledb.base_impl.AddressList._set_active_children
+  File "src/oracledb/impl/base/connect_params.pyx", line 690, in oracledb.base_impl.Address.resolve_host_name
+  File "C:\Users\valei\AppData\Local\Programs\Python\Python311\Lib\socket.py", line 962, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+socket.gaierror: [Errno 11001] getaddrinfo failed
+ERROR 2026-05-11 10:55:59,682 log2954819248Internal Server Error: /api/reportes/top_productos_vendidos/
+Traceback (most recent call last):
+  File "C:\Proyecto\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\rest_framework\viewsets.py", line 125, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Proyecto\.venv\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "C:\Proyecto\.venv\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\Producto\backend\gecko_tcg\apps\reportes\views.py", line 30, in top_productos_vendidos
+    'datos' : list(detalles)
+              ^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\models\query.py", line 386, in __iter__
+    self._fetch_all()
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\models\query.py", line 1954, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\models\query.py", line 218, in __iter__
+    for row in compiler.results_iter(
+               ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1572, in results_iter
+    results = self.execute_sql(
+              ^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1610, in execute_sql
+    sql, params = self.as_sql()
+                  ^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 766, in as_sql
+    extra_select, order_by, group_by = self.pre_sql_setup(
+                                       ^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 86, in pre_sql_setup
+    order_by = self.get_order_by()
+               ^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 527, in get_order_by
+    sql, params = self.compile(resolved)
+                  ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 575, in compile
+    sql, params = vendor_impl(self, self.connection)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\models\expressions.py", line 1890, in as_oracle
+    not connection.features.supports_boolean_expr_in_select_clause
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\utils\functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+                                         ^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\backends\oracle\features.py", line 211, in supports_boolean_expr_in_select_clause
+    return self.connection.oracle_version >= (23,)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\utils\functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+                                         ^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\backends\oracle\base.py", line 402, in oracle_version
+    with self.temporary_connection():
+  File "C:\Users\valei\AppData\Local\Programs\Python\Python311\Lib\contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\backends\base\base.py", line 695, in temporary_connection
+    with self.cursor() as cursor:
+         ^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\backends\base\base.py", line 320, in cursor
+    return self._cursor()
+           ^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\backends\base\base.py", line 296, in _cursor
+    self.ensure_connection()
+  File "C:\Proyecto\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\backends\base\base.py", line 279, in ensure_connection
+    self.connect()
+  File "C:\Proyecto\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\backends\base\base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\backends\oracle\base.py", line 303, in get_new_connection
+    return Database.connect(
+           ^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\oracledb\connection.py", line 1768, in connect
+    return conn_class(dsn=dsn, pool=pool, params=params, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\oracledb\connection.py", line 892, in __init__
+    impl.connect(params_impl)
+  File "src/oracledb/impl/thin/connection.pyx", line 544, in oracledb.thin_impl.ThinConnImpl.connect
+  File "src/oracledb/impl/thin/connection.pyx", line 540, in oracledb.thin_impl.ThinConnImpl.connect
+  File "src/oracledb/impl/thin/connection.pyx", line 478, in oracledb.thin_impl.ThinConnImpl._connect_with_params
+  File "src/oracledb/impl/base/connect_params.pyx", line 1061, in oracledb.base_impl.DescriptionList.set_active_children
+  File "src/oracledb/impl/base/connect_params.pyx", line 623, in oracledb.base_impl.ConnectParamsNode._set_active_children
+  File "src/oracledb/impl/base/connect_params.pyx", line 623, in oracledb.base_impl.ConnectParamsNode._set_active_children
+  File "src/oracledb/impl/base/connect_params.pyx", line 744, in oracledb.base_impl.AddressList._set_active_children
+  File "src/oracledb/impl/base/connect_params.pyx", line 690, in oracledb.base_impl.Address.resolve_host_name
+  File "C:\Users\valei\AppData\Local\Programs\Python\Python311\Lib\socket.py", line 962, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+socket.gaierror: [Errno 11001] getaddrinfo failed
+ERROR 2026-05-11 10:55:59,778 log2954826364Internal Server Error: /api/reportes/productos_bajo_stock/
+Traceback (most recent call last):
+  File "C:\Proyecto\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\rest_framework\viewsets.py", line 125, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Proyecto\.venv\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "C:\Proyecto\.venv\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\Producto\backend\gecko_tcg\apps\reportes\views.py", line 45, in productos_bajo_stock
+    'cantidad_productos':len(list (productos)),
+                             ^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\models\query.py", line 386, in __iter__
+    self._fetch_all()
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\models\query.py", line 1954, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\models\query.py", line 218, in __iter__
+    for row in compiler.results_iter(
+               ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1572, in results_iter
+    results = self.execute_sql(
+              ^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1610, in execute_sql
+    sql, params = self.as_sql()
+                  ^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 766, in as_sql
+    extra_select, order_by, group_by = self.pre_sql_setup(
+                                       ^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 86, in pre_sql_setup
+    order_by = self.get_order_by()
+               ^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 527, in get_order_by
+    sql, params = self.compile(resolved)
+                  ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 575, in compile
+    sql, params = vendor_impl(self, self.connection)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\models\expressions.py", line 1890, in as_oracle
+    not connection.features.supports_boolean_expr_in_select_clause
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\utils\functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+                                         ^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\backends\oracle\features.py", line 211, in supports_boolean_expr_in_select_clause
+    return self.connection.oracle_version >= (23,)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\utils\functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+                                         ^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\backends\oracle\base.py", line 402, in oracle_version
+    with self.temporary_connection():
+  File "C:\Users\valei\AppData\Local\Programs\Python\Python311\Lib\contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\backends\base\base.py", line 695, in temporary_connection
+    with self.cursor() as cursor:
+         ^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\backends\base\base.py", line 320, in cursor
+    return self._cursor()
+           ^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\backends\base\base.py", line 296, in _cursor
+    self.ensure_connection()
+  File "C:\Proyecto\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\backends\base\base.py", line 279, in ensure_connection
+    self.connect()
+  File "C:\Proyecto\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\backends\base\base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\backends\oracle\base.py", line 303, in get_new_connection
+    return Database.connect(
+           ^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\oracledb\connection.py", line 1768, in connect
+    return conn_class(dsn=dsn, pool=pool, params=params, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\oracledb\connection.py", line 892, in __init__
+    impl.connect(params_impl)
+  File "src/oracledb/impl/thin/connection.pyx", line 544, in oracledb.thin_impl.ThinConnImpl.connect
+  File "src/oracledb/impl/thin/connection.pyx", line 540, in oracledb.thin_impl.ThinConnImpl.connect
+  File "src/oracledb/impl/thin/connection.pyx", line 478, in oracledb.thin_impl.ThinConnImpl._connect_with_params
+  File "src/oracledb/impl/base/connect_params.pyx", line 1061, in oracledb.base_impl.DescriptionList.set_active_children
+  File "src/oracledb/impl/base/connect_params.pyx", line 623, in oracledb.base_impl.ConnectParamsNode._set_active_children
+  File "src/oracledb/impl/base/connect_params.pyx", line 623, in oracledb.base_impl.ConnectParamsNode._set_active_children
+  File "src/oracledb/impl/base/connect_params.pyx", line 744, in oracledb.base_impl.AddressList._set_active_children
+  File "src/oracledb/impl/base/connect_params.pyx", line 690, in oracledb.base_impl.Address.resolve_host_name
+  File "C:\Users\valei\AppData\Local\Programs\Python\Python311\Lib\socket.py", line 962, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+socket.gaierror: [Errno 11001] getaddrinfo failed
+WARNING 2026-05-11 14:19:39,997 log2954821936Too Many Requests: /api/productos/
+WARNING 2026-05-11 14:19:42,593 log2954828940Too Many Requests: /api/productos/2/
+WARNING 2026-05-11 14:19:42,605 log295484016Too Many Requests: /api/productos/2/
+WARNING 2026-05-11 14:19:43,635 log2954813420Too Many Requests: /api/productos/

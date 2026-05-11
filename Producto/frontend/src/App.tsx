@@ -6,8 +6,11 @@ import Login from "./pages/Login"
 import Reportes from "./pages/Reportes"
 import Perfil from "./pages/Perfil"
 import Inventario from "./pages/Inventario"
+import AgregarProducto from "./pages/AgregarProducto"
+import EditarProducto from "./pages/EditarProducto"
 import Ventas from "./pages/Ventas"
 import Usuarios from "./pages/Usuarios"
+import BuscadorTCGPlayer from "./pages/BuscadorTCGPlayer"
 import { Routes, Route, useLocation } from "react-router-dom"
 
 function App() {
@@ -34,10 +37,13 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/" element={<Home />} />
           <Route path="/inventario" element={<Inventario />} />
+          <Route path="/inventario/agregar" element={<AgregarProducto />} />
+          <Route path="/inventario/editar/:id" element={<EditarProducto />} />
           <Route path="/ventas" element={<Ventas />} />
           <Route path="/reportes" element={<Reportes />} />
           <Route path="/perfil" element={<Perfil />} />
           <Route path="/usuarios" element={<Usuarios />} />
+          <Route path="/tcgplayer" element={<BuscadorTCGPlayer />} />
         </Routes>
       </div>
         </div>

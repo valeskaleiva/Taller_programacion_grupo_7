@@ -16,7 +16,6 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from rest_framework.documentation import include_docs_urls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -28,6 +27,7 @@ urlpatterns = [
     path('api/', include('apps.productos.urls')),
     path('api/', include('apps.ventas.urls')),
     path('api/', include('apps.reportes.urls')),
+    path('api/', include('apps.usuarios.urls')),
     path('api/tcgplayer/', include('apps.tcgplayer.urls')),
 
     path('api/auth/', include('rest_framework.urls'))
