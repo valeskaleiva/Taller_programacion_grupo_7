@@ -16,6 +16,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from rest_framework_simplejwt.views import TokenRefreshView
+from apps.usuarios.views import AdminTokenObtainPairView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -30,5 +32,7 @@ urlpatterns = [
     path('api/', include('apps.usuarios.urls')),
     path('api/tcgplayer/', include('apps.tcgplayer.urls')),
 
+    path('api/auth/token/', AdminTokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/auth/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/auth/', include('rest_framework.urls'))
 ]

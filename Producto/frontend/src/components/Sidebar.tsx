@@ -24,9 +24,7 @@ function Sidebar() {
     { icon: "🧭", label: "Buscador TCG", path: "/tcgplayer" },
     { icon: "📊", label: "Reportes", path: "/reportes" },
     { icon: "💰", label: "Ventas", path: "/ventas" },
-    { icon: "🔐", label: "Login", path: "/login" },
     { icon: "👤", label: "Perfil", path: "/perfil" },
-    { icon: "🧑‍💼", label: "Usuarios", path: "/usuarios" },
   ];
 
   return (

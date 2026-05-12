@@ -1,6 +1,9 @@
 import type { Producto } from '../types';
 
 const API_BASE = '/api';
+const ACCESS_TOKEN_KEY = 'gecko_access_token';
+const REFRESH_TOKEN_KEY = 'gecko_refresh_token';
+const SALE_PAYMENT_METHODS_KEY = 'gecko_sale_payment_methods';
 
 type ProductoBasePayload = {
   codigo_barras: string;
@@ -41,10 +44,18 @@ type ApiIngresoCategoria = {
   cantidad_productos: number;
 };
 
+export type VentaDiaria = {
+  fecha: string;
+  ventas: number;
+  transacciones: number;
+  ticket_promedio: number;
+};
+
 export type VentaResumen = {
   id_venta: number;
   fecha_venta: string;
   total_pagado: number | string;
+  metodo_pago?: string;
   usuario?: {
     username?: string;
   };
@@ -92,10 +103,62 @@ export type UsuarioVenta = {
   is_staff: boolean;
 };
 
+type AuthUser = {
+  id: number;
+  username: string;
+  is_staff: boolean;
+};
+
+type LoginResponse = {
+  access: string;
+  refresh: string;
+  user: AuthUser;
+};
+
+function getAccessToken(): string | null {
+  return localStorage.getItem(ACCESS_TOKEN_KEY);
+}
+
+export function clearAuthTokens() {
+  localStorage.removeItem(ACCESS_TOKEN_KEY);
+  localStorage.removeItem(REFRESH_TOKEN_KEY);
+}
+
+function readSalePaymentMethods(): Record<string, string> {
+  try {
+    const raw = localStorage.getItem(SALE_PAYMENT_METHODS_KEY);
+    if (!raw) return {};
+    const parsed = JSON.parse(raw) as Record<string, string>;
+    return parsed && typeof parsed === 'object' ? parsed : {};
+  } catch {
+    return {};
+  }
+}
+
+function writeSalePaymentMethods(value: Record<string, string>) {
+  localStorage.setItem(SALE_PAYMENT_METHODS_KEY, JSON.stringify(value));
+}
+
+export function setVentaMetodoPago(ventaId: number, metodoPago: string) {
+  const current = readSalePaymentMethods();
+  current[String(ventaId)] = metodoPago;
+  writeSalePaymentMethods(current);
+}
+
+export function getVentaMetodoPago(ventaId: number): string | undefined {
+  const current = readSalePaymentMethods();
+  return current[String(ventaId)];
+}
+
 async function request<T>(url: string, init?: RequestInit): Promise<T> {
   const headers: Record<string, string> = {
     ...(init?.headers as Record<string, string> | undefined),
   };
+
+  const token = getAccessToken();
+  if (token && !headers.Authorization) {
+    headers.Authorization = `Bearer ${token}`;
+  }
 
   if (init?.body && !headers['Content-Type']) {
     headers['Content-Type'] = 'application/json';
@@ -170,6 +233,15 @@ export async function getTopProductosVendidos(): Promise<ApiTopProducto[]> {
   return data.datos ?? [];
 }
 
+export async function getTopProductosVendidosPorRango(fromDate?: string, toDate?: string): Promise<ApiTopProducto[]> {
+  const query = new URLSearchParams();
+  if (fromDate) query.set('from', fromDate);
+  if (toDate) query.set('to', toDate);
+  const suffix = query.toString() ? `?${query.toString()}` : '';
+  const data = await request<{ datos: ApiTopProducto[] }>(`${API_BASE}/reportes/top_productos_vendidos/${suffix}`);
+  return data.datos ?? [];
+}
+
 export async function getProductosBajoStock(): Promise<ApiBajoStockProducto[]> {
   const data = await request<{ datos: ApiBajoStockProducto[] }>(`${API_BASE}/reportes/productos_bajo_stock/`);
   return data.datos ?? [];
@@ -177,6 +249,24 @@ export async function getProductosBajoStock(): Promise<ApiBajoStockProducto[]> {
 
 export async function getIngresosPorCategoria(): Promise<ApiIngresoCategoria[]> {
   const data = await request<{ datos: ApiIngresoCategoria[] }>(`${API_BASE}/reportes/ingresos_por_categoria/`);
+  return data.datos ?? [];
+}
+
+export async function getIngresosPorCategoriaPorRango(fromDate?: string, toDate?: string): Promise<ApiIngresoCategoria[]> {
+  const query = new URLSearchParams();
+  if (fromDate) query.set('from', fromDate);
+  if (toDate) query.set('to', toDate);
+  const suffix = query.toString() ? `?${query.toString()}` : '';
+  const data = await request<{ datos: ApiIngresoCategoria[] }>(`${API_BASE}/reportes/ingresos_por_categoria/${suffix}`);
+  return data.datos ?? [];
+}
+
+export async function getVentasDiarias(fromDate?: string, toDate?: string): Promise<VentaDiaria[]> {
+  const query = new URLSearchParams();
+  if (fromDate) query.set('from', fromDate);
+  if (toDate) query.set('to', toDate);
+  const suffix = query.toString() ? `?${query.toString()}` : '';
+  const data = await request<{ datos: VentaDiaria[] }>(`${API_BASE}/reportes/ventas_diarias/${suffix}`);
   return data.datos ?? [];
 }
 
@@ -203,4 +293,28 @@ export async function buscarPrecioTcgPlayer(nombreCarta: string, numeroSerie?: s
     `${API_BASE}/tcgplayer/search-card-price/?nombre=${encodeURIComponent(nombreCarta)}${numeroParam}`
   );
   return data.cards ?? [];
+}
+
+export async function loginAdmin(username: string, password: string): Promise<AuthUser> {
+  const data = await request<LoginResponse>(`${API_BASE}/auth/token/`, {
+    method: 'POST',
+    body: JSON.stringify({ username, password }),
+  });
+
+  localStorage.setItem(ACCESS_TOKEN_KEY, data.access);
+  localStorage.setItem(REFRESH_TOKEN_KEY, data.refresh);
+  return data.user;
+}
+
+export async function getCurrentAdmin(): Promise<AuthUser> {
+  const data = await request<UsuarioVenta>(`${API_BASE}/usuarios/me/`);
+  if (!data.is_staff) {
+    throw new Error('Acceso permitido solo para administradores.');
+  }
+
+  return {
+    id: data.id,
+    username: data.username,
+    is_staff: data.is_staff,
+  };
 }

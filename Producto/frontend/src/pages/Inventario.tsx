@@ -12,6 +12,13 @@ import type { Producto } from '../types';
 type CategoriaFiltro = 'Todos' | 'Carta' | 'Sobre' | 'Caja';
 
 const STOCK_MINIMO = 5;
+const clpFormatter = new Intl.NumberFormat('es-CL', {
+  style: 'currency',
+  currency: 'CLP',
+  maximumFractionDigits: 0,
+});
+
+const formatCLP = (amount: number) => clpFormatter.format(amount);
 
 const productoVacio: Omit<Producto, 'id_producto'> = {
   codigo_barras: '',
@@ -348,11 +355,11 @@ const Inventario: React.FC = () => {
       <div className="overflow-x-auto rounded-xl border border-gray-200 shadow-sm">
         <table className="w-full text-sm">
           <thead>
-            <tr className="bg-gray-50 border-b border-gray-200 text-left">
-              <th className="px-3 py-3 font-semibold text-gray-600 whitespace-nowrap">Código Barras</th>
-              <th className="px-3 py-3 font-semibold text-gray-600">Nombre</th>
-              <th className="px-3 py-3 font-semibold text-gray-600">Categoría</th>
-              <th className="px-3 py-3 font-semibold text-gray-600 whitespace-nowrap">Precio Base</th>
+            <tr className="bg-gray-50 border-b border-gray-200 text-center">
+              <th className="px-3 py-3 font-semibold text-gray-600 whitespace-nowrap border-r border-gray-200">Código Barras</th>
+              <th className="px-3 py-3 font-semibold text-gray-600 border-r border-gray-200">Nombre</th>
+              <th className="px-3 py-3 font-semibold text-gray-600 border-r border-gray-200">Categoría</th>
+              <th className="px-3 py-3 font-semibold text-gray-600 whitespace-nowrap border-r border-gray-200">Precio Base (CLP)</th>
               <th className="px-3 py-3 font-semibold text-gray-600 text-center">Stock</th>
               <th className="px-3 py-3 font-semibold text-gray-600 text-center">Estado</th>
               {/* Columnas condicionales */}
@@ -361,7 +368,7 @@ const Inventario: React.FC = () => {
                   <th className="px-3 py-3 font-semibold text-gray-600">Rareza</th>
                   <th className="px-3 py-3 font-semibold text-gray-600">Edición</th>
                   <th className="px-3 py-3 font-semibold text-gray-600">Estado Carta</th>
-                  <th className="px-3 py-3 font-semibold text-gray-600 whitespace-nowrap">Precio Mercado</th>
+                  <th className="px-3 py-3 font-semibold text-gray-600 whitespace-nowrap">Precio Mercado (CLP)</th>
                 </>
               )}
               {(filtroCategoria === 'Todos' || filtroCategoria === 'Sobre') && (
@@ -402,12 +409,10 @@ const Inventario: React.FC = () => {
                         : 'hover:bg-gray-50'
                     }`}
                   >
-                    <td className="px-3 py-2 font-mono text-xs text-gray-600 whitespace-nowrap">{p.codigo_barras}</td>
-                    <td className="px-3 py-2 font-medium text-gray-800">{p.nombre}</td>
-                    <td className="px-3 py-2">{badgeCategoria(p.categoria)}</td>
-                    <td className="px-3 py-2 text-gray-700 whitespace-nowrap">
-                      ${p.precio_base.toLocaleString('es-CL')}
-                    </td>
+                    <td className="px-3 py-2 font-mono text-xs text-gray-600 whitespace-nowrap border-r border-gray-100 text-center">{p.codigo_barras}</td>
+                    <td className="px-3 py-2 font-medium text-gray-800 border-r border-gray-100 text-center">{p.nombre}</td>
+                    <td className="px-3 py-2 border-r border-gray-100 text-center">{badgeCategoria(p.categoria)}</td>
+                    <td className="px-3 py-2 text-gray-700 whitespace-nowrap border-r border-gray-100 text-center">{formatCLP(p.precio_base)}</td>
                     <td className="px-3 py-2 text-center font-semibold text-gray-800">{p.stock}</td>
                     <td className="px-3 py-2 text-center">{badgeStock(p.stock)}</td>
                     {/* Columnas Carta */}
@@ -417,7 +422,7 @@ const Inventario: React.FC = () => {
                         <td className="px-3 py-2 text-gray-600">{p.edicion ?? '—'}</td>
                         <td className="px-3 py-2 text-gray-600">{p.estado ?? '—'}</td>
                         <td className="px-3 py-2 text-gray-700 whitespace-nowrap">
-                          {p.precio_mercado != null ? `$${p.precio_mercado.toLocaleString('es-CL')}` : '—'}
+                          {p.precio_mercado != null ? formatCLP(p.precio_mercado) : '—'}
                         </td>
                       </>
                     )}
@@ -536,7 +541,7 @@ const Inventario: React.FC = () => {
                   />
                 </div>
                 <div>
-                  <label className="text-xs font-medium text-gray-600">Precio Base ($)</label>
+                  <label className="text-xs font-medium text-gray-600">Precio Base (CLP)</label>
                   <input
                     type="number"
                     min={0}
@@ -572,7 +577,7 @@ const Inventario: React.FC = () => {
                       </select>
                     </div>
                     <div>
-                      <label className="text-xs font-medium text-gray-600">Precio Mercado ($)</label>
+                      <label className="text-xs font-medium text-gray-600">Precio Mercado (CLP)</label>
                       <input type="number" min={0} value={form.precio_mercado ?? 0} onChange={(e) => setForm({ ...form, precio_mercado: Number(e.target.value) })} className="w-full mt-1 border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primaryLight" />
                     </div>
                   </div>

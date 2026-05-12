@@ -3,6 +3,7 @@ import {
   crearVenta,
   getProductoPorCodigo,
   getUsuariosVenta,
+  setVentaMetodoPago,
   type CrearVentaPayload,
   type UsuarioVenta,
 } from '../services/api';
@@ -17,6 +18,13 @@ type CartItem = {
 };
 
 const USUARIO_VENTA_DEFAULT = 1;
+const clpFormatter = new Intl.NumberFormat('es-CL', {
+  style: 'currency',
+  currency: 'CLP',
+  maximumFractionDigits: 0,
+});
+
+const formatCLP = (amount: number) => clpFormatter.format(amount);
 
 function Ventas() {
   const [codigo, setCodigo] = useState('');
@@ -162,6 +170,7 @@ function Ventas() {
 
     try {
       const venta = await crearVenta(payload);
+      setVentaMetodoPago(venta.id_venta, metodoPago);
       setItems([]);
       setMensaje(`Venta #${venta.id_venta} registrada correctamente (${metodoPago}).`);
       enfocarScanner();
@@ -245,7 +254,7 @@ function Ventas() {
 
         <div className="flex flex-wrap gap-4 text-sm">
           <span className="text-gray-600">Items: <strong>{totalItems}</strong></span>
-          <span className="text-gray-600">Total: <strong>${totalVenta.toLocaleString('es-CL')}</strong></span>
+          <span className="text-gray-600">Total (CLP): <strong>{formatCLP(totalVenta)}</strong></span>
           <button
             type="button"
             onClick={enfocarScanner}
@@ -272,14 +281,14 @@ function Ventas() {
         <h2 className="text-lg font-semibold text-gray-900">Carrito</h2>
 
         <div className="overflow-x-auto mt-4">
-          <table className="w-full text-sm">
+          <table className="w-full text-sm border border-gray-200 rounded-lg overflow-hidden">
             <thead>
               <tr className="border-b bg-gray-50">
-                <th className="text-left px-3 py-2">Código</th>
-                <th className="text-left px-3 py-2">Producto</th>
-                <th className="text-right px-3 py-2">Precio</th>
-                <th className="text-center px-3 py-2">Cantidad</th>
-                <th className="text-right px-3 py-2">Subtotal</th>
+                <th className="text-center px-3 py-2 border-r border-gray-200">Código</th>
+                <th className="text-center px-3 py-2 border-r border-gray-200">Producto</th>
+                <th className="text-center px-3 py-2 border-r border-gray-200">Precio (CLP)</th>
+                <th className="text-center px-3 py-2 border-r border-gray-200">Cantidad</th>
+                <th className="text-center px-3 py-2 border-r border-gray-200">Subtotal (CLP)</th>
                 <th className="text-center px-3 py-2">Acción</th>
               </tr>
             </thead>
@@ -295,10 +304,10 @@ function Ventas() {
                   const subtotal = item.cantidad * Number(item.precio_unitario);
                   return (
                     <tr key={item.producto.id_producto} className="border-b">
-                      <td className="px-3 py-2 font-mono text-xs">{item.producto.codigo_barras}</td>
-                      <td className="px-3 py-2">{item.producto.nombre}</td>
-                      <td className="px-3 py-2 text-right">${Number(item.precio_unitario).toLocaleString('es-CL')}</td>
-                      <td className="px-3 py-2 text-center">
+                      <td className="px-3 py-2 font-mono text-xs text-center border-r border-gray-100">{item.producto.codigo_barras}</td>
+                      <td className="px-3 py-2 text-center border-r border-gray-100">{item.producto.nombre}</td>
+                      <td className="px-3 py-2 text-center border-r border-gray-100">{formatCLP(Number(item.precio_unitario))}</td>
+                      <td className="px-3 py-2 text-center border-r border-gray-100">
                         <input
                           type="number"
                           min={1}
@@ -308,7 +317,7 @@ function Ventas() {
                           className="w-20 border rounded px-2 py-1 text-center"
                         />
                       </td>
-                      <td className="px-3 py-2 text-right font-semibold">${subtotal.toLocaleString('es-CL')}</td>
+                      <td className="px-3 py-2 text-center font-semibold border-r border-gray-100">{formatCLP(subtotal)}</td>
                       <td className="px-3 py-2 text-center">
                         <button
                           type="button"

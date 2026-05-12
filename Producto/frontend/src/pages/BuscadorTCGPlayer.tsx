@@ -112,13 +112,13 @@ export default function BuscadorTCGPlayer() {
       )}
 
       <div className="overflow-x-auto border rounded-xl">
-        <table className="w-full text-sm">
+        <table className="w-full text-sm border border-gray-200 rounded-lg overflow-hidden">
           <thead className="bg-gray-50 border-b">
             <tr>
-              <th className="text-left px-3 py-2">Carta</th>
-              <th className="text-left px-3 py-2">Set</th>
-              <th className="text-left px-3 py-2">Precio</th>
-              <th className="text-left px-3 py-2">Fuente</th>
+              <th className="text-center px-3 py-2 border-r border-gray-200">Carta</th>
+              <th className="text-center px-3 py-2 border-r border-gray-200">Set</th>
+              <th className="text-center px-3 py-2 border-r border-gray-200">Precio (USD)</th>
+              <th className="text-center px-3 py-2">Fuente</th>
             </tr>
           </thead>
           <tbody>
@@ -134,14 +134,14 @@ export default function BuscadorTCGPlayer() {
 
                 return (
                 <tr key={`${item.url}-${index}`} className="border-b last:border-b-0">
-                  <td className="px-3 py-2 text-gray-800">
+                  <td className="px-3 py-2 text-gray-800 border-r border-gray-100">
                     <div className="font-semibold">{parsed.nombre}</div>
                     <div className="text-xs text-gray-500">Rareza: {parsed.rareza}</div>
                     <div className="text-xs text-gray-500">Numero: {parsed.numero}</div>
                   </td>
-                  <td className="px-3 py-2 text-gray-600">{item.set}</td>
-                  <td className="px-3 py-2 font-semibold text-emerald-700">{item.currency} {item.price}</td>
-                  <td className="px-3 py-2 text-blue-700">
+                  <td className="px-3 py-2 text-gray-600 text-center border-r border-gray-100">{item.set}</td>
+                  <td className="px-3 py-2 font-semibold text-emerald-700 text-center border-r border-gray-100">{item.currency} {item.price}</td>
+                  <td className="px-3 py-2 text-blue-700 text-center">
                     <a href={item.url} target="_blank" rel="noreferrer" className="hover:underline">
                       Ver en TCGPlayer
                     </a>
