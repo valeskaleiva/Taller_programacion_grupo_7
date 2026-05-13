@@ -25,6 +25,7 @@ function Sidebar() {
     { icon: "📊", label: "Reportes", path: "/reportes" },
     { icon: "💰", label: "Ventas", path: "/ventas" },
     { icon: "👤", label: "Perfil", path: "/perfil" },
+    { icon: "🧑‍💼", label: "Usuarios", path: "/usuarios" },
   ];
 
   return (

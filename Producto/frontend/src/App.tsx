@@ -10,9 +10,10 @@ import Inventario from "./pages/Inventario"
 import AgregarProducto from "./pages/AgregarProducto"
 import EditarProducto from "./pages/EditarProducto"
 import Ventas from "./pages/Ventas"
+import Usuarios from "./pages/Usuarios"
 import BuscadorTCGPlayer from "./pages/BuscadorTCGPlayer"
 import { Routes, Route, useLocation, Navigate } from "react-router-dom"
-import { clearAuthTokens, getCurrentAdmin } from "./services/api"
+import { clearAuthTokens, getCurrentUser, getStoredAuthUser } from "./services/api"
 
 const ACCESS_TOKEN_KEY = "gecko_access_token"
 
@@ -20,28 +21,32 @@ function App() {
   const location = useLocation()
   const isLogin = location.pathname === "/login"
   const [authLoading, setAuthLoading] = useState(true)
-  const [isAdmin, setIsAdmin] = useState(false)
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [rol, setRol] = useState<"admin" | "vendedor">("admin")
 
   useEffect(() => {
     async function validateAdminSession() {
       const hasToken = Boolean(localStorage.getItem(ACCESS_TOKEN_KEY))
       if (!hasToken) {
-        setIsAdmin(false)
+        setIsAuthenticated(false)
         setAuthLoading(false)
         return
       }
 
-      // Permite entrar a la app inmediatamente si hay token persistido,
-      // y valida en segundo plano para no forzar relogin por latencia momentánea.
-      setIsAdmin(true)
+      const localUser = getStoredAuthUser()
+      if (localUser?.rol) {
+        setRol(localUser.rol)
+      }
+      setIsAuthenticated(true)
 
       try {
-        await getCurrentAdmin()
-        setIsAdmin(true)
+        const user = await getCurrentUser()
+        setRol(user.rol === "vendedor" ? "vendedor" : "admin")
+        setIsAuthenticated(true)
       } catch {
         // Si el token no es valido, limpiamos sesion para forzar login solo al ingresar.
         clearAuthTokens()
-        setIsAdmin(false)
+        setIsAuthenticated(false)
       } finally {
         setAuthLoading(false)
       }
@@ -57,7 +62,7 @@ function App() {
       const hasToken = Boolean(localStorage.getItem(ACCESS_TOKEN_KEY))
       if (!hasToken) {
         clearAuthTokens()
-        setIsAdmin(false)
+        setIsAuthenticated(false)
       }
     }
 
@@ -73,13 +78,15 @@ function App() {
     )
   }
 
-  if (isLogin && isAdmin) {
-    return <Navigate to="/" replace />
+  if (isLogin && isAuthenticated) {
+    return <Navigate to={rol === "vendedor" ? "/ventas" : "/"} replace />
   }
 
-  if (!isLogin && !isAdmin) {
+  if (!isLogin && !isAuthenticated) {
     return <Navigate to="/login" replace />
   }
+
+  const isVendedor = rol === "vendedor"
 
   return (
   <div className="flex min-h-screen w-full bg-gray-100">
@@ -101,12 +108,12 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/" element={<Home />} />
           <Route path="/inventario" element={<Inventario />} />
-          <Route path="/inventario/agregar" element={<AgregarProducto />} />
-          <Route path="/inventario/editar/:id" element={<EditarProducto />} />
+          <Route path="/inventario/agregar" element={isVendedor ? <Navigate to="/inventario" replace /> : <AgregarProducto />} />
+          <Route path="/inventario/editar/:id" element={isVendedor ? <Navigate to="/inventario" replace /> : <EditarProducto />} />
           <Route path="/ventas" element={<Ventas />} />
           <Route path="/reportes" element={<Reportes />} />
           <Route path="/perfil" element={<Perfil />} />
-          <Route path="/usuarios" element={<Navigate to="/" replace />} />
+          <Route path="/usuarios" element={<Usuarios />} />
           <Route path="/tcgplayer" element={<BuscadorTCGPlayer />} />
         </Routes>
       </div>

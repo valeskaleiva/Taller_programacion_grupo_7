@@ -2,6 +2,7 @@ from datetime import datetime, time, timedelta
 
 from django.db import models
 from rest_framework import viewsets, filters
+from rest_framework import permissions
 from .models import Reporte
 from .serializers import ReporteSerializer
 from apps.ventas.models import Venta, DetalleVenta
@@ -12,9 +13,23 @@ from django.utils import timezone
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
+
+class PuedeVerReportes(permissions.BasePermission):
+    """Admin y vendedor pueden leer reportes; solo admin puede modificar."""
+
+    def has_permission(self, request, view):
+        if not request.user or not request.user.is_authenticated:
+            return False
+
+        if request.method in permissions.SAFE_METHODS:
+            return True
+
+        return bool(request.user.is_staff)
+
 class ReporteViewSet(viewsets.ModelViewSet): # gestionar reportes 
     queryset = Reporte.objects.all()
     serializer_class = ReporteSerializer
+    permission_classes = [PuedeVerReportes]
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['tipo_reporte','id_usuario__username']
     ordering_fields = ['fecha_reporte', 'tipo_reporte']

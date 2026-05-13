@@ -10,6 +10,7 @@ const TITULOS: Record<string, string> = {
   "/ventas": "VENTAS",
   "/reportes": "REPORTES",
   "/perfil": "PERFIL",
+  "/usuarios": "USUARIOS",
 };
 
 type Props = {

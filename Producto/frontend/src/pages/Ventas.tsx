@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   crearVenta,
+  getStoredAuthUser,
   getProductoPorCodigo,
   getUsuariosVenta,
   setVentaMetodoPago,
@@ -27,6 +28,8 @@ const clpFormatter = new Intl.NumberFormat('es-CL', {
 const formatCLP = (amount: number) => clpFormatter.format(amount);
 
 function Ventas() {
+  const authUser = getStoredAuthUser();
+  const isVendedor = authUser?.rol === 'vendedor';
   const [codigo, setCodigo] = useState('');
   const [metodoPago, setMetodoPago] = useState<MetodoPago>('Efectivo');
   const [items, setItems] = useState<CartItem[]>([]);
@@ -45,17 +48,25 @@ function Ventas() {
         const activos = data.filter((u) => u.is_active);
         setUsuarios(activos);
 
+        if (isVendedor && authUser?.id) {
+          setUsuarioVentaId(authUser.id);
+          return;
+        }
+
         if (activos.length > 0) {
           const existeDefault = activos.some((u) => u.id === USUARIO_VENTA_DEFAULT);
           setUsuarioVentaId(existeDefault ? USUARIO_VENTA_DEFAULT : activos[0].id);
         }
       } catch {
         setUsuarios([]);
+        if (isVendedor && authUser?.id) {
+          setUsuarioVentaId(authUser.id);
+        }
       }
     })();
 
     enfocarScanner();
-  }, []);
+  }, [authUser?.id, isVendedor]);
 
   const totalItems = useMemo(
     () => items.reduce((acc, item) => acc + item.cantidad, 0),
@@ -234,7 +245,7 @@ function Ventas() {
               className="w-full mt-1 border rounded-lg px-3 py-2"
               value={usuarioVentaId}
               onChange={(e) => setUsuarioVentaId(Number(e.target.value))}
-              disabled={usuarios.length === 0}
+              disabled={usuarios.length === 0 || isVendedor}
             >
               {usuarios.length === 0 ? (
                 <option value={USUARIO_VENTA_DEFAULT}>Usuario #1 (por defecto)</option>

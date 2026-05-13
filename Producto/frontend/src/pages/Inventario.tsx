@@ -5,6 +5,7 @@ import {
   actualizarProducto,
   crearProducto,
   eliminarProducto,
+  getStoredAuthUser,
   getProductos,
 } from '../services/api';
 import type { Producto } from '../types';
@@ -37,6 +38,8 @@ const productoVacio: Omit<Producto, 'id_producto'> = {
 };
 
 const Inventario: React.FC = () => {
+  const authUser = getStoredAuthUser();
+  const canManageInventory = (authUser?.rol ?? 'admin') === 'admin';
   const navigate = useNavigate();
   const [productos, setProductos] = useState<Producto[]>([]);
   const [filtroCategoria, setFiltroCategoria] = useState<CategoriaFiltro>('Todos');
@@ -128,25 +131,19 @@ const Inventario: React.FC = () => {
             setProductoResaltado(null);
             setMensajeEscaner('');
           }, 3000);
-        } else {
+        } else if (canManageInventory) {
           setMensajeEscaner(`⚠ Código ${codigo} no encontrado. ¿Desea agregarlo?`);
           setForm({ ...productoVacio, codigo_barras: codigo });
           setModoEdicion(false);
           setModalAbierto(true);
+        } else {
+          setMensajeEscaner(`⚠ Código ${codigo} no encontrado.`);
         }
         setCodigoEscaneado('');
       }
     },
-    [codigoEscaneado, productos]
+    [canManageInventory, codigoEscaneado, productos]
   );
-
-  const abrirAgregar = () => {
-    setForm(productoVacio);
-    setModoEdicion(false);
-    setIdEditando(null);
-    setErrorGuardado('');
-    setModalAbierto(true);
-  };
 
   const abrirAgregarEnVentana = () => {
     const destino = '/inventario/agregar';
@@ -280,19 +277,24 @@ const Inventario: React.FC = () => {
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-800">Inventario</h1>
-          <p className="text-sm text-gray-500">{productos.length} productos en total</p>
+          <p className="text-sm text-gray-500">
+            {productos.length} productos en total
+            {!canManageInventory ? ' · Modo vendedor (solo lectura)' : ''}
+          </p>
         </div>
-        <button
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            abrirAgregarEnVentana();
-          }}
-          type="button"
-          className="btn-primary w-full sm:w-auto flex items-center justify-center gap-2 text-sm font-medium px-4 py-2 rounded-lg"
-        >
-          + Agregar producto
-        </button>
+        {canManageInventory && (
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              abrirAgregarEnVentana();
+            }}
+            type="button"
+            className="btn-primary w-full sm:w-auto flex items-center justify-center gap-2 text-sm font-medium px-4 py-2 rounded-lg"
+          >
+            + Agregar producto
+          </button>
+        )}
       </div>
 
       {/* Barra de escáner + búsqueda + filtros */}
@@ -380,7 +382,7 @@ const Inventario: React.FC = () => {
               {(filtroCategoria === 'Todos' || filtroCategoria === 'Caja') && (
                 <th className="px-3 py-3 font-semibold text-gray-600 whitespace-nowrap">Cant. Sobres</th>
               )}
-              <th className="px-3 py-3 font-semibold text-gray-600 text-center">Acciones</th>
+              {canManageInventory && <th className="px-3 py-3 font-semibold text-gray-600 text-center">Acciones</th>}
             </tr>
           </thead>
           <tbody>
@@ -437,21 +439,23 @@ const Inventario: React.FC = () => {
                     {(filtroCategoria === 'Todos' || filtroCategoria === 'Caja') && (
                       <td className="px-3 py-2 text-gray-600 text-center">{p.cant_sobres ?? '—'}</td>
                     )}
-                    <td className="px-3 py-2 text-center whitespace-nowrap">
-                      <button
-                        onClick={() => abrirEditar(p)}
-                        style={{ color: 'var(--primary)' }}
-                        className="font-medium mr-3 text-xs hover:opacity-70"
-                      >
-                        Editar
-                      </button>
-                      <button
-                        onClick={() => confirmarEliminar(p)}
-                        className="text-red-500 hover:text-red-700 font-medium text-xs"
-                      >
-                        Eliminar
-                      </button>
-                    </td>
+                    {canManageInventory && (
+                      <td className="px-3 py-2 text-center whitespace-nowrap">
+                        <button
+                          onClick={() => abrirEditar(p)}
+                          style={{ color: 'var(--primary)' }}
+                          className="font-medium mr-3 text-xs hover:opacity-70"
+                        >
+                          Editar
+                        </button>
+                        <button
+                          onClick={() => confirmarEliminar(p)}
+                          className="text-red-500 hover:text-red-700 font-medium text-xs"
+                        >
+                          Eliminar
+                        </button>
+                      </td>
+                    )}
                   </tr>
                 );
               })
@@ -472,7 +476,7 @@ const Inventario: React.FC = () => {
       </div>
 
       {/* Modal Agregar / Editar */}
-      {modalAbierto && renderInBody(
+      {modalAbierto && canManageInventory && renderInBody(
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-[9999] p-4">
           <div className="bg-white rounded-2xl shadow-xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between px-6 py-4 border-b">
@@ -627,7 +631,7 @@ const Inventario: React.FC = () => {
       )}
 
       {/* Modal Confirmar Eliminar */}
-      {modalEliminar && renderInBody(
+      {modalEliminar && canManageInventory && renderInBody(
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-[9999] p-4">
           <div className="bg-white rounded-2xl shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto">
             <div className="p-6 space-y-4">

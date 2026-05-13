@@ -21,10 +21,10 @@ function Login() {
 
     try {
       setLoading(true)
-      await loginAdmin(username.trim(), password)
-      navigate("/", { replace: true })
+      const user = await loginAdmin(username.trim(), password)
+      navigate(user.rol === 'vendedor' ? "/ventas" : "/", { replace: true })
     } catch {
-      setError("Acceso denegado. Solo administradores de Django pueden entrar.")
+      setError("Acceso denegado. Verifica usuario, contraseña y rol activo.")
     } finally {
       setLoading(false)
     }
@@ -39,8 +39,8 @@ function Login() {
             alt="logo"
             className="w-[260px] h-[280px] mx-auto mb-2 object-contain"
           />
-          <h1 className="text-xl font-extrabold text-white">Acceso Administrador</h1>
-          <p className="text-sm text-white/90 mt-1">Solo cuentas staff de Django</p>
+          <h1 className="text-xl font-extrabold text-white">Acceso al Sistema</h1>
+          <p className="text-sm text-white/90 mt-1">Roles habilitados: administrador y vendedor</p>
         </div>
 
         <form onSubmit={(e) => void handleSubmit(e)} className="space-y-4">
@@ -82,7 +82,7 @@ function Login() {
         </form>
 
         <p className="text-center text-xs text-white mt-4">
-          Si no tienes acceso staff, solicita habilitación al administrador del sistema.
+          Si no tienes acceso, solicita habilitación al administrador del sistema.
         </p>
       </div>
     </div>
