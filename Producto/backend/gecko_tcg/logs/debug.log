@@ -3095,3 +3095,13 @@ WARNING 2026-05-11 14:19:39,997 log2954821936Too Many Requests: /api/productos/
 WARNING 2026-05-11 14:19:42,593 log2954828940Too Many Requests: /api/productos/2/
 WARNING 2026-05-11 14:19:42,605 log295484016Too Many Requests: /api/productos/2/
 WARNING 2026-05-11 14:19:43,635 log2954813420Too Many Requests: /api/productos/
+WARNING 2026-05-11 14:26:44,956 log2954814632Too Many Requests: /api/productos/
+INFO 2026-05-12 15:51:11,450 autoreload1542433808Watching for file changes with StatReloader
+INFO 2026-05-12 15:51:41,250 autoreload1520421720Watching for file changes with StatReloader
+INFO 2026-05-12 15:52:18,656 autoreload2138025324Watching for file changes with StatReloader
+INFO 2026-05-12 15:54:17,787 autoreload548030416Watching for file changes with StatReloader
+WARNING 2026-05-12 15:54:37,713 log548034136Not Found: /
+INFO 2026-05-14 15:11:13,529 autoreload2475617012Watching for file changes with StatReloader
+WARNING 2026-05-14 15:20:10,999 log2475617684Not Found: /
+WARNING 2026-05-14 15:20:16,954 log2475617684Not Found: /
+WARNING 2026-05-14 16:21:44,192 log2475627008Too Many Requests: /api/ventas/
