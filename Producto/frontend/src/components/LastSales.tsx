@@ -4,6 +4,7 @@ const METODO_BADGE: Record<string, string> = {
   Efectivo: "bg-green-100 text-green-700",
   Tarjeta: "bg-blue-100 text-blue-700",
   Transferencia: "bg-purple-100 text-purple-700",
+  "N/D": "bg-gray-100 text-gray-600",
 };
 
 type VentaTabla = {
@@ -15,6 +16,14 @@ type VentaTabla = {
 };
 
 const COLS = ["#", "Hora", "Cliente", "Producto", "Método", "Total"];
+
+const clpFormatter = new Intl.NumberFormat('es-CL', {
+  style: 'currency',
+  currency: 'CLP',
+  maximumFractionDigits: 0,
+});
+
+const formatCLP = (amount: number) => clpFormatter.format(amount);
 
 type Props = {
   ventas?: VentaResumen[];
@@ -29,7 +38,7 @@ export default function LastSales({ ventas = [] }: Props) {
       cliente: v.usuario?.username || 'Cliente',
       producto: firstDetail?.producto?.nombre || 'Producto',
       total: Number.isFinite(total) ? total : 0,
-      metodo: 'Tarjeta',
+      metodo: v.metodo_pago || 'N/D',
       hora: new Date(v.fecha_venta).toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' }),
     };
   });
@@ -42,13 +51,13 @@ export default function LastSales({ ventas = [] }: Props) {
       </div>
 
       <div className="overflow-x-auto">
-        <table className="w-full text-sm">
+        <table className="w-full text-sm border border-gray-200 rounded-lg overflow-hidden">
           <thead>
-            <tr className="border-b border-gray-100">
+            <tr className="bg-gray-50 border-b border-gray-200">
               {COLS.map((col) => (
                 <th
                   key={col}
-                  className="text-left text-xs font-semibold text-gray-400 uppercase tracking-wide pb-2 pr-4 last:text-right last:pr-0"
+                  className="text-center text-xs font-semibold text-gray-500 uppercase tracking-wide py-2 px-3 border-r border-gray-200 last:border-r-0"
                 >
                   {col}
                 </th>
@@ -57,19 +66,16 @@ export default function LastSales({ ventas = [] }: Props) {
           </thead>
           <tbody>
             {ventasTabla.map((v, i) => (
-              <tr
-                key={i}
-                className="border-b border-gray-50 hover:bg-gray-50 transition-colors"
-              >
+              <tr key={i} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
                 {/* # */}
-                <td className="py-3 pr-4 text-gray-400 font-medium w-8">{i + 1}</td>
+                <td className="py-3 px-3 text-center text-gray-400 font-medium w-8 border-r border-gray-100">{i + 1}</td>
 
                 {/* Hora */}
-                <td className="py-3 pr-4 text-gray-500 whitespace-nowrap">{v.hora}</td>
+                <td className="py-3 px-3 text-center text-gray-500 whitespace-nowrap border-r border-gray-100">{v.hora}</td>
 
                 {/* Cliente */}
-                <td className="py-3 pr-4">
-                  <div className="flex items-center gap-2">
+                <td className="py-3 px-3 border-r border-gray-100">
+                  <div className="flex items-center justify-center gap-2">
                     <div className="w-7 h-7 rounded-full bg-emerald-100 text-emerald-700 font-bold text-xs flex items-center justify-center flex-shrink-0">
                       {v.cliente[0]}
                     </div>
@@ -78,22 +84,18 @@ export default function LastSales({ ventas = [] }: Props) {
                 </td>
 
                 {/* Producto */}
-                <td className="py-3 pr-4 text-gray-700">{v.producto}</td>
+                <td className="py-3 px-3 text-gray-700 text-center border-r border-gray-100">{v.producto}</td>
 
                 {/* Método */}
-                <td className="py-3 pr-4">
-                  <span
-                    className={`text-xs px-2.5 py-1 rounded-full font-medium ${
-                      METODO_BADGE[v.metodo] ?? "bg-gray-100 text-gray-600"
-                    }`}
-                  >
+                <td className="py-3 px-3 text-center border-r border-gray-100">
+                  <span className={`text-xs px-2.5 py-1 rounded-full font-medium ${METODO_BADGE[v.metodo] ?? "bg-gray-100 text-gray-600"}`}>
                     {v.metodo}
                   </span>
                 </td>
 
                 {/* Total */}
-                <td className="py-3 text-right font-bold text-gray-800 whitespace-nowrap">
-                  ${v.total.toLocaleString("es-CL")}
+                <td className="py-3 px-3 text-center font-bold text-gray-800 whitespace-nowrap">
+                  {formatCLP(v.total)}
                 </td>
               </tr>
             ))}
@@ -104,7 +106,7 @@ export default function LastSales({ ventas = [] }: Props) {
                 Total del día
               </td>
               <td className="pt-3 text-right font-bold text-emerald-700 text-sm">
-                ${ventasTabla.reduce((s, v) => s + v.total, 0).toLocaleString("es-CL")}
+                {formatCLP(ventasTabla.reduce((s, v) => s + v.total, 0))}
               </td>
             </tr>
           </tfoot>

@@ -180,7 +180,7 @@ const EditarProducto: React.FC = () => {
                 />
               </div>
               <div>
-                <label className="text-xs font-medium text-gray-600">Precio Base ($)</label>
+                <label className="text-xs font-medium text-gray-600">Precio Base (CLP)</label>
                 <input
                   type="number"
                   min={0}

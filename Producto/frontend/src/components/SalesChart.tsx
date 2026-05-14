@@ -15,7 +15,7 @@ type Props = {
 };
 
 const formatCLP = (v: number) =>
-  v >= 1000 ? `$${(v / 1000).toFixed(0)}k` : `$${v}`;
+  v >= 1000 ? `${Math.round(v / 1000)}k CLP` : `${v} CLP`;
 
 export default function SalesChart({ ventas = [] }: Props) {
   const data = useMemo(() => {
@@ -57,7 +57,7 @@ export default function SalesChart({ ventas = [] }: Props) {
           <Tooltip
             formatter={(v) => {
               const value = typeof v === 'number' ? v : Number(v ?? 0);
-              return [`$${value.toLocaleString("es-CL")}`, "Ventas"];
+              return [new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP', maximumFractionDigits: 0 }).format(value), "Ventas"];
             }}
             contentStyle={{ borderRadius: "8px", border: "none", boxShadow: "0 4px 12px rgba(0,0,0,.1)" }}
           />

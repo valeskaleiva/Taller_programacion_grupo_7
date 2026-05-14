@@ -5,6 +5,7 @@ import TopProducts from "../components/TopProducts";
 import LowStock from "../components/LowStock";
 import LastSales from "../components/LastSales";
 import {
+  getVentaMetodoPago,
   getProductos,
   getProductosBajoStock,
   getTopProductosVendidos,
@@ -12,6 +13,14 @@ import {
   type VentaResumen,
 } from "../services/api";
 import type { Producto } from "../types";
+
+const clpFormatter = new Intl.NumberFormat('es-CL', {
+  style: 'currency',
+  currency: 'CLP',
+  maximumFractionDigits: 0,
+});
+
+const formatCLP = (amount: number) => clpFormatter.format(amount);
 
 export default function Home() {
   const [productos, setProductos] = useState<Producto[]>([]);
@@ -29,6 +38,11 @@ export default function Home() {
       ]);
 
       setProductos(productosData);
+
+      const categoriaPorId = new Map<number, string>(
+        productosData.map((p) => [p.id_producto, p.categoria])
+      );
+
       setTopVendidos(
         topData.map((item) => ({
           nombre: item.id_producto__nombre,
@@ -39,11 +53,16 @@ export default function Home() {
         bajoStockData.map((item) => ({
           id_producto: item.id_producto,
           nombre: item.nombre,
-          categoria: 'Producto',
+          categoria: categoriaPorId.get(item.id_producto) ?? 'Producto',
           stock: item.stock,
         }))
       );
-      setVentas(ventasData.slice(0, 5));
+      setVentas(
+        ventasData.map((venta) => ({
+          ...venta,
+          metodo_pago: getVentaMetodoPago(venta.id_venta) ?? venta.metodo_pago,
+        }))
+      );
     }
 
     void load();
@@ -51,12 +70,25 @@ export default function Home() {
 
   const totalStock = useMemo(() => productos.reduce((acc, p) => acc + p.stock, 0), [productos]);
   const totalProductos = productos.length;
-  const ventasHoy = useMemo(
-    () =>
-      ventas.reduce((acc, v) => {
-        const value = typeof v.total_pagado === 'string' ? Number(v.total_pagado) : v.total_pagado;
-        return acc + (Number.isFinite(value) ? value : 0);
-      }, 0),
+  const ventasHoy = useMemo(() => {
+    const hoy = new Date();
+    return ventas.reduce((acc, v) => {
+      const fecha = new Date(v.fecha_venta);
+      if (Number.isNaN(fecha.getTime())) return acc;
+
+      const esHoy =
+        fecha.getFullYear() === hoy.getFullYear() &&
+        fecha.getMonth() === hoy.getMonth() &&
+        fecha.getDate() === hoy.getDate();
+      if (!esHoy) return acc;
+
+      const value = typeof v.total_pagado === 'string' ? Number(v.total_pagado) : v.total_pagado;
+      return acc + (Number.isFinite(value) ? value : 0);
+    }, 0);
+  }, [ventas]);
+
+  const ultimasVentas = useMemo(
+    () => [...ventas].sort((a, b) => new Date(b.fecha_venta).getTime() - new Date(a.fecha_venta).getTime()).slice(0, 5),
     [ventas]
   );
   const valorInventario = useMemo(
@@ -68,10 +100,10 @@ export default function Home() {
     <div className="space-y-6 p-2 sm:p-4">
       {/* FILA 1: 4 KPIs en una sola fila */}
       <div className="grid grid-cols-4 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-        <Card title="💰 Ventas hoy" value={`$${ventasHoy.toLocaleString('es-CL')}`} extra="+12% vs ayer" />
+        <Card title="💰 Ventas hoy" value={formatCLP(ventasHoy)} extra="Actualizado en tiempo real" />
         <Card title="📦 Unidades en stock" value={totalStock} />
         <Card title="🧾 Productos" value={totalProductos} />
-        <Card title="🏦 Valor inventario" value={`$${valorInventario.toLocaleString('es-CL')}`} />
+        <Card title="🏦 Valor inventario" value={formatCLP(valorInventario)} />
       </div>
 
       {/* FILA 2: Gráfico ancho completo */}
@@ -84,7 +116,7 @@ export default function Home() {
       </div>
 
       {/* FILA 4: Últimas Ventas ancho completo */}
-      <LastSales ventas={ventas} />
+      <LastSales ventas={ultimasVentas} />
     </div>
   );
 }

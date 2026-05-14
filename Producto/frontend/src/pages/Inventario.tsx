@@ -5,6 +5,7 @@ import {
   actualizarProducto,
   crearProducto,
   eliminarProducto,
+  getStoredAuthUser,
   getProductos,
 } from '../services/api';
 import type { Producto } from '../types';
@@ -12,6 +13,13 @@ import type { Producto } from '../types';
 type CategoriaFiltro = 'Todos' | 'Carta' | 'Sobre' | 'Caja';
 
 const STOCK_MINIMO = 5;
+const clpFormatter = new Intl.NumberFormat('es-CL', {
+  style: 'currency',
+  currency: 'CLP',
+  maximumFractionDigits: 0,
+});
+
+const formatCLP = (amount: number) => clpFormatter.format(amount);
 
 const productoVacio: Omit<Producto, 'id_producto'> = {
   codigo_barras: '',
@@ -30,6 +38,8 @@ const productoVacio: Omit<Producto, 'id_producto'> = {
 };
 
 const Inventario: React.FC = () => {
+  const authUser = getStoredAuthUser();
+  const canManageInventory = (authUser?.rol ?? 'admin') === 'admin';
   const navigate = useNavigate();
   const [productos, setProductos] = useState<Producto[]>([]);
   const [filtroCategoria, setFiltroCategoria] = useState<CategoriaFiltro>('Todos');
@@ -121,25 +131,19 @@ const Inventario: React.FC = () => {
             setProductoResaltado(null);
             setMensajeEscaner('');
           }, 3000);
-        } else {
+        } else if (canManageInventory) {
           setMensajeEscaner(`⚠ Código ${codigo} no encontrado. ¿Desea agregarlo?`);
           setForm({ ...productoVacio, codigo_barras: codigo });
           setModoEdicion(false);
           setModalAbierto(true);
+        } else {
+          setMensajeEscaner(`⚠ Código ${codigo} no encontrado.`);
         }
         setCodigoEscaneado('');
       }
     },
-    [codigoEscaneado, productos]
+    [canManageInventory, codigoEscaneado, productos]
   );
-
-  const abrirAgregar = () => {
-    setForm(productoVacio);
-    setModoEdicion(false);
-    setIdEditando(null);
-    setErrorGuardado('');
-    setModalAbierto(true);
-  };
 
   const abrirAgregarEnVentana = () => {
     const destino = '/inventario/agregar';
@@ -273,19 +277,24 @@ const Inventario: React.FC = () => {
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-800">Inventario</h1>
-          <p className="text-sm text-gray-500">{productos.length} productos en total</p>
+          <p className="text-sm text-gray-500">
+            {productos.length} productos en total
+            {!canManageInventory ? ' · Modo vendedor (solo lectura)' : ''}
+          </p>
         </div>
-        <button
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            abrirAgregarEnVentana();
-          }}
-          type="button"
-          className="btn-primary w-full sm:w-auto flex items-center justify-center gap-2 text-sm font-medium px-4 py-2 rounded-lg"
-        >
-          + Agregar producto
-        </button>
+        {canManageInventory && (
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              abrirAgregarEnVentana();
+            }}
+            type="button"
+            className="btn-primary w-full sm:w-auto flex items-center justify-center gap-2 text-sm font-medium px-4 py-2 rounded-lg"
+          >
+            + Agregar producto
+          </button>
+        )}
       </div>
 
       {/* Barra de escáner + búsqueda + filtros */}
@@ -348,11 +357,11 @@ const Inventario: React.FC = () => {
       <div className="overflow-x-auto rounded-xl border border-gray-200 shadow-sm">
         <table className="w-full text-sm">
           <thead>
-            <tr className="bg-gray-50 border-b border-gray-200 text-left">
-              <th className="px-3 py-3 font-semibold text-gray-600 whitespace-nowrap">Código Barras</th>
-              <th className="px-3 py-3 font-semibold text-gray-600">Nombre</th>
-              <th className="px-3 py-3 font-semibold text-gray-600">Categoría</th>
-              <th className="px-3 py-3 font-semibold text-gray-600 whitespace-nowrap">Precio Base</th>
+            <tr className="bg-gray-50 border-b border-gray-200 text-center">
+              <th className="px-3 py-3 font-semibold text-gray-600 whitespace-nowrap border-r border-gray-200">Código Barras</th>
+              <th className="px-3 py-3 font-semibold text-gray-600 border-r border-gray-200">Nombre</th>
+              <th className="px-3 py-3 font-semibold text-gray-600 border-r border-gray-200">Categoría</th>
+              <th className="px-3 py-3 font-semibold text-gray-600 whitespace-nowrap border-r border-gray-200">Precio Base (CLP)</th>
               <th className="px-3 py-3 font-semibold text-gray-600 text-center">Stock</th>
               <th className="px-3 py-3 font-semibold text-gray-600 text-center">Estado</th>
               {/* Columnas condicionales */}
@@ -361,7 +370,7 @@ const Inventario: React.FC = () => {
                   <th className="px-3 py-3 font-semibold text-gray-600">Rareza</th>
                   <th className="px-3 py-3 font-semibold text-gray-600">Edición</th>
                   <th className="px-3 py-3 font-semibold text-gray-600">Estado Carta</th>
-                  <th className="px-3 py-3 font-semibold text-gray-600 whitespace-nowrap">Precio Mercado</th>
+                  <th className="px-3 py-3 font-semibold text-gray-600 whitespace-nowrap">Precio Mercado (CLP)</th>
                 </>
               )}
               {(filtroCategoria === 'Todos' || filtroCategoria === 'Sobre') && (
@@ -373,7 +382,7 @@ const Inventario: React.FC = () => {
               {(filtroCategoria === 'Todos' || filtroCategoria === 'Caja') && (
                 <th className="px-3 py-3 font-semibold text-gray-600 whitespace-nowrap">Cant. Sobres</th>
               )}
-              <th className="px-3 py-3 font-semibold text-gray-600 text-center">Acciones</th>
+              {canManageInventory && <th className="px-3 py-3 font-semibold text-gray-600 text-center">Acciones</th>}
             </tr>
           </thead>
           <tbody>
@@ -402,12 +411,10 @@ const Inventario: React.FC = () => {
                         : 'hover:bg-gray-50'
                     }`}
                   >
-                    <td className="px-3 py-2 font-mono text-xs text-gray-600 whitespace-nowrap">{p.codigo_barras}</td>
-                    <td className="px-3 py-2 font-medium text-gray-800">{p.nombre}</td>
-                    <td className="px-3 py-2">{badgeCategoria(p.categoria)}</td>
-                    <td className="px-3 py-2 text-gray-700 whitespace-nowrap">
-                      ${p.precio_base.toLocaleString('es-CL')}
-                    </td>
+                    <td className="px-3 py-2 font-mono text-xs text-gray-600 whitespace-nowrap border-r border-gray-100 text-center">{p.codigo_barras}</td>
+                    <td className="px-3 py-2 font-medium text-gray-800 border-r border-gray-100 text-center">{p.nombre}</td>
+                    <td className="px-3 py-2 border-r border-gray-100 text-center">{badgeCategoria(p.categoria)}</td>
+                    <td className="px-3 py-2 text-gray-700 whitespace-nowrap border-r border-gray-100 text-center">{formatCLP(p.precio_base)}</td>
                     <td className="px-3 py-2 text-center font-semibold text-gray-800">{p.stock}</td>
                     <td className="px-3 py-2 text-center">{badgeStock(p.stock)}</td>
                     {/* Columnas Carta */}
@@ -417,7 +424,7 @@ const Inventario: React.FC = () => {
                         <td className="px-3 py-2 text-gray-600">{p.edicion ?? '—'}</td>
                         <td className="px-3 py-2 text-gray-600">{p.estado ?? '—'}</td>
                         <td className="px-3 py-2 text-gray-700 whitespace-nowrap">
-                          {p.precio_mercado != null ? `$${p.precio_mercado.toLocaleString('es-CL')}` : '—'}
+                          {p.precio_mercado != null ? formatCLP(p.precio_mercado) : '—'}
                         </td>
                       </>
                     )}
@@ -432,21 +439,23 @@ const Inventario: React.FC = () => {
                     {(filtroCategoria === 'Todos' || filtroCategoria === 'Caja') && (
                       <td className="px-3 py-2 text-gray-600 text-center">{p.cant_sobres ?? '—'}</td>
                     )}
-                    <td className="px-3 py-2 text-center whitespace-nowrap">
-                      <button
-                        onClick={() => abrirEditar(p)}
-                        style={{ color: 'var(--primary)' }}
-                        className="font-medium mr-3 text-xs hover:opacity-70"
-                      >
-                        Editar
-                      </button>
-                      <button
-                        onClick={() => confirmarEliminar(p)}
-                        className="text-red-500 hover:text-red-700 font-medium text-xs"
-                      >
-                        Eliminar
-                      </button>
-                    </td>
+                    {canManageInventory && (
+                      <td className="px-3 py-2 text-center whitespace-nowrap">
+                        <button
+                          onClick={() => abrirEditar(p)}
+                          style={{ color: 'var(--primary)' }}
+                          className="font-medium mr-3 text-xs hover:opacity-70"
+                        >
+                          Editar
+                        </button>
+                        <button
+                          onClick={() => confirmarEliminar(p)}
+                          className="text-red-500 hover:text-red-700 font-medium text-xs"
+                        >
+                          Eliminar
+                        </button>
+                      </td>
+                    )}
                   </tr>
                 );
               })
@@ -467,7 +476,7 @@ const Inventario: React.FC = () => {
       </div>
 
       {/* Modal Agregar / Editar */}
-      {modalAbierto && renderInBody(
+      {modalAbierto && canManageInventory && renderInBody(
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-[9999] p-4">
           <div className="bg-white rounded-2xl shadow-xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between px-6 py-4 border-b">
@@ -536,7 +545,7 @@ const Inventario: React.FC = () => {
                   />
                 </div>
                 <div>
-                  <label className="text-xs font-medium text-gray-600">Precio Base ($)</label>
+                  <label className="text-xs font-medium text-gray-600">Precio Base (CLP)</label>
                   <input
                     type="number"
                     min={0}
@@ -572,7 +581,7 @@ const Inventario: React.FC = () => {
                       </select>
                     </div>
                     <div>
-                      <label className="text-xs font-medium text-gray-600">Precio Mercado ($)</label>
+                      <label className="text-xs font-medium text-gray-600">Precio Mercado (CLP)</label>
                       <input type="number" min={0} value={form.precio_mercado ?? 0} onChange={(e) => setForm({ ...form, precio_mercado: Number(e.target.value) })} className="w-full mt-1 border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primaryLight" />
                     </div>
                   </div>
@@ -622,7 +631,7 @@ const Inventario: React.FC = () => {
       )}
 
       {/* Modal Confirmar Eliminar */}
-      {modalEliminar && renderInBody(
+      {modalEliminar && canManageInventory && renderInBody(
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-[9999] p-4">
           <div className="bg-white rounded-2xl shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto">
             <div className="p-6 space-y-4">

@@ -86,6 +86,10 @@ class VentaCreateSerializer(serializers.ModelSerializer):
         read_only_fields = ['id_venta', 'fecha_venta', 'total_pagado']
 
     def validate(self, attrs):
+        request = self.context.get('request')
+        if request and request.user and request.user.is_authenticated and not request.user.is_staff:
+            attrs['id_usuario'] = request.user
+
         detalles_data = attrs.get('detalles', [])
         if not detalles_data:
             raise serializers.ValidationError({'detalles': 'Debes agregar al menos un producto.'})
