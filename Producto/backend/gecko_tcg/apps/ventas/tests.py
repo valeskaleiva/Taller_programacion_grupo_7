@@ -3,6 +3,7 @@ from django.test import SimpleTestCase
 from decimal import Decimal
 from apps.ventas.models import DetalleVenta
 from apps.ventas.serializers import DetalleVentaSerializer
+from django.core.exceptions import ValidationError
 
 
 
@@ -49,3 +50,14 @@ class DetalleVentaSerializerTest(SimpleTestCase):
         self.assertEqual(resultado, Decimal('299.99'))
 
 # Create your tests here.
+class DetalleVentaValidacionTest(SimpleTestCase):
+
+    def test_cantidad_cero_es_invalida(self):
+        detalle = DetalleVenta(cantidad=0, precio_unitario=Decimal('10.00'))
+        with self.assertRaises(ValidationError):
+            detalle.full_clean()
+
+    def test_cantidad_negativa_es_invalida(self):
+        detalle = DetalleVenta(cantidad=-5, precio_unitario=Decimal('10.00'))
+        with self.assertRaises(ValidationError):
+            detalle.full_clean()

@@ -4,6 +4,7 @@ from apps.productos.models import Producto, ProductoCarta, ProductoSobre, Produc
 from apps.productos.serializers import ProductoSerializer, ProductoCartaSerializer, ProductoSobreSerializer, ProductoCajaSerializer
 from unittest.mock import patch, MagicMock
 from rest_framework.test import APIClient
+from django.core.exceptions import ValidationError
 
 class ProductoStrTest(SimpleTestCase):
 
@@ -137,3 +138,23 @@ class ReducirStockViewTest(SimpleTestCase):
         )
         self.assertEqual(response.status_code, 400)
         self.assertIn('error', response.data)
+
+
+# Test de validacione de modelo 
+class ProductoValidacionTest(SimpleTestCase):
+
+    def test_stock_negativo_es_invalido(self):
+        producto = Producto(
+            nombre="Pikachu", codigo_barras="001",
+            stock=-1, precio_base=Decimal('10.00'), categoria='Carta'
+        )
+        with self.assertRaises(ValidationError):
+            producto.full_clean(validate_unique=False)
+
+    def test_categoria_invalida_es_rechazada(self):
+        producto = Producto(
+            nombre="Pikachu", codigo_barras="001",
+            stock=5, precio_base=Decimal('10.00'), categoria='TipoInventado'
+        )
+        with self.assertRaises(ValidationError):
+            producto.full_clean(validate_unique=False)

@@ -7127,3 +7127,4 @@ WARNING 2026-05-15 01:19:35,430 log31217432Unauthorized: /api/productos/bajo_sto
 WARNING 2026-05-15 01:19:35,435 log31217432Unauthorized: /api/productos/bajo_stock/
 WARNING 2026-05-15 01:19:35,454 log31217432Bad Request: /api/productos/1/reducir_stock/
 WARNING 2026-05-15 01:30:43,023 log197928576Bad Request: /api/productos/1/reducir_stock/
+WARNING 2026-05-15 10:17:33,878 log93643588Unauthorized: /api/reportes/top_productos_vendidos/
