@@ -7103,3 +7103,27 @@ INFO 2026-05-13 02:19:23,446 autoreload3009217724C:\Users\Taller_programacion_gr
 INFO 2026-05-13 02:19:23,514 autoreload342687460C:\Users\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\apps\usuarios\views.py changed, reloading.
 INFO 2026-05-13 02:19:24,333 autoreload1413633456Watching for file changes with StatReloader
 INFO 2026-05-13 02:19:24,396 autoreload3076421544Watching for file changes with StatReloader
+WARNING 2026-05-15 00:47:16,569 log1392814776Unauthorized: /api/productos/bajo_stock/
+WARNING 2026-05-15 00:47:16,579 log1392814776Unauthorized: /api/productos/bajo_stock/
+WARNING 2026-05-15 00:47:16,583 log1392814776Unauthorized: /api/productos/bajo_stock/
+WARNING 2026-05-15 00:47:16,595 log1392814776Unauthorized: /api/productos/1/reducir_stock/
+WARNING 2026-05-15 00:47:16,600 log1392814776Unauthorized: /api/productos/1/reducir_stock/
+WARNING 2026-05-15 00:51:20,686 log37247860Unauthorized: /api/productos/bajo_stock/
+WARNING 2026-05-15 00:51:20,692 log37247860Unauthorized: /api/productos/bajo_stock/
+WARNING 2026-05-15 00:51:20,697 log37247860Unauthorized: /api/productos/bajo_stock/
+WARNING 2026-05-15 00:51:20,706 log37247860Unauthorized: /api/productos/1/reducir_stock/
+WARNING 2026-05-15 00:51:20,710 log37247860Unauthorized: /api/productos/1/reducir_stock/
+WARNING 2026-05-15 00:58:13,996 log582018980Unauthorized: /api/productos/bajo_stock/
+WARNING 2026-05-15 00:58:14,001 log582018980Unauthorized: /api/productos/bajo_stock/
+WARNING 2026-05-15 00:58:14,007 log582018980Unauthorized: /api/productos/bajo_stock/
+WARNING 2026-05-15 00:58:14,017 log582018980Unauthorized: /api/productos/1/reducir_stock/
+WARNING 2026-05-15 00:58:14,024 log582018980Unauthorized: /api/productos/1/reducir_stock/
+WARNING 2026-05-15 01:02:03,920 log420412092Unauthorized: /api/productos/bajo_stock/
+WARNING 2026-05-15 01:02:03,926 log420412092Unauthorized: /api/productos/bajo_stock/
+WARNING 2026-05-15 01:02:03,931 log420412092Unauthorized: /api/productos/bajo_stock/
+WARNING 2026-05-15 01:02:03,960 log420412092Bad Request: /api/productos/1/reducir_stock/
+WARNING 2026-05-15 01:19:35,424 log31217432Unauthorized: /api/productos/bajo_stock/
+WARNING 2026-05-15 01:19:35,430 log31217432Unauthorized: /api/productos/bajo_stock/
+WARNING 2026-05-15 01:19:35,435 log31217432Unauthorized: /api/productos/bajo_stock/
+WARNING 2026-05-15 01:19:35,454 log31217432Bad Request: /api/productos/1/reducir_stock/
+WARNING 2026-05-15 01:30:43,023 log197928576Bad Request: /api/productos/1/reducir_stock/
