@@ -98,7 +98,7 @@ function App() {
     <div className="flex-1 flex flex-col min-w-0">
 
       {/* HEADER */}
-      {!isLogin && <Header titulo="DASHBOARD" />}
+      {!isLogin && <Header />}
 
       {/* CONTENIDO REAL */}
       <main className="flex-1 bg-gray-100 p-3 sm:p-6">

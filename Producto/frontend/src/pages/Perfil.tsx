@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import type { ChangeEvent } from 'react';
 import { actualizarPerfilUsuario, getPerfilUsuario } from '../services/mockApi';
 import type { UserProfile } from '../types';
 
@@ -77,6 +78,17 @@ function Perfil() {
     setForm((prev) => ({ ...prev, [field]: value }));
   };
 
+  // Manejar subida de archivo de imagen y guardar como base64 en el estado
+  const handleAvatarFile = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      setForm((prev) => ({ ...prev, avatar: ev.target?.result as string }));
+    };
+    reader.readAsDataURL(file);
+  };
+
   const handleTelefonoChange = (value: string) => {
     setForm((prev) => ({ ...prev, telefono: extractTelefonoLocal(value) }));
   };
@@ -115,31 +127,27 @@ function Perfil() {
   }
 
   return (
-    <div className="w-full max-w-5xl mx-auto text-left">
+    <div className="w-full max-w-5xl mx-auto text-left" style={{ fontFamily: 'var(--sans)', fontSize: '18.5px', color: '#082f1a' }}>
       <div className="flex flex-col md:flex-row gap-6">
-        <section className="bg-white rounded-2xl shadow-sm border p-6 md:w-80">
-          <h2 className="text-2xl font-semibold text-gray-800">Mi perfil</h2>
-          <p className="text-sm text-gray-500 mt-1">Datos visibles en el panel de administración.</p>
+        <section className="bg-gradient-to-br from-emerald-50 via-white to-emerald-100 rounded-2xl shadow-md border-2 border-emerald-300 p-6 md:w-80" style={{ fontFamily: 'inherit', fontSize: 'inherit', color: 'inherit' }}>
+          <h2 className="text-2xl font-semibold text-gray-800"></h2>{/* aca va el titulo #borre el titulo porque se ve raro con el header, pero se puede volver a poner si se quiere*/}
+          <p className="text-sm text-gray-500 mt-1"></p>{/*borre la descripcion porque se ve raro con el header, pero se puede volver a poner si se quiere*/}
 
           <div className="mt-6 flex flex-col items-center gap-3">
-            <img
-              src={form.avatar || 'https://i.pravatar.cc/220?img=12'}
-              alt="Avatar del usuario"
-              className="w-28 h-28 rounded-full object-cover border-4 border-emerald-700"
-            />
-            <p className="text-lg font-semibold text-gray-800">{form.nombre || 'Sin nombre'}</p>
-            <p className="text-sm text-gray-500">@{form.nombre_usuario || 'usuario'}</p>
-            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800">
+            {/* Imagen de avatar eliminada por solicitud: no mostrar foto en el perfil */}
+            <p className="text-lg font-bold text-emerald-900">{form.nombre || 'Sin nombre'}</p>
+            <p className="text-sm text-emerald-700 font-medium">@{form.nombre_usuario || 'usuario'}</p>
+            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-emerald-200 text-emerald-900 border border-emerald-400">
               {form.puesto || 'Sin puesto'}
             </span>
           </div>
         </section>
 
-        <section className="flex-1 bg-white rounded-2xl shadow-sm border p-6">
-          <h3 className="text-xl font-semibold text-gray-800">Editar información</h3>
+        <section className="flex-1 bg-gradient-to-br from-white via-emerald-50 to-emerald-100 rounded-2xl shadow-md border-2 border-emerald-200 p-6" style={{ fontFamily: 'inherit', fontSize: 'inherit', color: 'inherit' }}>
+          <h3 className="text-2xl font-bold text-emerald-900 mb-2">Editar información</h3>
 
           <div className="mt-5 grid grid-cols-1 md:grid-cols-2 gap-4">
-            <label className="flex flex-col gap-1 text-sm text-gray-700">
+            <label className="flex flex-col gap-1 text-base text-emerald-900 font-medium">
               Nombre real *
               <input
                 className="border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500"
@@ -148,7 +156,7 @@ function Perfil() {
               />
             </label>
 
-            <label className="flex flex-col gap-1 text-sm text-gray-700">
+            <label className="flex flex-col gap-1 text-base text-emerald-900 font-medium">
               Nombre de usuario *
               <input
                 className="border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500"
@@ -157,7 +165,7 @@ function Perfil() {
               />
             </label>
 
-            <label className="flex flex-col gap-1 text-sm text-gray-700">
+            <label className="flex flex-col gap-1 text-base text-emerald-900 font-medium">
               Puesto *
               <input
                 className="border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500"
@@ -166,7 +174,7 @@ function Perfil() {
               />
             </label>
 
-            <label className="flex flex-col gap-1 text-sm text-gray-700">
+            <label className="flex flex-col gap-1 text-base text-emerald-900 font-medium">
               Fecha de nacimiento *
               <input
                 type="date"
@@ -176,7 +184,7 @@ function Perfil() {
               />
             </label>
 
-            <label className="flex flex-col gap-1 text-sm text-gray-700">
+            <label className="flex flex-col gap-1 text-base text-emerald-900 font-medium">
               Correo
               <input
                 type="email"
@@ -186,25 +194,29 @@ function Perfil() {
               />
             </label>
 
-            <label className="flex flex-col gap-1 text-sm text-gray-700">
-              URL de foto
+            <label className="flex flex-col gap-1 text-base text-emerald-900 font-medium">
+              Subir foto desde archivo
               <input
-                className="border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                value={form.avatar}
-                onChange={(e) => handleChange('avatar', e.target.value)}
+                type="file"
+                accept="image/*"
+                className="border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white"
+                onChange={handleAvatarFile}
               />
+              <span className="text-xs text-gray-500 mt-1">Puedes subir una imagen JPG, PNG o GIF.</span>
+              {/* Previsualización eliminada por solicitud: no mostrar imagen al editar */}
             </label>
 
-            <label className="flex flex-col gap-1 text-sm text-gray-700">
+            <label className="flex flex-col gap-1 text-base text-emerald-900 font-medium">
               Teléfono (recomendado)
-              <div className="flex items-center border rounded-lg focus-within:ring-2 focus-within:ring-emerald-500">
-                <span className="px-3 py-2 text-gray-500 border-r bg-gray-50 rounded-l-lg">{PHONE_PREFIX}</span>
+              <div className="flex flex-row items-center border rounded-lg focus-within:ring-2 focus-within:ring-emerald-500 overflow-hidden" style={{height: 44}}>
+                <span className="px-3 text-gray-500 bg-gray-50 border-r rounded-l-lg whitespace-nowrap" style={{height: '100%', display: 'flex', alignItems: 'center'}}>{PHONE_PREFIX}</span>
                 <input
-                  className="w-full px-3 py-2 rounded-r-lg focus:outline-none"
+                  className="w-full px-3 py-2 rounded-r-lg focus:outline-none border-0 bg-transparent"
                   inputMode="numeric"
                   placeholder="1234 5678"
                   value={formatTelefonoInput(form.telefono)}
                   onChange={(e) => handleTelefonoChange(e.target.value)}
+                  style={{height: '100%'}}
                 />
               </div>
             </label>
@@ -219,7 +231,7 @@ function Perfil() {
             </label>
           </div>
 
-          <label className="mt-4 flex flex-col gap-1 text-sm text-gray-700">
+          <label className="mt-4 flex flex-col gap-1 text-base text-emerald-900 font-medium">
             Bio (recomendado)
             <textarea
               rows={3}
@@ -233,16 +245,17 @@ function Perfil() {
             <button
               onClick={handleSave}
               disabled={saving}
-              className="bg-emerald-700 text-white px-5 py-2 rounded-lg hover:bg-emerald-800 disabled:opacity-60"
+              className="btn-verde px-5 py-2 rounded-lg font-semibold text-base shadow hover:brightness-95 disabled:opacity-70 transition-all"
+              style={{ minWidth: 150 }}
             >
               {saving ? 'Guardando...' : 'Guardar perfil'}
             </button>
-            {message && <p className="text-sm text-gray-600">{message}</p>}
+            {message && <p className="text-sm text-emerald-700 font-medium">{message}</p>}
           </div>
 
-          <div className="mt-6 p-4 rounded-xl bg-amber-50 border border-amber-200">
-            <p className="text-sm text-amber-800">
-              Recomendado para BD en siguiente etapa: telefono, direccion, bio, ultimo_acceso y estado_cuenta.
+          <div className="mt-6 p-4 rounded-xl bg-amber-50 border-2 border-amber-300">
+            <p className="text-sm text-amber-900 font-semibold">
+             
             </p>
           </div>
         </section>

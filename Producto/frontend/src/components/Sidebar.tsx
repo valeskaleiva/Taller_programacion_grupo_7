@@ -61,7 +61,7 @@ function Sidebar() {
           transition: "transform 0.3s ease, width 0.3s ease",
           paddingTop: "20px",
         }}
-        className={`fixed top-0 left-0 z-50 h-screen shrink-0 md:sticky md:z-10 md:translate-x-0 ${
+        className={`sidebar-modern-font fixed top-0 left-0 z-50 h-screen shrink-0 md:sticky md:z-10 md:translate-x-0 ${
           mobileOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
@@ -98,7 +98,7 @@ function Sidebar() {
             key={item.path}
             style={{ padding: "15px", cursor: "pointer" }}
             onClick={() => handleNavigate(item.path)}
-            className="hover:bg-black/10 transition-colors"
+            className="text-[18px] font-medium hover:bg-black/10 transition-colors"
           >
             {item.icon} {desktopOpen && item.label}
           </li>

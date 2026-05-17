@@ -47,22 +47,22 @@ const AgregarProducto: React.FC = () => {
   };
 
   return (
-    <div className="max-w-3xl mx-auto p-3 sm:p-6 space-y-4">
+    <div className="max-w-3xl mx-auto p-3 sm:p-6 space-y-4 dashboard-panel-font">
       <div className="flex items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold text-gray-800">Agregar producto</h1>
-          <p className="text-sm text-gray-500">Formulario en pantalla completa para evitar problemas de modal.</p>
+          <h1 className="text-2xl font-bold text-green-900 dashboard-panel-font">Agregar producto</h1>
+          <p className="text-sm text-green-700">Formulario en pantalla completa para evitar problemas de modal.</p>
         </div>
         <button
           type="button"
           onClick={volverInventario}
-          className="px-4 py-2 text-sm border border-gray-300 rounded-lg text-gray-600 hover:text-gray-800"
+          className="px-4 py-2 text-sm border border-green-300 rounded-lg text-green-700 hover:text-green-900 bg-green-50 font-semibold shadow"
         >
           Volver a inventario
         </button>
       </div>
 
-      <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-4 sm:p-6 space-y-4">
+      <div className="bg-green-50 rounded-2xl border border-green-200 shadow-lg p-4 sm:p-6 space-y-4">
         {error && (
           <div className="text-sm px-3 py-2 rounded-lg border border-red-200 bg-red-50 text-red-700">
             {error}
@@ -71,21 +71,21 @@ const AgregarProducto: React.FC = () => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
-            <label className="text-xs font-medium text-gray-600">Codigo de Barras *</label>
+            <label className="text-xs font-semibold text-green-900 dashboard-panel-font">Código de Barras *</label>
             <input
               type="text"
               value={form.codigo_barras}
               onChange={(e) => setForm({ ...form, codigo_barras: e.target.value })}
-              className="w-full mt-1 border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primaryLight"
+              className="w-full mt-1 border border-green-300 rounded-lg px-3 py-2 text-base bg-green-100 text-green-900 focus:outline-none focus:ring-2 focus:ring-green-400 font-semibold shadow"
             />
           </div>
 
           <div>
-            <label className="text-xs font-medium text-gray-600">Categoria *</label>
+            <label className="text-xs font-semibold text-green-900 dashboard-panel-font">Categoría *</label>
             <select
               value={form.categoria}
               onChange={(e) => setForm({ ...form, categoria: e.target.value as Producto['categoria'] })}
-              className="w-full mt-1 border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primaryLight"
+              className="w-full mt-1 border border-green-300 rounded-lg px-3 py-2 text-base bg-green-100 text-green-900 focus:outline-none focus:ring-2 focus:ring-green-400 font-semibold shadow"
             >
               <option value="Carta">Carta</option>
               <option value="Sobre">Sobre</option>
@@ -95,44 +95,44 @@ const AgregarProducto: React.FC = () => {
         </div>
 
         <div>
-          <label className="text-xs font-medium text-gray-600">Nombre *</label>
+          <label className="text-xs font-semibold text-green-900 dashboard-panel-font">Nombre *</label>
           <input
             type="text"
             value={form.nombre}
             onChange={(e) => setForm({ ...form, nombre: e.target.value })}
-            className="w-full mt-1 border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primaryLight"
+            className="w-full mt-1 border border-green-300 rounded-lg px-3 py-2 text-base bg-green-100 text-green-900 focus:outline-none focus:ring-2 focus:ring-green-400 font-semibold shadow"
           />
         </div>
 
         <div>
-          <label className="text-xs font-medium text-gray-600">Descripcion</label>
+          <label className="text-xs font-semibold text-green-900 dashboard-panel-font">Descripción</label>
           <input
             type="text"
             value={form.descripcion}
             onChange={(e) => setForm({ ...form, descripcion: e.target.value })}
-            className="w-full mt-1 border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primaryLight"
+            className="w-full mt-1 border border-green-300 rounded-lg px-3 py-2 text-base bg-green-100 text-green-900 focus:outline-none focus:ring-2 focus:ring-green-400 font-semibold shadow"
           />
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
-            <label className="text-xs font-medium text-gray-600">Stock</label>
+            <label className="text-xs font-semibold text-green-900 dashboard-panel-font">Stock</label>
             <input
               type="number"
               min={0}
               value={form.stock}
               onChange={(e) => setForm({ ...form, stock: Number(e.target.value) })}
-              className="w-full mt-1 border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primaryLight"
+              className="w-full mt-1 border border-green-300 rounded-lg px-3 py-2 text-base bg-green-100 text-green-900 focus:outline-none focus:ring-2 focus:ring-green-400 font-semibold shadow"
             />
           </div>
           <div>
-            <label className="text-xs font-medium text-gray-600">Precio Base (CLP)</label>
+            <label className="text-xs font-semibold text-green-900 dashboard-panel-font">Precio Base (CLP)</label>
             <input
               type="number"
               min={0}
               value={form.precio_base}
               onChange={(e) => setForm({ ...form, precio_base: Number(e.target.value) })}
-              className="w-full mt-1 border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primaryLight"
+              className="w-full mt-1 border border-green-300 rounded-lg px-3 py-2 text-base bg-green-100 text-green-900 focus:outline-none focus:ring-2 focus:ring-green-400 font-semibold shadow"
             />
           </div>
         </div>
@@ -141,7 +141,7 @@ const AgregarProducto: React.FC = () => {
           <button
             type="button"
             onClick={volverInventario}
-            className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800 border border-gray-300 rounded-lg"
+            className="px-4 py-2 text-sm text-green-700 hover:text-green-900 border border-green-300 rounded-lg bg-green-50 font-semibold shadow"
           >
             Cancelar
           </button>
@@ -149,7 +149,7 @@ const AgregarProducto: React.FC = () => {
             type="button"
             onClick={() => void guardarProducto()}
             disabled={guardando || !form.codigo_barras.trim() || !form.nombre.trim()}
-            className="btn-primary px-5 py-2 text-sm font-semibold rounded-lg"
+            className="px-5 py-2 text-sm font-semibold rounded-lg bg-green-600 text-white shadow hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-400 transition-colors"
           >
             {guardando ? 'Guardando...' : 'Agregar'}
           </button>

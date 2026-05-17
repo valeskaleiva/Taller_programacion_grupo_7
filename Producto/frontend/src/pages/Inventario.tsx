@@ -47,16 +47,12 @@ const Inventario: React.FC = () => {
   const [codigoEscaneado, setCodigoEscaneado] = useState('');
   const [productoResaltado, setProductoResaltado] = useState<number | null>(null);
   const [modalAbierto, setModalAbierto] = useState(false);
-  const [modalEliminar, setModalEliminar] = useState<Producto | null>(null);
   const [modoEdicion, setModoEdicion] = useState(false);
   const [form, setForm] = useState<Omit<Producto, 'id_producto'>>(productoVacio);
-  const [idEditando, setIdEditando] = useState<number | null>(null);
+  const [idEditando] = useState<number | null>(null);
   const [mensajeEscaner, setMensajeEscaner] = useState('');
   const [cargando, setCargando] = useState(true);
   const [errorGuardado, setErrorGuardado] = useState('');
-  const [tipoEliminacion, setTipoEliminacion] = useState<'stock' | 'completo'>('stock');
-  const [cantidadEliminar, setCantidadEliminar] = useState(1);
-  const [errorEliminar, setErrorEliminar] = useState('');
   const [procesandoEliminar, setProcesandoEliminar] = useState(false);
 
   const inputEscanerRef = useRef<HTMLInputElement>(null);
@@ -94,10 +90,10 @@ const Inventario: React.FC = () => {
 
   // Mantener el foco en el input del escáner cuando no hay modal abierto
   useEffect(() => {
-    if (!modalAbierto && !modalEliminar) {
+    if (!modalAbierto) {
       inputEscanerRef.current?.focus();
     }
-  }, [modalAbierto, modalEliminar]);
+  }, [modalAbierto]);
 
   // Scroll automático al producto resaltado
   useEffect(() => {
@@ -176,49 +172,22 @@ const Inventario: React.FC = () => {
     }
   };
 
-  const confirmarEliminar = (producto: Producto) => {
-    setTipoEliminacion(producto.stock > 0 ? 'stock' : 'completo');
-    setCantidadEliminar(1);
-    setErrorEliminar('');
-    setModalEliminar(producto);
-  };
+  const confirmarEliminar = async (producto: Producto) => {
+    const confirmar = typeof window === 'undefined'
+      ? true
+      : window.confirm(`¿Eliminar definitivamente el producto "${producto.nombre}"?`);
 
-  const eliminarProductoConfirmado = async () => {
-    if (!modalEliminar) return;
+    if (!confirmar) return;
 
     try {
       setProcesandoEliminar(true);
-      setErrorEliminar('');
-
-      if (tipoEliminacion === 'completo') {
-        await eliminarProducto(modalEliminar.id_producto);
-      } else {
-        const cantidad = Number(cantidadEliminar);
-        if (!Number.isInteger(cantidad) || cantidad <= 0) {
-          setErrorEliminar('Ingresa una cantidad válida mayor a 0.');
-          return;
-        }
-
-        if (cantidad > modalEliminar.stock) {
-          setErrorEliminar(`La cantidad no puede ser mayor al stock actual (${modalEliminar.stock}).`);
-          return;
-        }
-
-        const nuevoStock = modalEliminar.stock - cantidad;
-        const { id_producto, ...resto } = modalEliminar;
-        void id_producto;
-
-        await actualizarProducto(modalEliminar.id_producto, {
-          ...resto,
-          stock: nuevoStock,
-        });
-      }
-
+      await eliminarProducto(producto.id_producto);
       await cargarProductos();
-      setModalEliminar(null);
     } catch (error) {
-      const message = error instanceof Error ? error.message : 'No se pudo completar la eliminación.';
-      setErrorEliminar(message);
+      const message = error instanceof Error ? error.message : 'No se pudo eliminar el producto.';
+      if (typeof window !== 'undefined') {
+        window.alert(message);
+      }
     } finally {
       setProcesandoEliminar(false);
     }
@@ -290,7 +259,7 @@ const Inventario: React.FC = () => {
               abrirAgregarEnVentana();
             }}
             type="button"
-            className="btn-primary w-full sm:w-auto flex items-center justify-center gap-2 text-sm font-medium px-4 py-2 rounded-lg"
+            className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold text-white bg-[#0B3D2E] border border-[#0B3D2E] hover:bg-[#0a4e3a] disabled:bg-[#0B3D2E] disabled:text-white disabled:opacity-100 disabled:cursor-not-allowed"
           >
             + Agregar producto
           </button>
@@ -301,7 +270,7 @@ const Inventario: React.FC = () => {
       <div className="flex flex-col sm:flex-row gap-3">
         {/* Input escáner (siempre enfocado cuando no hay modal) */}
         <div className="flex-1 relative">
-          <span className="absolute inset-y-0 left-3 flex items-center text-gray-400 text-lg">⬛</span>
+          <span className="absolute inset-y-0 right-3 flex items-center text-gray-400 text-lg">⬛</span>
           <input
             ref={inputEscanerRef}
             type="text"
@@ -309,18 +278,18 @@ const Inventario: React.FC = () => {
             onChange={(e) => setCodigoEscaneado(e.target.value)}
             onKeyDown={handleEscaneo}
             placeholder="Escanear código de barras (Enter para buscar)..."
-            className="w-full pl-9 pr-4 py-2 border border-primary rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primaryLight bg-green-50"
+            className="w-full pl-4 pr-9 py-2 border border-primary rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primaryLight bg-green-50"
           />
         </div>
         {/* Búsqueda manual */}
         <div className="flex-1 relative">
-          <span className="absolute inset-y-0 left-3 flex items-center text-gray-400">🔍</span>
+          <span className="absolute inset-y-0 right-3 flex items-center text-gray-400">🔍</span>
           <input
             type="text"
             value={busqueda}
             onChange={(e) => setBusqueda(e.target.value)}
             placeholder="Buscar por nombre, código..."
-            className="w-full pl-9 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primaryLight"
+            className="w-full pl-4 pr-9 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primaryLight"
           />
         </div>
         {/* Filtro categoría */}
@@ -354,35 +323,19 @@ const Inventario: React.FC = () => {
       )}
 
       {/* Tabla estilo Excel */}
-      <div className="overflow-x-auto rounded-xl border border-gray-200 shadow-sm">
+      <div className="overflow-x-auto max-h-72 overflow-y-auto rounded-xl border border-gray-200 shadow-sm">
         <table className="w-full text-sm">
           <thead>
-            <tr className="bg-gray-50 border-b border-gray-200 text-center">
-              <th className="px-3 py-3 font-semibold text-gray-600 whitespace-nowrap border-r border-gray-200">Código Barras</th>
-              <th className="px-3 py-3 font-semibold text-gray-600 border-r border-gray-200">Nombre</th>
-              <th className="px-3 py-3 font-semibold text-gray-600 border-r border-gray-200">Categoría</th>
-              <th className="px-3 py-3 font-semibold text-gray-600 whitespace-nowrap border-r border-gray-200">Precio Base (CLP)</th>
-              <th className="px-3 py-3 font-semibold text-gray-600 text-center">Stock</th>
-              <th className="px-3 py-3 font-semibold text-gray-600 text-center">Estado</th>
+            <tr className="bg-[#0a4e3a] border-b border-[#0B3D2E]/25 text-center text-white">
+              <th className="px-3 py-3 text-xs font-semibold text-[#e4f3eb] uppercase tracking-wide whitespace-nowrap border-r border-[#0B3D2E]/30">Código Barras</th>
+              <th className="px-3 py-3 text-xs font-semibold text-[#e4f3eb] uppercase tracking-wide border-r border-[#0B3D2E]/30">Nombre</th>
+              <th className="px-3 py-3 text-xs font-semibold text-[#e4f3eb] uppercase tracking-wide border-r border-[#0B3D2E]/30">Categoría</th>
+              <th className="px-3 py-3 text-xs font-semibold text-[#e4f3eb] uppercase tracking-wide whitespace-nowrap border-r border-[#0B3D2E]/30">Precio Base (CLP)</th>
+              <th className="px-3 py-3 text-xs font-semibold text-[#e4f3eb] uppercase tracking-wide border-r-2 border-black">Stock</th>
+              <th className="px-3 py-3 text-xs font-semibold text-[#e4f3eb] uppercase tracking-wide border-l-2 border-black border-r-2 border-black">Estado</th>
+               <th className="px-3 py-3 text-xs font-semibold text-[#e4f3eb] uppercase tracking-wide text-center border-l-2 border-black">Acción</th>
               {/* Columnas condicionales */}
-              {(filtroCategoria === 'Todos' || filtroCategoria === 'Carta') && (
-                <>
-                  <th className="px-3 py-3 font-semibold text-gray-600">Rareza</th>
-                  <th className="px-3 py-3 font-semibold text-gray-600">Edición</th>
-                  <th className="px-3 py-3 font-semibold text-gray-600">Estado Carta</th>
-                  <th className="px-3 py-3 font-semibold text-gray-600 whitespace-nowrap">Precio Mercado (CLP)</th>
-                </>
-              )}
-              {(filtroCategoria === 'Todos' || filtroCategoria === 'Sobre') && (
-                <>
-                  <th className="px-3 py-3 font-semibold text-gray-600 whitespace-nowrap">Cant. Cartas</th>
-                  <th className="px-3 py-3 font-semibold text-gray-600">Serie</th>
-                </>
-              )}
-              {(filtroCategoria === 'Todos' || filtroCategoria === 'Caja') && (
-                <th className="px-3 py-3 font-semibold text-gray-600 whitespace-nowrap">Cant. Sobres</th>
-              )}
-              {canManageInventory && <th className="px-3 py-3 font-semibold text-gray-600 text-center">Acciones</th>}
+             
             </tr>
           </thead>
           <tbody>
@@ -399,7 +352,7 @@ const Inventario: React.FC = () => {
                 </td>
               </tr>
             ) : (
-              productosFiltrados.map((p) => {
+              productosFiltrados.map((p, i) => {
                 const esResaltado = productoResaltado === p.id_producto;
                 return (
                   <tr
@@ -408,52 +361,36 @@ const Inventario: React.FC = () => {
                     className={`border-b border-gray-100 transition-colors ${
                       esResaltado
                         ? 'bg-green-50 ring-2 ring-inset ring-primaryLight'
-                        : 'hover:bg-gray-50'
+                        : i % 2
+                          ? 'bg-white hover:bg-[#edf8f1]'
+                          : 'bg-[#edf8f1] hover:bg-[#e3f3e9]'
                     }`}
                   >
                     <td className="px-3 py-2 font-mono text-xs text-gray-600 whitespace-nowrap border-r border-gray-100 text-center">{p.codigo_barras}</td>
                     <td className="px-3 py-2 font-medium text-gray-800 border-r border-gray-100 text-center">{p.nombre}</td>
                     <td className="px-3 py-2 border-r border-gray-100 text-center">{badgeCategoria(p.categoria)}</td>
                     <td className="px-3 py-2 text-gray-700 whitespace-nowrap border-r border-gray-100 text-center">{formatCLP(p.precio_base)}</td>
-                    <td className="px-3 py-2 text-center font-semibold text-gray-800">{p.stock}</td>
-                    <td className="px-3 py-2 text-center">{badgeStock(p.stock)}</td>
-                    {/* Columnas Carta */}
-                    {(filtroCategoria === 'Todos' || filtroCategoria === 'Carta') && (
-                      <>
-                        <td className="px-3 py-2 text-gray-600">{p.rareza ?? '—'}</td>
-                        <td className="px-3 py-2 text-gray-600">{p.edicion ?? '—'}</td>
-                        <td className="px-3 py-2 text-gray-600">{p.estado ?? '—'}</td>
-                        <td className="px-3 py-2 text-gray-700 whitespace-nowrap">
-                          {p.precio_mercado != null ? formatCLP(p.precio_mercado) : '—'}
-                        </td>
-                      </>
-                    )}
-                    {/* Columnas Sobre */}
-                    {(filtroCategoria === 'Todos' || filtroCategoria === 'Sobre') && (
-                      <>
-                        <td className="px-3 py-2 text-gray-600 text-center">{p.cant_cartas ?? '—'}</td>
-                        <td className="px-3 py-2 text-gray-600">{p.serie ?? '—'}</td>
-                      </>
-                    )}
-                    {/* Columnas Caja */}
-                    {(filtroCategoria === 'Todos' || filtroCategoria === 'Caja') && (
-                      <td className="px-3 py-2 text-gray-600 text-center">{p.cant_sobres ?? '—'}</td>
-                    )}
+                    <td className="px-3 py-2 text-center font-semibold text-gray-800 border-r-2 border-black">{p.stock}</td>
+                    <td className="px-3 py-2 text-center border-l-2 border-black border-r-2 border-black">{badgeStock(p.stock)}</td>
+                   
                     {canManageInventory && (
-                      <td className="px-3 py-2 text-center whitespace-nowrap">
-                        <button
-                          onClick={() => abrirEditar(p)}
-                          style={{ color: 'var(--primary)' }}
-                          className="font-medium mr-3 text-xs hover:opacity-70"
-                        >
-                          Editar
-                        </button>
-                        <button
-                          onClick={() => confirmarEliminar(p)}
-                          className="text-red-500 hover:text-red-700 font-medium text-xs"
-                        >
-                          Eliminar
-                        </button>
+                      <td className="px-3 py-2 text-center whitespace-nowrap border-l-2 border-black">
+                        <div className="flex items-center justify-center gap-2">
+                          <button
+                            onClick={() => abrirEditar(p)}
+                            disabled={procesandoEliminar}
+                            className="inline-flex min-w-[74px] items-center justify-center px-4 py-2 text-xs font-semibold rounded-full border-2 border-[#0B3D2E] bg-[#0B3D2E] text-white shadow-sm hover:bg-[#0a4e3a] hover:border-[#0a4e3a] transition-colors disabled:bg-[#0B3D2E] disabled:text-white disabled:opacity-100 disabled:cursor-not-allowed"
+                          >
+                            Editar
+                          </button>
+                          <button
+                            onClick={() => confirmarEliminar(p)}
+                            disabled={procesandoEliminar}
+                            className="inline-flex min-w-[74px] items-center justify-center px-4 py-2 text-xs font-semibold rounded-full border-2 border-[#0B3D2E] bg-[#0B3D2E] text-white shadow-sm hover:bg-[#0a4e3a] hover:border-[#0a4e3a] transition-colors disabled:bg-[#0B3D2E] disabled:text-white disabled:opacity-100 disabled:cursor-not-allowed"
+                          >
+                            {procesandoEliminar ? 'Eliminando...' : 'Eliminar'}
+                          </button>
+                        </div>
                       </td>
                     )}
                   </tr>
@@ -621,7 +558,7 @@ const Inventario: React.FC = () => {
               <button
                 onClick={guardarProducto}
                 disabled={!form.codigo_barras || !form.nombre}
-                className="btn-primary px-5 py-2 text-sm font-semibold rounded-lg"
+                className="px-5 py-2 text-sm font-semibold rounded-lg text-white bg-[#0B3D2E] border border-[#0B3D2E] hover:bg-[#0a4e3a] disabled:bg-[#0B3D2E] disabled:text-white disabled:opacity-100 disabled:cursor-not-allowed"
               >
                 {modoEdicion ? 'Guardar cambios' : 'Agregar'}
               </button>
@@ -630,112 +567,6 @@ const Inventario: React.FC = () => {
         </div>
       )}
 
-      {/* Modal Confirmar Eliminar */}
-      {modalEliminar && canManageInventory && renderInBody(
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-[9999] p-4">
-          <div className="bg-white rounded-2xl shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto">
-            <div className="p-6 space-y-4">
-              <h2 className="text-lg font-bold text-gray-800">Eliminar producto</h2>
-              <p className="text-sm text-gray-600">
-                Producto: <strong>{modalEliminar.nombre}</strong> (stock actual: {modalEliminar.stock})
-              </p>
-
-              <div className="space-y-3">
-                <label
-                  className={`block border rounded-xl p-3 cursor-pointer transition ${
-                    tipoEliminacion === 'stock'
-                      ? 'border-emerald-600 bg-emerald-50 ring-2 ring-emerald-200'
-                      : 'border-gray-200 bg-white hover:bg-gray-50'
-                  }`}
-                >
-                  <div className="flex items-start gap-2">
-                    <input
-                      type="radio"
-                      name="tipo-eliminacion"
-                      checked={tipoEliminacion === 'stock'}
-                      onChange={() => setTipoEliminacion('stock')}
-                      disabled={procesandoEliminar}
-                      className="mt-1"
-                    />
-                    <div>
-                      <p className="text-sm font-semibold text-gray-800">Descontar por cantidad de stock</p>
-                      <p className="text-xs text-gray-600">Reduce unidades y mantiene el producto en inventario.</p>
-                    </div>
-                  </div>
-
-                  {tipoEliminacion === 'stock' && (
-                    <div className="mt-3">
-                      <label className="text-xs font-medium text-gray-600">Cantidad a descontar</label>
-                      <input
-                        type="number"
-                        min={1}
-                        max={Math.max(1, modalEliminar.stock)}
-                        value={cantidadEliminar}
-                        onChange={(e) => setCantidadEliminar(Number(e.target.value))}
-                        disabled={procesandoEliminar}
-                        className="w-full mt-1 border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primaryLight"
-                      />
-                      <p className="mt-1 text-xs text-gray-500">
-                        Stock después de aceptar: {Math.max(0, modalEliminar.stock - Number(cantidadEliminar || 0))}
-                      </p>
-                    </div>
-                  )}
-                </label>
-
-                <label
-                  className={`block border rounded-xl p-3 cursor-pointer transition ${
-                    tipoEliminacion === 'completo'
-                      ? 'border-red-600 bg-red-50 ring-2 ring-red-200'
-                      : 'border-gray-200 bg-white hover:bg-gray-50'
-                  }`}
-                >
-                  <div className="flex items-start gap-2">
-                    <input
-                      type="radio"
-                      name="tipo-eliminacion"
-                      checked={tipoEliminacion === 'completo'}
-                      onChange={() => setTipoEliminacion('completo')}
-                      disabled={procesandoEliminar}
-                      className="mt-1"
-                    />
-                    <div>
-                      <p className="text-sm font-semibold text-gray-800">Eliminar producto completo</p>
-                      <p className="text-xs text-red-700">Borra el producto de forma permanente.</p>
-                    </div>
-                  </div>
-                </label>
-              </div>
-
-              {errorEliminar && (
-                <div className="text-sm px-3 py-2 rounded-lg border border-red-200 bg-red-50 text-red-700">
-                  {errorEliminar}
-                </div>
-              )}
-            </div>
-
-            <div className="sticky bottom-0 bg-white border-t rounded-b-2xl px-6 py-4 flex justify-end gap-3">
-              <button
-                onClick={() => setModalEliminar(null)}
-                disabled={procesandoEliminar}
-                className="px-4 py-2 text-sm border border-gray-300 rounded-lg text-gray-600 hover:text-gray-800"
-              >
-                Cancelar
-              </button>
-              <button
-                onClick={() => void eliminarProductoConfirmado()}
-                disabled={procesandoEliminar}
-                className="px-4 py-2 text-sm font-semibold text-white bg-red-600 hover:bg-red-700 rounded-lg transition disabled:opacity-60"
-              >
-                {procesandoEliminar
-                  ? 'Procesando...'
-                  : tipoEliminacion === 'stock'
-                    ? 'Descontar stock'
-                    : 'Eliminar producto'}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

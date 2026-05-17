@@ -7,10 +7,12 @@ import type { UserProfile } from '../types';
 const TITULOS: Record<string, string> = {
   "/": "DASHBOARD",
   "/inventario": "INVENTARIO",
+  "/inventario/agregar": "AGREGAR PRODUCTO",
   "/ventas": "VENTAS",
   "/reportes": "REPORTES",
   "/perfil": "PERFIL",
   "/usuarios": "USUARIOS",
+  "/tcgplayer": "BUSCADOR TCGPLAYER",
 };
 
 type Props = {

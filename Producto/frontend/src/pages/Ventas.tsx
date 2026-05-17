@@ -221,7 +221,8 @@ function Ventas() {
               await agregarPorCodigo(scanned);
               enfocarScanner();
             })()}
-            className="px-4 py-2 rounded-lg text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-60"
+            className="px-4 py-2 rounded-lg text-white bg-[#0B3D2E] hover:bg-[#0a4e3a] disabled:bg-[#0B3D2E] disabled:text-white disabled:opacity-100 disabled:cursor-not-allowed"
+            style={{ backgroundColor: '#0B3D2E', color: '#ffffff', opacity: 1 }}
             disabled={!codigo.trim()}
           >
             Agregar
@@ -269,7 +270,8 @@ function Ventas() {
           <button
             type="button"
             onClick={enfocarScanner}
-            className="text-blue-700 hover:underline"
+            className="px-4 py-2 rounded-lg text-white bg-[#0B3D2E] hover:bg-[#0a4e3a] disabled:bg-[#0B3D2E] disabled:text-white disabled:opacity-100 disabled:cursor-not-allowed"
+            style={{ backgroundColor: '#0B3D2E', color: '#ffffff', opacity: 1 }}
           >
             Enfocar escáner
           </button>
@@ -292,15 +294,15 @@ function Ventas() {
         <h2 className="text-lg font-semibold text-gray-900">Carrito</h2>
 
         <div className="overflow-x-auto mt-4">
-          <table className="w-full text-sm border border-gray-200 rounded-lg overflow-hidden">
+          <table className="w-full text-sm border border-[#0B3D2E]/20 rounded-lg overflow-hidden">
             <thead>
-              <tr className="border-b bg-gray-50">
-                <th className="text-center px-3 py-2 border-r border-gray-200">Código</th>
-                <th className="text-center px-3 py-2 border-r border-gray-200">Producto</th>
-                <th className="text-center px-3 py-2 border-r border-gray-200">Precio (CLP)</th>
-                <th className="text-center px-3 py-2 border-r border-gray-200">Cantidad</th>
-                <th className="text-center px-3 py-2 border-r border-gray-200">Subtotal (CLP)</th>
-                <th className="text-center px-3 py-2">Acción</th>
+              <tr className="bg-[#0a4e3a] border-b border-[#0B3D2E]/25 text-white">
+                <th className="text-center text-xs font-semibold text-[#e4f3eb] uppercase tracking-wide px-3 py-2 border-r border-[#0B3D2E]/30">Código</th>
+                <th className="text-center text-xs font-semibold text-[#e4f3eb] uppercase tracking-wide px-3 py-2 border-r border-[#0B3D2E]/30">Producto</th>
+                <th className="text-center text-xs font-semibold text-[#e4f3eb] uppercase tracking-wide px-3 py-2 border-r border-[#0B3D2E]/30">Precio (CLP)</th>
+                <th className="text-center text-xs font-semibold text-[#e4f3eb] uppercase tracking-wide px-3 py-2 border-r border-[#0B3D2E]/30">Cantidad</th>
+                <th className="text-center text-xs font-semibold text-[#e4f3eb] uppercase tracking-wide px-3 py-2 border-r border-[#0B3D2E]/30">Subtotal (CLP)</th>
+                <th className="text-center text-xs font-semibold text-[#e4f3eb] uppercase tracking-wide px-3 py-2">Acción</th>
               </tr>
             </thead>
             <tbody>
@@ -311,10 +313,10 @@ function Ventas() {
                   </td>
                 </tr>
               ) : (
-                items.map((item) => {
+                items.map((item, i) => {
                   const subtotal = item.cantidad * Number(item.precio_unitario);
                   return (
-                    <tr key={item.producto.id_producto} className="border-b">
+                    <tr key={item.producto.id_producto} className={`border-b border-[#0B3D2E]/10 transition-colors ${i % 2 ? 'bg-white hover:bg-[#edf8f1]' : 'bg-[#edf8f1] hover:bg-[#e3f3e9]'}`}>
                       <td className="px-3 py-2 font-mono text-xs text-center border-r border-gray-100">{item.producto.codigo_barras}</td>
                       <td className="px-3 py-2 text-center border-r border-gray-100">{item.producto.nombre}</td>
                       <td className="px-3 py-2 text-center border-r border-gray-100">{formatCLP(Number(item.precio_unitario))}</td>
@@ -333,7 +335,8 @@ function Ventas() {
                         <button
                           type="button"
                           onClick={() => quitarItem(item.producto.id_producto)}
-                          className="text-red-600 hover:text-red-800"
+                          className="px-3 py-1 rounded-lg text-white font-semibold !bg-red-600 border border-red-700 hover:!bg-red-700 shadow"
+                          style={{ backgroundColor: '#dc2626', color: '#ffffff', opacity: 1 }}
                         >
                           Quitar
                         </button>
@@ -350,7 +353,8 @@ function Ventas() {
           <button
             type="button"
             onClick={() => setItems([])}
-            className="px-4 py-2 border rounded-lg text-gray-600 hover:text-gray-800"
+            className="px-4 py-2 rounded-lg text-white bg-green-700 hover:bg-green-800 disabled:bg-green-700 disabled:text-white disabled:opacity-100 disabled:cursor-not-allowed"
+            style={{ backgroundColor: '#15803d', color: '#ffffff', opacity: 1 }}
             disabled={guardando || items.length === 0}
           >
             Vaciar carrito
@@ -359,7 +363,8 @@ function Ventas() {
             type="button"
             onClick={() => void confirmarVenta()}
             disabled={guardando || items.length === 0}
-            className="px-5 py-2 rounded-lg text-white bg-emerald-700 hover:bg-emerald-800 disabled:opacity-60"
+            className="px-5 py-2 rounded-lg text-white bg-[#0B3D2E] hover:bg-[#0a4e3a] disabled:bg-[#0B3D2E] disabled:text-white disabled:opacity-100 disabled:cursor-not-allowed"
+            style={{ backgroundColor: '#0B3D2E', color: '#ffffff', opacity: 1 }}
           >
             {guardando ? 'Registrando...' : 'Confirmar venta'}
           </button>

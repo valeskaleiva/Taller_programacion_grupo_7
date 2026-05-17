@@ -75,7 +75,7 @@ function Login() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-emerald-700 hover:bg-emerald-800 disabled:opacity-60 text-white font-semibold rounded-lg px-4 py-2.5 transition"
+            className="w-full bg-emerald-700 hover:bg-emerald-800 disabled:opacity-60 text-black font-semibold rounded-lg px-4 py-2.5 transition"
           >
             {loading ? "Validando..." : "Ingresar"}
           </button>

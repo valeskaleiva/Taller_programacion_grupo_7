@@ -3,7 +3,7 @@ import Card from "../components/Card";
 import SalesChart from "../components/SalesChart";
 import TopProducts from "../components/TopProducts";
 import LowStock from "../components/LowStock";
-import LastSales from "../components/LastSales";
+import LastSales from "../components/LastSales.tsx";
 import {
   getVentaMetodoPago,
   getProductos,
@@ -97,26 +97,35 @@ export default function Home() {
   );
 
   return (
-    <div className="space-y-6 p-2 sm:p-4">
+    <div className="p-3 sm:p-5">
       {/* FILA 1: 4 KPIs en una sola fila */}
-      <div className="grid grid-cols-4 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-        <Card title="💰 Ventas hoy" value={formatCLP(ventasHoy)} extra="Actualizado en tiempo real" />
-        <Card title="📦 Unidades en stock" value={totalStock} />
-        <Card title="🧾 Productos" value={totalProductos} />
-        <Card title="🏦 Valor inventario" value={formatCLP(valorInventario)} />
+      <div
+        className="mb-20 rounded-2xl p-3"
+        style={{ boxShadow: "0 20px 44px rgba(0, 0, 0, 0.22), 0 10px 24px rgba(11, 61, 46, 0.20)" }}
+      >
+        <div className="grid grid-cols-4 sm:grid-cols-2 xl:grid-cols-4 gap-5">
+          <Card title=" Ventas hoy" value={formatCLP(ventasHoy)} extra="Actualizado en tiempo real" />
+          <Card title="Unidades en stock" value={totalStock} />
+          <Card title="Productos" value={totalProductos} />
+          <Card title="Valor inventario" value={formatCLP(valorInventario)} />
+        </div>
       </div>
 
       {/* FILA 2: Gráfico ancho completo */}
-      <SalesChart ventas={ventas} />
+      <div>
+        <SalesChart ventas={ventas} />
+      </div>
 
       {/* FILA 3: Top Cartas + Stock Crítico */}
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
+      <div className="mt-20 grid grid-cols-1 xl:grid-cols-2 gap-x-5 gap-y-20 xl:gap-y-5">
         <TopProducts topVendidos={topVendidos} />
         <LowStock productos={bajoStock} />
       </div>
 
       {/* FILA 4: Últimas Ventas ancho completo */}
-      <LastSales ventas={ultimasVentas} />
+      <div className="mt-20">
+        <LastSales ventas={ultimasVentas} />
+      </div>
     </div>
   );
 }

@@ -6,10 +6,22 @@ type CardProps = {
 
 export default function Card({ title, value, extra }: CardProps) {
 
+  const isZeroValue = () => {
+    if (typeof value === "number") return value === 0;
+    if (typeof value !== "string") return false;
+
+    const normalized = value.replace(/[^0-9-]/g, "");
+    if (!normalized) return false;
+
+    return Number(normalized) === 0;
+  };
+
   
 
   // 👇 lógica de color
   const getColor = () => {
+    if (isZeroValue()) return "bg-[#b7e4c7]";
+
     if (typeof value === "number") {
       if (value <= 3) return "bg-red-500"
       if (value <= 10) return "bg-[#145c43]" // verde medio
@@ -27,7 +39,8 @@ export default function Card({ title, value, extra }: CardProps) {
     w-[250px]
     p-6
     rounded-3xl
-    text-white
+    text-center
+    ${isZeroValue() ? "text-[#073b2a]" : "text-white"}
     shadow-md
     min-h-[140px]
 
@@ -50,7 +63,7 @@ export default function Card({ title, value, extra }: CardProps) {
       </h2>
 
       {extra && (
-        <p className="text-green-300 font-semibold mt-1">
+        <p className={`${isZeroValue() ? "text-[#145c43]" : "text-green-300"} font-semibold mt-1`}>
           {extra}
         </p>
       )}

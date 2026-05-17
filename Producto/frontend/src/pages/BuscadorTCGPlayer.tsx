@@ -80,7 +80,7 @@ export default function BuscadorTCGPlayer() {
   return (
     <div className="space-y-4">
       <div>
-        <h1 className="text-2xl font-bold text-gray-800">Buscador TCGPlayer</h1>
+        <h1 className="text-2xl font-bold text-gray-800">Consultor precios y cartas TCG</h1>
         <p className="text-sm text-gray-500">Aplicación independiente para consultar precios y cartas.</p>
         <p className="text-xs text-amber-700 mt-1">Búsqueda por número de serie desactivada temporalmente. Usa nombre de carta por ahora.</p>
       </div>
@@ -100,9 +100,9 @@ export default function BuscadorTCGPlayer() {
         />
         <button
           onClick={() => void onSearch()}
-          disabled={loading || !query.trim()}
-          className="px-4 py-2 rounded-lg text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-60"
-        >
+          disabled={loading}
+          className="px-4 py-2 rounded-lg text-sm font-semibold text-white bg-[#0B3D2E] border border-[#0B3D2E] hover:bg-[#0a4e3a] disabled:bg-[#0B3D2E] disabled:text-white disabled:opacity-100 disabled:cursor-not-allowed"
+>
           {loading ? 'Buscando...' : 'Buscar'}
         </button>
       </div>
@@ -112,13 +112,13 @@ export default function BuscadorTCGPlayer() {
       )}
 
       <div className="overflow-x-auto border rounded-xl">
-        <table className="w-full text-sm border border-gray-200 rounded-lg overflow-hidden">
-          <thead className="bg-gray-50 border-b">
-            <tr>
-              <th className="text-center px-3 py-2 border-r border-gray-200">Carta</th>
-              <th className="text-center px-3 py-2 border-r border-gray-200">Set</th>
-              <th className="text-center px-3 py-2 border-r border-gray-200">Precio (USD)</th>
-              <th className="text-center px-3 py-2">Fuente</th>
+        <table className="w-full text-sm border border-[#0B3D2E]/20 rounded-lg overflow-hidden">
+          <thead>
+            <tr className="bg-[#0a4e3a] border-b border-[#0B3D2E]/25 text-white">
+              <th className="text-center text-xs font-semibold text-[#e4f3eb] uppercase tracking-wide px-3 py-2 border-r border-[#0B3D2E]/30">Carta</th>
+              <th className="text-center text-xs font-semibold text-[#e4f3eb] uppercase tracking-wide px-3 py-2 border-r border-[#0B3D2E]/30">Set</th>
+              <th className="text-center text-xs font-semibold text-[#e4f3eb] uppercase tracking-wide px-3 py-2 border-r border-[#0B3D2E]/30">Precio (USD)</th>
+              <th className="text-center text-xs font-semibold text-[#e4f3eb] uppercase tracking-wide px-3 py-2">Fuente</th>
             </tr>
           </thead>
           <tbody>
@@ -133,7 +133,7 @@ export default function BuscadorTCGPlayer() {
                 const parsed = parseCardName(item.name);
 
                 return (
-                <tr key={`${item.url}-${index}`} className="border-b last:border-b-0">
+                <tr key={`${item.url}-${index}`} className={`border-b border-[#0B3D2E]/10 transition-colors ${index % 2 ? 'bg-white hover:bg-[#edf8f1]' : 'bg-[#edf8f1] hover:bg-[#e3f3e9]'}`}>
                   <td className="px-3 py-2 text-gray-800 border-r border-gray-100">
                     <div className="font-semibold">{parsed.nombre}</div>
                     <div className="text-xs text-gray-500">Rareza: {parsed.rareza}</div>

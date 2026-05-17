@@ -84,9 +84,9 @@ const toUsuarioFila = (u: UsuarioGestion): UsuarioFila => ({
 
 const BTN_BASE =
   'inline-flex items-center justify-center rounded-xl font-semibold transition-all duration-150 active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed';
-const BTN_PRIMARY = `${BTN_BASE} text-sm px-4 py-2 !text-white bg-emerald-700 hover:bg-emerald-800 shadow-sm active:opacity-100 focus-visible:!ring-emerald-700`;
-const BTN_EDIT = `${BTN_BASE} text-xs px-3 py-1.5 text-sky-700 bg-sky-50 border border-sky-100 hover:bg-sky-100 active:bg-sky-200 active:border-emerald-600 active:ring-1 active:ring-emerald-300 focus-visible:ring-sky-400`;
-const BTN_DANGER = `${BTN_BASE} text-xs px-3 py-1.5 text-rose-700 bg-rose-50 border border-rose-100 hover:bg-rose-100 active:bg-rose-200 active:border-emerald-600 active:ring-1 active:ring-emerald-300 focus-visible:ring-rose-400`;
+const BTN_PRIMARY = `${BTN_BASE} text-sm px-4 py-2 text-white bg-[#0B3D2E] border border-[#0B3D2E] hover:bg-[#0a4e3a] disabled:bg-[#0B3D2E] disabled:text-white disabled:opacity-100 disabled:cursor-not-allowed`;
+const BTN_EDIT = `${BTN_BASE} text-xs px-3 py-1.5 text-white bg-[#0B3D2E] border border-[#0B3D2E] hover:bg-[#0a4e3a] disabled:bg-[#0B3D2E] disabled:text-white disabled:opacity-100 disabled:cursor-not-allowed rounded-full`;
+const BTN_DANGER = `${BTN_BASE} text-xs px-3 py-1.5 text-white bg-[#0B3D2E] border border-[#0B3D2E] hover:bg-[#0a4e3a] disabled:bg-[#0B3D2E] disabled:text-white disabled:opacity-100 disabled:cursor-not-allowed rounded-full`;
 const BTN_SECONDARY = `${BTN_BASE} text-sm px-4 py-2 text-gray-600 bg-white border border-gray-200 hover:bg-gray-50 active:bg-gray-100 focus-visible:ring-gray-300`;
 
 export default function Usuarios() {
@@ -322,11 +322,11 @@ export default function Usuarios() {
       <div className="bg-white rounded-xl border border-gray-200 shadow overflow-x-auto">
         <table className="w-full min-w-[760px] text-sm border-collapse">
           <thead>
-            <tr className="bg-gray-50 border-b border-gray-200">
+            <tr className="bg-[#0a4e3a] border-b border-[#0B3D2E]/25 text-white">
               {['#', 'Nombre', 'Usuario', 'Correo', 'Teléfono', 'Rol', 'Estado', 'Creado', ...(canManageUsers ? ['Acciones'] : [])].map((col) => (
                 <th
                   key={col}
-                  className="text-center text-xs font-semibold text-gray-500 uppercase tracking-wide px-4 py-3 border-r border-gray-200 last:border-r-0"
+                  className="text-center text-xs font-semibold text-[#e4f3eb] uppercase tracking-wide px-4 py-3 border-r border-[#0B3D2E]/30 last:border-r-0"
                 >
                   {col}
                 </th>
@@ -344,7 +344,7 @@ export default function Usuarios() {
               </tr>
             ) : (
               usuarios.map((u, i) => (
-                <tr key={u.id} className="border-b border-gray-50 hover:bg-gray-50 transition-colors">
+                <tr key={u.id} className={`border-b border-[#0B3D2E]/10 transition-colors ${i % 2 ? 'bg-white hover:bg-[#edf8f1]' : 'bg-[#edf8f1] hover:bg-[#e3f3e9]'}`}>
                   <td className="px-4 py-3 text-gray-400 text-center border-r border-gray-100">{i + 1}</td>
                   <td className="px-4 py-3 border-r border-gray-100">
                     <div className="flex items-center justify-center gap-2">
@@ -517,7 +517,7 @@ export default function Usuarios() {
               <button
                 onClick={() => void handleGuardar()}
                 disabled={saving}
-                className={`${BTN_PRIMARY} px-5`}
+                className={BTN_PRIMARY}
               >
                 {saving ? 'Guardando...' : editingId === null ? 'Crear usuario' : 'Guardar cambios'}
               </button>
