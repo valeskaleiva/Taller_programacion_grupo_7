@@ -7128,3 +7128,39 @@ WARNING 2026-05-15 01:19:35,435 log31217432Unauthorized: /api/productos/bajo_sto
 WARNING 2026-05-15 01:19:35,454 log31217432Bad Request: /api/productos/1/reducir_stock/
 WARNING 2026-05-15 01:30:43,023 log197928576Bad Request: /api/productos/1/reducir_stock/
 WARNING 2026-05-15 10:17:33,878 log93643588Unauthorized: /api/reportes/top_productos_vendidos/
+WARNING 2026-05-16 21:41:27,529 log132016088Unauthorized: /api/auth/token/
+WARNING 2026-05-16 21:41:31,248 log132016088Bad Request: /api/auth/token/
+WARNING 2026-05-16 21:41:37,190 log132016088Unauthorized: /api/usuarios/
+ERROR 2026-05-16 21:41:47,331 log132016088Internal Server Error: /api/productos/1/reducir_stock/
+Traceback (most recent call last):
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\django\core\handlers\base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\rest_framework\viewsets.py", line 125, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "C:\Users\usuario\Desktop\Proyectodetítulo\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\apps\productos\views.py", line 64, in reducir_stock
+    if producto.stock < cantidad:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '<' not supported between instances of 'int' and 'str'
+WARNING 2026-05-16 21:41:50,457 log132016088Forbidden: /api/productos/
+WARNING 2026-05-16 21:51:15,919 log1075612828Unauthorized: /api/auth/token/
+WARNING 2026-05-16 21:51:19,614 log1075612828Unauthorized: /api/auth/token/
+WARNING 2026-05-16 21:51:25,579 log1075612828Unauthorized: /api/usuarios/
+WARNING 2026-05-16 21:51:38,597 log1075612828Forbidden: /api/productos/
+WARNING 2026-05-16 22:03:05,804 log110923428Unauthorized: /api/auth/token/
+WARNING 2026-05-16 22:03:09,594 log110923428Unauthorized: /api/auth/token/
+WARNING 2026-05-16 22:03:15,248 log110923428Unauthorized: /api/usuarios/
+WARNING 2026-05-16 22:03:27,859 log110923428Forbidden: /api/productos/

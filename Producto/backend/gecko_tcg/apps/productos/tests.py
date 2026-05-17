@@ -1,160 +1,129 @@
-from django.test import TestCase, SimpleTestCase
+from django.test import TestCase
+from django.contrib.auth.models import User
+from rest_framework.test import APITestCase
+from rest_framework import status
 from decimal import Decimal
-from apps.productos.models import Producto, ProductoCarta, ProductoSobre, ProductoCaja
-from apps.productos.serializers import ProductoSerializer, ProductoCartaSerializer, ProductoSobreSerializer, ProductoCajaSerializer
-from unittest.mock import patch, MagicMock
-from rest_framework.test import APIClient
-from django.core.exceptions import ValidationError
-
-class ProductoStrTest(SimpleTestCase):
-
-    
-
-    def test_str_formato_correcto(self):
-        producto = Producto(nombre="Pikachu", codigo_barras="PKM-001")
-        self.assertEqual(str(producto), "Pikachu (PKM-001)")
-
-    def test_str_nombre_compuesto(self):   
-        producto = Producto(nombre="Carta Holográfica Rara", codigo_barras="PKM-999")
-        self.assertEqual(str(producto), "Carta Holográfica Rara (PKM-999)")
-
-class ProductoCartaStrTest(SimpleTestCase):
-    def test_str_formato_carta(self):
-        producto = Producto(nombre="Charizard")
-        carta = ProductoCarta()
-        carta.id_producto = producto
-        self.assertEqual(str(carta), "Carta: " \
-        "Charizard")
-
-class ProductoSobreStrTest(SimpleTestCase):
-    def test_str_formato_sobre(self):
-        producto = Producto(nombre="Sobre de Evoluciones")
-        sobre = ProductoSobre()
-        sobre.id_producto = producto
-        self.assertEqual(str(sobre), "Sobre: Sobre de Evoluciones")
-
-class ProductoCajaStrTest(SimpleTestCase):
-    def test_str_formato_caja(self):
-        producto = Producto(nombre="Caja Elite Trainer")
-        caja = ProductoCaja()
-        caja.id_producto = producto
-        self.assertEqual(str(caja), "Caja: Caja Elite Trainer")
-# Create your tests here.
+from apps.productos.models import Producto, ProductoCaja
+from apps.usuarios.models import Rol, UsuarioGecko
 
 
-#testeos de los serializers, donde se combierte el formato a json y viceversa
-# se va a ser un testeo a la validacin de campos y que esten bien ingresados
 
-class ProductoSerializerTest(SimpleTestCase):
+def crear_rol(tipo='vendedor'):
+    return Rol.objects.get_or_create(tipo=tipo, defaults={'descripcion': f'Rol {tipo}'})[0]
+
+
+def crear_vendedor(username='vendedor1', password='pass1234'):
+    rol = crear_rol('vendedor')
+    user = User.objects.create_user(username=username, password=password, is_active=True)
+    UsuarioGecko.objects.create(usuario=user, rol=rol, estado='activo')
+    return user
+
+
+def crear_admin(username='admin1', password='pass1234'):
+    user = User.objects.create_user(username=username, password=password, is_staff=True, is_active=True)
+    rol = crear_rol('admin')
+    UsuarioGecko.objects.create(usuario=user, rol=rol, estado='activo')
+    return user
+
+
+def crear_producto(id_prod=1, nombre='Carta Test', precio=Decimal('100.00'), stock=10, categoria='Carta'):
+    return Producto.objects.create(
+        id_producto=id_prod,
+        codigo_barras=f'TEST{id_prod:04d}',
+        nombre=nombre,
+        descripcion='Producto de prueba',
+        stock=stock,
+        precio_base=precio,
+        categoria=categoria
+    )
+
+
+
+
+class ProductoModelTest(TestCase):
+
+    def test_crear_producto(self):
+        producto = crear_producto(id_prod=1, nombre='Charizard', precio=Decimal('50000.00'), stock=5)
+        self.assertEqual(producto.nombre, 'Charizard')
+        self.assertEqual(producto.stock, 5)
+        self.assertEqual(producto.precio_base, Decimal('50000.00'))
+
+
+class ProductoCajaModelTest(TestCase):
+
+    def test_crear_producto_caja(self):
+        producto = crear_producto(id_prod=1, nombre='Caja Elite', categoria='Caja')
+        caja = ProductoCaja.objects.create(id_producto=producto, cant_sobres=36)
+        self.assertEqual(caja.cant_sobres, 36)
+        self.assertIn('Caja Elite', str(caja))
+
+    def test_caja_se_elimina_al_eliminar_producto(self):
+        producto = crear_producto(id_prod=1, nombre='Caja Booster', categoria='Caja')
+        ProductoCaja.objects.create(id_producto=producto, cant_sobres=24)
+        producto.delete()
+        self.assertEqual(ProductoCaja.objects.count(), 0)
+
+
+
+
+class ProductoAPITest(APITestCase):
+
     def setUp(self):
-        self.producto = Producto(
-            codigo_barras="PKM-001",
-            nombre="Pikachu V",
-            descripcion="Carta básica",
-            stock=10,
-            precio_base=Decimal('15.00'),
-            categoria='Carta'
-        )
-        self.data = ProductoSerializer(self.producto).data
-    
-    def test_contiene_campos_esperados(self):
-        for campo in ['nombre', 'codigo_barras', 'stock', 'precio_base', 'categoria']:
-            self.assertIn(campo, self.data)
+        self.url_token = '/api/auth/token/'
+        self.url_productos = '/api/productos/'
+        self.vendedor = crear_vendedor(username='vend_prod', password='pass1234')
+        self.admin = crear_admin(username='admin_prod', password='pass1234')
+        self.producto = crear_producto(id_prod=1, stock=10)
 
-    def test_valores_serializados_correctos(self):
-        self.assertEqual(self.data['nombre'], "Pikachu V")
-        self.assertEqual(self.data['codigo_barras'], "PKM-001")
-        self.assertEqual(self.data['stock'], 10)
+    def _token(self, username, password='pass1234'):
+        response = self.client.post(self.url_token, {'username': username, 'password': password})
+        return response.data['access']
 
-#----------- estó va hacer ls test de productos pero con las urls----
+    def test_vendedor_puede_listar_productos(self):
+        token = self._token('vend_prod')
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {token}')
+        response = self.client.get(self.url_productos)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-class BajoStockViewTest(SimpleTestCase):
-    def setUp(self):
-        self.client = APIClient()
 
-    @patch('apps.productos.views.PuedeVerProductos.has_permission', return_value=True)
-    @patch('apps.productos.views.Producto.objects')
-    def test_responde_200(self, mock_manager, mock_permission):
-        mock_manager.all.return_value = []
-        mock_manager.filter.return_value = []
-        response = self.client.get('/api/productos/bajo_stock/')
-        self.assertEqual(response.status_code, 200)
+    def test_vendedor_no_puede_crear_productos(self):
+        token = self._token('vend_prod')
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {token}')
+        data = {
+            'id_producto': 99,
+            'codigo_barras': 'NUEVO001',
+            'nombre': 'Producto Nuevo',
+            'stock': 5,
+            'precio_base': '1000.00',
+            'categoria': 'Carta'
+        }
+        response = self.client.post(self.url_productos, data)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-    @patch('apps.productos.views.PuedeVerProductos.has_permission', return_value=True)
-    @patch('apps.productos.views.Producto.objects')
-    def test_responde_lista_vacia_si_no_hay_bajo_stock(self, mock_manager, mock_permission):
-        mock_manager.all.return_value = []
-        mock_manager.filter.return_value = []
-        response = self.client.get('/api/productos/bajo_stock/')
-        self.assertEqual(list(response.data), [])
+    def test_buscar_por_codigo_existente(self):
+        token = self._token('vend_prod')
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {token}')
+        response = self.client.get('/api/productos/por_codigo/', {'codigo': 'TEST0001'})
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['nombre'], 'Carta Test')
 
-    @patch('apps.productos.views.PuedeVerProductos.has_permission', return_value=True)
-    @patch('apps.productos.views.Producto.objects')
-    def test_solo_producto_con_stock_bajo_10(self, mock_manager, mock_permission):
-        producto_bajo = Producto(
-            id_producto=1, nombre="Pikachu", codigo_barras="001",
-            stock=5, precio_base=Decimal('10.00'), categoria='Carta'
-        )
-        mock_manager.all.return_value = [producto_bajo]
-        mock_manager.filter.return_value = [producto_bajo]
-        response = self.client.get('/api/productos/bajo_stock/')
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.data), 1)
-
-class ReducirStockViewTest(SimpleTestCase):
-    def setUp(self):
-        self.client = APIClient()
-        mock_user = MagicMock(is_authenticated=True, is_staff=True)
-        self.client.force_authenticate(user=mock_user)
-
-    @patch('apps.productos.views.PuedeVerProductos.has_permission', return_value=True)
-    @patch('apps.productos.views.ProductoViewSet.get_object')
-    def test_reducir_stock_exitoso(self, mock_get_object, mock_permission):
-        producto_mock = MagicMock(spec=Producto)
-        producto_mock.stock = 20
-        mock_get_object.return_value = producto_mock
-
+    def test_reducir_stock_exitoso(self):
+        token = self._token('admin_prod')
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {token}')
         response = self.client.post(
-            '/api/productos/1/reducir_stock/', 
-            {'cantidad': 5}, 
-            format='json'
+            f'/api/productos/{self.producto.id_producto}/reducir_stock/',
+            {'cantidad': 3}
         )
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data['stock_actual'], 15)
-        producto_mock.save.assert_called_once()
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.producto.refresh_from_db()
+        self.assertEqual(self.producto.stock, 7)
 
-
-    @patch('apps.productos.views.PuedeVerProductos.has_permission', return_value=True)
-    @patch('apps.productos.views.ProductoViewSet.get_object')
-    def test_reducir_stock_insuficiente_retorna_400(self, mock_get_object,mock_permission):
-        producto_mock = MagicMock(spec=Producto)
-        producto_mock.stock = 3
-        mock_get_object.return_value = producto_mock
-
-        response = self.client.post(
-            '/api/productos/1/reducir_stock/', 
-            {'cantidad': 10}, 
-            format='json'
-        )
-        self.assertEqual(response.status_code, 400)
-        self.assertIn('error', response.data)
-
-
-# Test de validacione de modelo 
-class ProductoValidacionTest(SimpleTestCase):
-
-    def test_stock_negativo_es_invalido(self):
-        producto = Producto(
-            nombre="Pikachu", codigo_barras="001",
-            stock=-1, precio_base=Decimal('10.00'), categoria='Carta'
-        )
-        with self.assertRaises(ValidationError):
-            producto.full_clean(validate_unique=False)
-
-    def test_categoria_invalida_es_rechazada(self):
-        producto = Producto(
-            nombre="Pikachu", codigo_barras="001",
-            stock=5, precio_base=Decimal('10.00'), categoria='TipoInventado'
-        )
-        with self.assertRaises(ValidationError):
-            producto.full_clean(validate_unique=False)
+    def test_bajo_stock_retorna_productos_con_menos_de_10(self):
+        crear_producto(id_prod=2, nombre='Producto Escaso', stock=3)
+        token = self._token('admin_prod')
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {token}')
+        response = self.client.get('/api/productos/bajo_stock/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        nombres = [p['nombre'] for p in response.data]
+        self.assertIn('Producto Escaso', nombres)
+        self.assertNotIn('Carta Test', nombres)

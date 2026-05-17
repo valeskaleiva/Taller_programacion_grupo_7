@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers, viewsets, filters, status
+from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAdminUser, AllowAny, IsAuthenticated, BasePermission
 from rest_framework.response import Response
@@ -70,7 +71,7 @@ class AdminTokenObtainPairSerializer(TokenObtainPairSerializer):
                 if perfil.estado != 'activo':
                     raise serializers.ValidationError('Usuario inactivo.')
             except UsuarioGecko.DoesNotExist:
-                raise serializers.ValidationError('Usuario sin perfil configurado.')
+                raise AuthenticationFailed('Usuario sin perfil configurado.')
 
         rol_tipo = None
         try:

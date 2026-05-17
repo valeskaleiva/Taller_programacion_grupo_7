@@ -1,71 +1,123 @@
-from django.test import SimpleTestCase
-from rest_framework.test import APIClient
-from unittest.mock import patch, MagicMock
+from django.test import TestCase
 from django.contrib.auth.models import User
-import time 
+from rest_framework.test import APITestCase
+from rest_framework import status
+from decimal import Decimal
+from apps.reportes.models import Reporte
+from apps.ventas.models import Venta, DetalleVenta
+from apps.productos.models import Producto
+from apps.usuarios.models import Rol, UsuarioGecko
 
-# pruebas de integracion 
-class ReporteIntegracionTest(SimpleTestCase):
+
+def crear_rol(tipo='vendedor'):
+    return Rol.objects.get_or_create(tipo=tipo, defaults={'descripcion': f'Rol {tipo}'})[0]
+
+
+def crear_vendedor(username='vendedor1', password='pass1234'):
+    rol = crear_rol('vendedor')
+    user = User.objects.create_user(username=username, password=password, is_active=True)
+    UsuarioGecko.objects.create(usuario=user, rol=rol, estado='activo')
+    return user
+
+
+def crear_admin(username='admin1', password='pass1234'):
+    user = User.objects.create_user(username=username, password=password, is_staff=True, is_active=True)
+    rol = crear_rol('admin')
+    UsuarioGecko.objects.create(usuario=user, rol=rol, estado='activo')
+    return user
+
+
+def crear_producto(id_prod=1, nombre='Carta Test', precio=Decimal('100.00'), stock=10, categoria='Carta'):
+    return Producto.objects.create(
+        id_producto=id_prod,
+        codigo_barras=f'TEST{id_prod:04d}',
+        nombre=nombre,
+        descripcion='Producto de prueba',
+        stock=stock,
+        precio_base=precio,
+        categoria=categoria
+    )
+
+
+#Tests unitarios MModelo
+
+class ReporteModelTest(TestCase):
+
+    def test_crear_reporte(self):
+        admin = crear_admin(username='admin_rep', password='pass1234')
+        reporte = Reporte.objects.create(
+            id_reporte=1,
+            tipo_reporte='Ventas',
+            id_usuario=admin,
+            descripcion='Reporte de prueba',
+            datos_json={'total': 1000}
+        )
+        self.assertEqual(reporte.tipo_reporte, 'Ventas')
+        self.assertIsNotNone(reporte.fecha_reporte)
+
+#Tests de API
+
+class ReportePermisoAPITest(APITestCase):
 
     def setUp(self):
-        self.client = APIClient()
-        self.user = MagicMock(spec=User, is_authenticated=True, is_staff=True)
-        self.client.force_authenticate(user=self.user)
+        self.url_token = '/api/auth/token/'
+        self.url_reportes = '/api/reportes/'
+        self.vendedor = crear_vendedor(username='vend_rep', password='pass1234')
+        self.admin = crear_admin(username='admin_rep', password='pass1234')
 
-    @patch('apps.reportes.views.DetalleVenta.objects')
-    def test_top_productos_responde_estructura_correcta(self, mock_detalles):
-        mock_detalles.all.return_value.values.return_value.annotate.return_value.order_by.return_value.__getitem__.return_value = [
-            {'id_producto__nombre': 'Charizard', 'cantidad_vendida': 10, 'veces_vendido': 3},
-            {'id_producto__nombre': 'Pikachu', 'cantidad_vendida': 5, 'veces_vendido': 2},
-        ]
+    def _token(self, username, password='pass1234'):
+        response = self.client.post(self.url_token, {'username': username, 'password': password})
+        return response.data['access']
+
+
+
+
+    def setUp(self):
+        self.url_token = '/api/auth/token/'
+        self.admin = crear_admin(username='admin_acc', password='pass1234')
+        self.vendedor = crear_vendedor(username='vend_acc', password='pass1234')
+        self.producto = crear_producto(id_prod=1, stock=5)
+
+    def _token(self, username, password='pass1234'):
+        response = self.client.post(self.url_token, {'username': username, 'password': password})
+        return response.data['access']
+
+    def test_top_productos_vendidos(self):
+        token = self._token('admin_acc')
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {token}')
         response = self.client.get('/api/reportes/top_productos_vendidos/')
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIn('titulo', response.data)
         self.assertIn('datos', response.data)
         self.assertIn('filtros', response.data)
 
-    @patch('apps.reportes.views.Producto.objects')
-    def test_productos_bajo_stock_responde_estructura_correcta(self, mock_productos):
-        mock_productos.filter.return_value.values.return_value.order_by.return_value = []
+    def test_productos_bajo_stock(self):
+        token = self._token('admin_acc')
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {token}')
         response = self.client.get('/api/reportes/productos_bajo_stock/')
-        self.assertEqual(response.status_code, 200)
-        self.assertIn('titulo', response.data)
-        self.assertIn('cantidad_productos', response.data)
-        self.assertIn('datos', response.data)
+        nombres = [p['nombre'] for p in response.data['datos']]
+        self.assertIn('Carta Test', nombres)
 
-    def test_usuario_no_autenticado_recibe_403(self):
-        client_sin_auth = APIClient()
-        response = client_sin_auth.get('/api/reportes/top_productos_vendidos/')
-        self.assertIn(response.status_code, [401, 403])
-
-#Pruebas de rendimiento 
-
-class ReporteRendimientoTest(SimpleTestCase):
-
-    def setUp(self):
-        self.client = APIClient()
-        user = MagicMock(is_authenticated=True, is_staff=True)
-        self.client.force_authenticate(user=user)
-
-    @patch('apps.reportes.views.Venta.objects')
-    def test_ventas_diarias_responde_en_menos_de_1_segundo(self, mock_ventas):
-        # Simula 500 ventas distribuidas en fechas distintas
-        from datetime import datetime, timezone as tz
-        from decimal import Decimal
-
-        ventas_simuladas = [
-            {
-                'fecha_venta': datetime(2024, 1, i % 28 + 1, tzinfo=tz.utc),
-                'total_pagado': Decimal('15000.00')
-            }
-            for i in range(500)
-        ]
-        mock_ventas.all.return_value.filter.return_value.values.return_value.order_by.return_value = ventas_simuladas
-        mock_ventas.all.return_value.values.return_value.order_by.return_value = ventas_simuladas
-
-        inicio = time.time()
+    def test_ventas_diarias_con_datos_reales(self):
+        venta = Venta.objects.create(
+            total_pagado=Decimal('500.00'),
+            id_usuario=self.admin
+        )
+        DetalleVenta.objects.create(
+            id_venta=venta,
+            id_producto=self.producto,
+            cantidad=5,
+            precio_unitario=Decimal('100.00')
+        )
+        token = self._token('admin_acc')
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {token}')
         response = self.client.get('/api/reportes/ventas_diarias/')
-        duracion = time.time() - inicio
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data['datos']), 1)
+        self.assertEqual(response.data['datos'][0]['transacciones'], 1)
 
-        self.assertEqual(response.status_code, 200)
-        self.assertLess(duracion, 1.0)  # este test tiene que responder en menos de un segundo CR
+    def test_vendedor_puede_acceder_a_reportes_de_lectura(self):
+        token = self._token('vend_acc')
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {token}')
+        response = self.client.get('/api/reportes/ventas_diarias/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)

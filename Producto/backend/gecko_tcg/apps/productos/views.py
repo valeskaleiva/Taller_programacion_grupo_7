@@ -59,8 +59,8 @@ class ProductoViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['post'])
     def reducir_stock(self, request, pk=None):
         producto = self.get_object()
-        cantidad = request.data.get('cantidad', 0)
-        
+        cantidad = int(request.data.get('cantidad', 0))
+
         if producto.stock < cantidad:
             return Response({'error': 'Stock insuficiente'},
                             status=status.HTTP_400_BAD_REQUEST)
