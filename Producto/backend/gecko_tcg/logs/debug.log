@@ -7103,3 +7103,118 @@ INFO 2026-05-13 02:19:23,446 autoreload3009217724C:\Users\Taller_programacion_gr
 INFO 2026-05-13 02:19:23,514 autoreload342687460C:\Users\Taller_programacion_grupo_7\Producto\backend\gecko_tcg\apps\usuarios\views.py changed, reloading.
 INFO 2026-05-13 02:19:24,333 autoreload1413633456Watching for file changes with StatReloader
 INFO 2026-05-13 02:19:24,396 autoreload3076421544Watching for file changes with StatReloader
+INFO 2026-05-14 17:41:20,760 autoreload1242421856Watching for file changes with StatReloader
+INFO 2026-05-14 17:43:58,989 autoreload2426020428Watching for file changes with StatReloader
+WARNING 2026-05-14 18:02:14,217 log2426021288Unauthorized: /api/auth/token/
+ERROR 2026-05-14 18:42:55,187 log242606364Internal Server Error: /api/productos/2/
+Traceback (most recent call last):
+  File "C:\Proyecto\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\rest_framework\viewsets.py", line 125, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Proyecto\.venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Proyecto\.venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Proyecto\.venv\Lib\site-packages\rest_framework\mixins.py", line 91, in destroy
+    self.perform_destroy(instance)
+  File "C:\Proyecto\.venv\Lib\site-packages\rest_framework\mixins.py", line 95, in perform_destroy
+    instance.delete()
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\models\base.py", line 1280, in delete
+    collector.collect([self], keep_parents=keep_parents)
+  File "C:\Proyecto\.venv\Lib\site-packages\django\db\models\deletion.py", line 350, in collect
+    raise ProtectedError(
+django.db.models.deletion.ProtectedError: ("Cannot delete some instances of model 'Producto' because they are referenced through protected foreign keys: 'DetalleVenta.id_producto'.", {<DetalleVenta: Detalle de Venta #10>, <DetalleVenta: Detalle de Venta #13>, <DetalleVenta: Detalle de Venta #8>, <DetalleVenta: Detalle de Venta #9>})
+INFO 2026-05-14 18:44:18,273 autoreload2426020428C:\Proyecto\Producto\backend\gecko_tcg\apps\productos\models.py changed, reloading.
+INFO 2026-05-14 18:44:18,275 autoreload1242421856C:\Proyecto\Producto\backend\gecko_tcg\apps\productos\models.py changed, reloading.
+INFO 2026-05-14 18:44:19,240 autoreload396412520Watching for file changes with StatReloader
+INFO 2026-05-14 18:44:19,240 autoreload723227928Watching for file changes with StatReloader
+INFO 2026-05-14 18:44:34,490 autoreload396412520C:\Proyecto\Producto\backend\gecko_tcg\apps\productos\views.py changed, reloading.
+INFO 2026-05-14 18:44:34,504 autoreload723227928C:\Proyecto\Producto\backend\gecko_tcg\apps\productos\views.py changed, reloading.
+INFO 2026-05-14 18:44:35,271 autoreload233961232Watching for file changes with StatReloader
+INFO 2026-05-14 18:44:35,271 autoreload2128416188Watching for file changes with StatReloader
+INFO 2026-05-14 18:46:30,107 autoreload2128416188C:\Proyecto\Producto\backend\gecko_tcg\apps\productos\models.py changed, reloading.
+INFO 2026-05-14 18:46:30,364 autoreload233961232C:\Proyecto\Producto\backend\gecko_tcg\apps\productos\models.py changed, reloading.
+INFO 2026-05-14 18:46:30,885 autoreload1674827376Watching for file changes with StatReloader
+INFO 2026-05-14 18:46:31,077 autoreload2637225408Watching for file changes with StatReloader
+INFO 2026-05-14 18:47:07,529 autoreload136127064Watching for file changes with StatReloader
+WARNING 2026-05-14 18:47:19,318 log1674811036Bad Request: /api/productos/2/
+INFO 2026-05-15 17:07:14,458 autoreload151728568Watching for file changes with StatReloader
+WARNING 2026-05-15 17:26:06,353 log151722000Unauthorized: /api/usuarios/me/
+WARNING 2026-05-15 18:55:30,345 log1517227608Bad Request: /api/productos/2/
+WARNING 2026-05-15 18:57:15,473 log1517210652Bad Request: /api/productos/2/
+INFO 2026-05-15 18:59:08,417 autoreload151728568C:\Proyecto\Producto\backend\gecko_tcg\apps\productos\views.py changed, reloading.
+INFO 2026-05-15 18:59:09,540 autoreload1312818800Watching for file changes with StatReloader
+INFO 2026-05-15 19:01:30,827 autoreload1312818800C:\Proyecto\Producto\backend\gecko_tcg\apps\productos\views.py changed, reloading.
+INFO 2026-05-15 19:01:31,567 autoreload2078814636Watching for file changes with StatReloader
+INFO 2026-05-15 19:28:58,113 logger2078828180====== WebDriver manager ======
+INFO 2026-05-15 19:28:59,172 logger2078828180Get LATEST chromedriver version for google-chrome
+INFO 2026-05-15 19:28:59,234 logger2078828180Get LATEST chromedriver version for google-chrome
+INFO 2026-05-15 19:28:59,274 logger2078828180There is no [win64] chromedriver "148.0.7778.167" for browser google-chrome "148.0.7778" in cache
+INFO 2026-05-15 19:28:59,274 logger2078828180Get LATEST chromedriver version for google-chrome
+INFO 2026-05-15 19:28:59,460 logger2078828180WebDriver version 148.0.7778.167 selected
+INFO 2026-05-15 19:28:59,465 logger2078828180Modern chrome version https://storage.googleapis.com/chrome-for-testing-public/148.0.7778.167/win32/chromedriver-win32.zip
+INFO 2026-05-15 19:28:59,465 logger2078828180About to download new driver from https://storage.googleapis.com/chrome-for-testing-public/148.0.7778.167/win32/chromedriver-win32.zip
+INFO 2026-05-15 19:28:59,518 logger2078828180Driver downloading response is 200
+INFO 2026-05-15 19:29:03,552 logger2078828180Get LATEST chromedriver version for google-chrome
+INFO 2026-05-15 19:29:03,688 logger2078828180Driver has been saved in cache [C:\Users\valei\.wdm\drivers\chromedriver\win64\148.0.7778.167]
+INFO 2026-05-15 19:29:18,683 logger2078812644====== WebDriver manager ======
+INFO 2026-05-15 19:29:19,593 logger2078812644Get LATEST chromedriver version for google-chrome
+INFO 2026-05-15 19:29:19,786 logger2078812644Get LATEST chromedriver version for google-chrome
+INFO 2026-05-15 19:29:19,866 logger2078812644Driver [C:\Users\valei\.wdm\drivers\chromedriver\win64\148.0.7778.167\chromedriver-win32/chromedriver.exe] found in cache
+INFO 2026-05-15 19:29:23,004 logger2078820572====== WebDriver manager ======
+INFO 2026-05-15 19:29:24,063 logger2078820572Get LATEST chromedriver version for google-chrome
+INFO 2026-05-15 19:29:24,276 logger2078820572Get LATEST chromedriver version for google-chrome
+INFO 2026-05-15 19:29:24,327 logger2078820572Driver [C:\Users\valei\.wdm\drivers\chromedriver\win64\148.0.7778.167\chromedriver-win32/chromedriver.exe] found in cache
+INFO 2026-05-15 19:29:33,321 logger207883908====== WebDriver manager ======
+INFO 2026-05-15 19:29:34,209 logger207883908Get LATEST chromedriver version for google-chrome
+INFO 2026-05-15 19:29:34,262 logger207883908Get LATEST chromedriver version for google-chrome
+INFO 2026-05-15 19:29:34,324 logger207883908Driver [C:\Users\valei\.wdm\drivers\chromedriver\win64\148.0.7778.167\chromedriver-win32/chromedriver.exe] found in cache
+INFO 2026-05-15 19:29:45,007 logger207881652====== WebDriver manager ======
+INFO 2026-05-15 19:29:46,077 logger207881652Get LATEST chromedriver version for google-chrome
+INFO 2026-05-15 19:29:46,127 logger207881652Get LATEST chromedriver version for google-chrome
+INFO 2026-05-15 19:29:46,178 logger207881652Driver [C:\Users\valei\.wdm\drivers\chromedriver\win64\148.0.7778.167\chromedriver-win32/chromedriver.exe] found in cache
+INFO 2026-05-15 19:43:05,616 logger207881884====== WebDriver manager ======
+INFO 2026-05-15 19:43:06,602 logger207881884Get LATEST chromedriver version for google-chrome
+INFO 2026-05-15 19:43:06,760 logger207881884Get LATEST chromedriver version for google-chrome
+INFO 2026-05-15 19:43:06,829 logger207881884Driver [C:\Users\valei\.wdm\drivers\chromedriver\win64\148.0.7778.167\chromedriver-win32/chromedriver.exe] found in cache
+INFO 2026-05-15 19:44:55,277 logger2078822416====== WebDriver manager ======
+INFO 2026-05-15 19:44:56,146 logger2078822416Get LATEST chromedriver version for google-chrome
+INFO 2026-05-15 19:44:56,196 logger2078822416Get LATEST chromedriver version for google-chrome
+INFO 2026-05-15 19:44:56,246 logger2078822416Driver [C:\Users\valei\.wdm\drivers\chromedriver\win64\148.0.7778.167\chromedriver-win32/chromedriver.exe] found in cache
+WARNING 2026-05-15 21:06:05,610 log2078812808Unauthorized: /api/auth/token/
+WARNING 2026-05-15 21:17:14,739 log2078823364Unauthorized: /api/auth/token/
+WARNING 2026-05-15 21:19:56,110 log2078814120Unauthorized: /api/auth/token/
+INFO 2026-05-15 21:23:24,372 logger2078817756====== WebDriver manager ======
+INFO 2026-05-15 21:23:25,478 logger2078817756Get LATEST chromedriver version for google-chrome
+INFO 2026-05-15 21:23:25,651 logger2078817756Get LATEST chromedriver version for google-chrome
+INFO 2026-05-15 21:23:25,712 logger2078817756Driver [C:\Users\valei\.wdm\drivers\chromedriver\win64\148.0.7778.167\chromedriver-win32/chromedriver.exe] found in cache
+INFO 2026-05-17 11:06:47,164 autoreload2476811804Watching for file changes with StatReloader
+INFO 2026-05-17 11:07:12,324 autoreload1481628180Watching for file changes with StatReloader
+INFO 2026-05-17 11:12:03,468 autoreload502011324Watching for file changes with StatReloader
+INFO 2026-05-17 11:13:23,840 autoreload207601888Watching for file changes with StatReloader
+INFO 2026-05-17 11:24:12,309 autoreload2542822952Watching for file changes with StatReloader
+WARNING 2026-05-17 11:24:21,422 log2542814400Not Found: /favicon.ico
+WARNING 2026-05-17 11:28:12,656 log2542812652Not Found: /favicon.ico
+INFO 2026-05-17 11:39:15,199 autoreload280887280Watching for file changes with StatReloader
+INFO 2026-05-17 11:41:45,053 autoreload1977216188Watching for file changes with StatReloader
+WARNING 2026-05-17 11:42:22,443 log1977225320Not Found: /
+INFO 2026-05-17 11:56:14,612 autoreload1774826100Watching for file changes with StatReloader
+INFO 2026-05-17 11:57:08,676 autoreload2861621528Watching for file changes with StatReloader
+WARNING 2026-05-17 11:59:10,316 log286167132Unauthorized: /api/auth/token/
+INFO 2026-05-17 12:50:50,068 autoreload2861621528C:\Proyecto\Producto\backend\gecko_tcg\apps\productos\models.py changed, reloading.
+INFO 2026-05-17 12:50:51,114 autoreload1514418380Watching for file changes with StatReloader
