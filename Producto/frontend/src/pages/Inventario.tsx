@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
+import { BrowserMultiFormatReader, type IScannerControls } from '@zxing/browser';
+import { NotFoundException } from '@zxing/library';
 import {
   actualizarProducto,
   crearProducto,
@@ -46,6 +48,18 @@ const Inventario: React.FC = () => {
   const [busqueda, setBusqueda] = useState('');
   const [codigoEscaneado, setCodigoEscaneado] = useState('');
   const [productoResaltado, setProductoResaltado] = useState<number | null>(null);
+  const [modoIngresoStock, setModoIngresoStock] = useState(false);
+  const [cantidadIngresoStock, setCantidadIngresoStock] = useState(1);
+  const [procesandoStock, setProcesandoStock] = useState(false);
+  const [camaraActiva, setCamaraActiva] = useState(false);
+  const [mostrarCamara, setMostrarCamara] = useState(false);
+  const [estadoCamara, setEstadoCamara] = useState('');
+  const [contextoSeguro] = useState(
+    () => typeof window !== 'undefined' && window.isSecureContext
+  );
+  const [camaraDisponible] = useState(
+    () => typeof navigator !== 'undefined' && Boolean(navigator.mediaDevices?.getUserMedia)
+  );
   const [modalAbierto, setModalAbierto] = useState(false);
   const [modoEdicion, setModoEdicion] = useState(false);
   const [form, setForm] = useState<Omit<Producto, 'id_producto'>>(productoVacio);
@@ -57,6 +71,13 @@ const Inventario: React.FC = () => {
 
   const inputEscanerRef = useRef<HTMLInputElement>(null);
   const filaResaltadaRef = useRef<HTMLTableRowElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const lectorCamaraRef = useRef<BrowserMultiFormatReader | null>(null);
+  const controlesCamaraRef = useRef<IScannerControls | null>(null);
+  const ultimoCodigoRef = useRef<{ codigo: string; timestamp: number }>({
+    codigo: '',
+    timestamp: 0,
+  });
 
   const cargarProductos = useCallback(async () => {
     setCargando(true);
@@ -112,34 +133,187 @@ const Inventario: React.FC = () => {
     return coincideCategoria && coincideBusqueda;
   });
 
-  const handleEscaneo = useCallback(
-    (e: React.KeyboardEvent<HTMLInputElement>) => {
-      if (e.key === 'Enter') {
-        const codigo = codigoEscaneado.trim();
-        if (!codigo) return;
-        const encontrado = productos.find((p) => p.codigo_barras === codigo);
-        if (encontrado) {
-          setFiltroCategoria('Todos');
-          setBusqueda('');
-          setProductoResaltado(encontrado.id_producto);
-          setMensajeEscaner(`✓ Producto encontrado: ${encontrado.nombre}`);
-          setTimeout(() => {
-            setProductoResaltado(null);
-            setMensajeEscaner('');
-          }, 3000);
-        } else if (canManageInventory) {
-          setMensajeEscaner(`⚠ Código ${codigo} no encontrado. ¿Desea agregarlo?`);
-          setForm({ ...productoVacio, codigo_barras: codigo });
-          setModoEdicion(false);
-          setModalAbierto(true);
-        } else {
-          setMensajeEscaner(`⚠ Código ${codigo} no encontrado.`);
+  const sumarStockPorCodigo = useCallback(
+    async (producto: Producto, cantidad: number) => {
+      const cantidadNormalizada = Number(cantidad);
+      if (!Number.isFinite(cantidadNormalizada) || cantidadNormalizada <= 0) {
+        setMensajeEscaner('⚠ Ingresa una cantidad válida para aumentar stock.');
+        return;
+      }
+
+      try {
+        setProcesandoStock(true);
+        const nuevoStock = producto.stock + cantidadNormalizada;
+        const actualizado = await actualizarProducto(producto.id_producto, { stock: nuevoStock });
+
+        setProductos((prev) =>
+          prev.map((p) => (p.id_producto === actualizado.id_producto ? actualizado : p))
+        );
+        setFiltroCategoria('Todos');
+        setBusqueda('');
+        setProductoResaltado(actualizado.id_producto);
+        setMensajeEscaner(`✓ Stock actualizado: ${actualizado.nombre} (+${cantidadNormalizada}). Nuevo stock: ${actualizado.stock}`);
+        setTimeout(() => {
+          setProductoResaltado(null);
+          setMensajeEscaner('');
+        }, 3500);
+      } catch (error) {
+        const message = error instanceof Error ? error.message : 'No se pudo actualizar el stock.';
+        setMensajeEscaner(`⚠ ${message}`);
+      } finally {
+        setProcesandoStock(false);
+      }
+    },
+    []
+  );
+
+  const procesarCodigoEscaneado = useCallback(async (codigoRaw: string) => {
+    const codigo = codigoRaw.trim();
+    if (!codigo) return;
+
+    const encontrado = productos.find((p) => p.codigo_barras === codigo);
+    if (encontrado) {
+      if (canManageInventory && modoIngresoStock) {
+        await sumarStockPorCodigo(encontrado, cantidadIngresoStock);
+        return;
+      }
+
+      setFiltroCategoria('Todos');
+      setBusqueda('');
+      setProductoResaltado(encontrado.id_producto);
+      setMensajeEscaner(`✓ Producto encontrado: ${encontrado.nombre}`);
+      setTimeout(() => {
+        setProductoResaltado(null);
+        setMensajeEscaner('');
+      }, 3000);
+      return;
+    }
+
+    if (canManageInventory) {
+      setMensajeEscaner(`⚠ Código ${codigo} no encontrado. ¿Desea agregarlo?`);
+      setForm({ ...productoVacio, codigo_barras: codigo });
+      setModoEdicion(false);
+      setModalAbierto(true);
+      return;
+    }
+
+    setMensajeEscaner(`⚠ Código ${codigo} no encontrado.`);
+  }, [canManageInventory, cantidadIngresoStock, modoIngresoStock, productos, sumarStockPorCodigo]);
+
+  const detenerCamara = useCallback(() => {
+    controlesCamaraRef.current?.stop();
+    controlesCamaraRef.current = null;
+    setCamaraActiva(false);
+    setMostrarCamara(false);
+    setEstadoCamara('');
+    inputEscanerRef.current?.focus();
+  }, []);
+
+  const iniciarCamara = useCallback(async () => {
+    setMensajeEscaner('');
+
+    if (!camaraDisponible) {
+      setMensajeEscaner('⚠ Este navegador no tiene acceso a cámara para escanear.');
+      return;
+    }
+
+    if (!contextoSeguro) {
+      setMensajeEscaner('⚠ Para usar cámara en celular debes abrir el frontend en HTTPS (o localhost).');
+      return;
+    }
+
+    try {
+      if (!lectorCamaraRef.current) {
+        lectorCamaraRef.current = new BrowserMultiFormatReader();
+      }
+
+      setMostrarCamara(true);
+      await new Promise<void>((resolve) => {
+        requestAnimationFrame(() => resolve());
+      });
+
+      if (!videoRef.current) {
+        setMensajeEscaner('⚠ No se pudo inicializar la vista de cámara.');
+        setMostrarCamara(false);
+        return;
+      }
+
+      const dispositivos = await lectorCamaraRef.current.listVideoInputDevices();
+      const camaraPreferida = dispositivos.find((d) => {
+        const label = d.label.toLowerCase();
+        return /rear|back|environment|trase|posterior/.test(label);
+      })
+        ?? dispositivos.find((d) => {
+          const label = d.label.toLowerCase();
+          return /integrated|internal|built|facetime|webcam/.test(label);
+        })
+        ?? dispositivos[0];
+
+      if (!camaraPreferida) {
+        setMensajeEscaner('⚠ No se detectó ninguna cámara en este equipo.');
+        setMostrarCamara(false);
+        return;
+      }
+
+      setEstadoCamara('Iniciando cámara...');
+
+      const controls = await lectorCamaraRef.current.decodeFromVideoDevice(
+        camaraPreferida.deviceId,
+        videoRef.current,
+        (result, err) => {
+          if (result) {
+            const codigoDetectado = result.getText().trim();
+            const ahora = Date.now();
+            const esDuplicadoReciente =
+              ultimoCodigoRef.current.codigo === codigoDetectado
+              && ahora - ultimoCodigoRef.current.timestamp < 1500;
+
+            if (!codigoDetectado || esDuplicadoReciente) {
+              return;
+            }
+
+            ultimoCodigoRef.current = {
+              codigo: codigoDetectado,
+              timestamp: ahora,
+            };
+
+            setCodigoEscaneado('');
+            void procesarCodigoEscaneado(codigoDetectado);
+            return;
+          }
+
+          if (err && !(err instanceof NotFoundException)) {
+            setEstadoCamara('Cámara activa. Ajusta enfoque o iluminación para escanear.');
+          }
         }
+      );
+
+      controlesCamaraRef.current = controls;
+      setCamaraActiva(true);
+      setEstadoCamara('Cámara activa. Apunta al código de barras.');
+    } catch {
+      setCamaraActiva(false);
+      setMostrarCamara(false);
+      setEstadoCamara('');
+      setMensajeEscaner('⚠ No se pudo iniciar la cámara. Revisa permisos del navegador.');
+    }
+  }, [camaraDisponible, contextoSeguro, procesarCodigoEscaneado]);
+
+  const handleEscaneo = useCallback(
+    async (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === 'Enter') {
+        await procesarCodigoEscaneado(codigoEscaneado);
         setCodigoEscaneado('');
       }
     },
-    [canManageInventory, codigoEscaneado, productos]
+    [codigoEscaneado, procesarCodigoEscaneado]
   );
+
+  useEffect(() => {
+    return () => {
+      detenerCamara();
+    };
+  }, [detenerCamara]);
 
   const abrirAgregarEnVentana = () => {
     const destino = '/inventario/agregar';
@@ -281,6 +455,53 @@ const Inventario: React.FC = () => {
             className="w-full pl-4 pr-9 py-2 border border-primary rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primaryLight bg-green-50"
           />
         </div>
+        {canManageInventory && (
+          <div className="flex items-center gap-2 rounded-lg border border-gray-300 px-3 py-2 bg-white">
+            <label className="inline-flex items-center gap-2 text-xs font-semibold text-gray-700">
+              <input
+                type="checkbox"
+                checked={modoIngresoStock}
+                onChange={(e) => setModoIngresoStock(e.target.checked)}
+                className="h-4 w-4"
+              />
+              Modo ingreso stock
+            </label>
+            <input
+              type="number"
+              min={1}
+              value={cantidadIngresoStock}
+              onChange={(e) => setCantidadIngresoStock(Math.max(1, Number(e.target.value) || 1))}
+              className="w-20 border rounded-lg px-2 py-1 text-xs"
+              disabled={!modoIngresoStock || procesandoStock}
+            />
+            <span className="text-xs text-gray-500 whitespace-nowrap">unidades por escaneo</span>
+          </div>
+        )}
+        <div className="flex items-center gap-2 rounded-lg border border-gray-300 px-3 py-2 bg-white">
+          <button
+            type="button"
+            onClick={() => void iniciarCamara()}
+            disabled={camaraActiva}
+            className="px-3 py-2 rounded-lg text-xs font-semibold text-white bg-[#0B3D2E] hover:bg-[#0a4e3a] disabled:bg-gray-400 disabled:cursor-not-allowed"
+          >
+            Iniciar cámara
+          </button>
+          <button
+            type="button"
+            onClick={detenerCamara}
+            disabled={!camaraActiva}
+            className="px-3 py-2 rounded-lg text-xs font-semibold text-white bg-gray-700 hover:bg-gray-800 disabled:bg-gray-400 disabled:cursor-not-allowed"
+          >
+            Detener cámara
+          </button>
+          <span className="text-xs text-gray-500 whitespace-nowrap">
+            {estadoCamara || (camaraDisponible
+              ? (contextoSeguro
+                ? 'Escaneo por cámara disponible.'
+                : 'Escaneo por cámara requiere HTTPS en celular.')
+              : 'Escaneo por cámara no disponible en este navegador.')}
+          </span>
+        </div>
         {/* Búsqueda manual */}
         <div className="flex-1 relative">
           <span className="absolute inset-y-0 right-3 flex items-center text-gray-400">🔍</span>
@@ -319,6 +540,20 @@ const Inventario: React.FC = () => {
           }`}
         >
           {mensajeEscaner}
+        </div>
+      )}
+
+      {mostrarCamara && (
+        <div className="rounded-xl border border-[#0B3D2E]/20 bg-[#edf8f1] p-3">
+          <video
+            ref={videoRef}
+            className="w-full max-w-md rounded-lg border border-[#0B3D2E]/30 bg-black"
+            muted
+            playsInline
+          />
+          <p className="mt-2 text-xs text-gray-600">
+            Apunta la cámara al código para buscar producto o sumar stock según el modo activo.
+          </p>
         </div>
       )}
 

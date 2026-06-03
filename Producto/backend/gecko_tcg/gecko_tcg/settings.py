@@ -83,6 +83,9 @@ WSGI_APPLICATION = 'gecko_tcg.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
+DB_WALLET_DIR = os.getenv('DB_WALLET_DIR', r'C:\Wallet_DBPROYECTO')
+DB_LOG_FILE = os.getenv('DJANGO_LOG_FILE', str(BASE_DIR / 'logs' / 'debug.log'))
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.oracle',
@@ -93,8 +96,8 @@ DATABASES = {
         'HOST': os.getenv('DB_HOST', ''),
         'PORT': os.getenv('DB_PORT', ''),
         'OPTIONS': {
-            'config_dir': os.getenv('DB_WALLET_DIR'),
-            'wallet_location': os.getenv('DB_WALLET_DIR'),
+            'config_dir': DB_WALLET_DIR,
+            'wallet_location': DB_WALLET_DIR,
             'wallet_password': os.getenv('DB_WALLET_PASSWORD'),
         },
     }
@@ -228,8 +231,9 @@ LOGGING = {
         'file':{
                 'level': 'INFO',
                 'class': 'logging.FileHandler',
-                'filename': BASE_DIR / 'logs' / 'debug.log',
+            'filename': DB_LOG_FILE,
                 'formatter': 'verbose',
+            'delay': True,
         }, 
         'console': {
             'level': 'DEBUG',
