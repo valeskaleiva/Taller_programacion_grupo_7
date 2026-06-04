@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import type { ChangeEvent } from 'react';
-import { actualizarPerfilUsuario, getPerfilUsuario } from '../services/mockApi';
-import type { UserProfile } from '../types';
+import { getPerfilUsuarioApi, actualizarPerfilUsuarioApi } from '../services/api';
+import type { UserProfileApi } from '../services/api';
 
 type FormState = {
   nombre: string;
@@ -44,12 +44,13 @@ const formatTelefonoInput = (localDigits: string): string => {
   return `${localDigits.slice(0, 4)} ${localDigits.slice(4)}`;
 };
 
-function toFormState(profile: UserProfile): FormState {
+function toFormState(profile: UserProfileApi): FormState {
+  const nombre = [profile.first_name, profile.last_name].filter(Boolean).join(' ') || profile.username;
   return {
-    nombre: profile.nombre,
-    nombre_usuario: profile.nombre_usuario,
-    puesto: profile.puesto,
-    fecha_nacimiento: profile.fecha_nacimiento,
+    nombre,
+    nombre_usuario: profile.username,
+    puesto: profile.puesto ?? '',
+    fecha_nacimiento: profile.fecha_nacimiento ?? '',
     email: profile.email,
     avatar: profile.avatar ?? '',
     telefono: extractTelefonoLocal(profile.telefono),
@@ -66,9 +67,14 @@ function Perfil() {
 
   useEffect(() => {
     async function loadProfile() {
-      const profile = await getPerfilUsuario();
-      setForm(toFormState(profile));
-      setLoading(false);
+      try {
+        const profile = await getPerfilUsuarioApi();
+        setForm(toFormState(profile));
+      } catch {
+        setMessage('No se pudo cargar el perfil desde el servidor.');
+      } finally {
+        setLoading(false);
+      }
     }
 
     void loadProfile();
@@ -103,16 +109,17 @@ function Perfil() {
     setMessage('');
 
     try {
-      await actualizarPerfilUsuario({
-        nombre: form.nombre,
-        nombre_usuario: form.nombre_usuario,
-        puesto: form.puesto,
-        fecha_nacimiento: form.fecha_nacimiento,
+      const [firstName, ...rest] = form.nombre.trim().split(' ');
+      await actualizarPerfilUsuarioApi({
+        first_name: firstName ?? '',
+        last_name: rest.join(' '),
         email: form.email,
-        avatar: form.avatar,
+        puesto: form.puesto,
+        fecha_nacimiento: form.fecha_nacimiento || null,
         telefono: formatTelefono(form.telefono),
         direccion: form.direccion,
         bio: form.bio,
+        avatar: form.avatar,
       });
       setMessage('Perfil guardado correctamente.');
     } catch {

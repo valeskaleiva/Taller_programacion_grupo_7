@@ -1,6 +1,4 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { BrowserMultiFormatReader, type IScannerControls } from '@zxing/browser';
-import { NotFoundException } from '@zxing/library';
 import {
   crearVenta,
   getStoredAuthUser,
@@ -40,24 +38,8 @@ function Ventas() {
   const [guardando, setGuardando] = useState(false);
   const [usuarios, setUsuarios] = useState<UsuarioVenta[]>([]);
   const [usuarioVentaId, setUsuarioVentaId] = useState<number>(USUARIO_VENTA_DEFAULT);
-  const [camaraActiva, setCamaraActiva] = useState(false);
-  const [mostrarCamara, setMostrarCamara] = useState(false);
-  const [estadoCamara, setEstadoCamara] = useState('');
-  const [contextoSeguro] = useState(
-    () => typeof window !== 'undefined' && window.isSecureContext
-  );
-  const [camaraDisponible] = useState(
-    () => typeof navigator !== 'undefined' && Boolean(navigator.mediaDevices?.getUserMedia)
-  );
 
   const inputScannerRef = useRef<HTMLInputElement>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const lectorCamaraRef = useRef<BrowserMultiFormatReader | null>(null);
-  const controlesCamaraRef = useRef<IScannerControls | null>(null);
-  const ultimoCodigoRef = useRef<{ codigo: string; timestamp: number }>({
-    codigo: '',
-    timestamp: 0,
-  });
 
   const enfocarScanner = useCallback(() => {
     inputScannerRef.current?.focus();
@@ -107,108 +89,8 @@ function Ventas() {
       );
     });
 
-    setMensaje(`Agregado: ${producto.nombre}`);
+    setMensaje(`Código ${codigoNormalizado} verificado en stock: ${producto.nombre} agregado.`);
   }, []);
-
-  const detenerCamara = useCallback(() => {
-    controlesCamaraRef.current?.stop();
-    controlesCamaraRef.current = null;
-    setCamaraActiva(false);
-    setMostrarCamara(false);
-    setEstadoCamara('');
-    enfocarScanner();
-  }, [enfocarScanner]);
-
-  const iniciarCamara = useCallback(async () => {
-    setError('');
-    setMensaje('');
-
-    if (!camaraDisponible) {
-      setError('Este navegador no tiene acceso a cámara para escanear.');
-      return;
-    }
-
-    if (!contextoSeguro) {
-      setError('Para usar cámara en celular debes abrir el frontend en HTTPS (o localhost).');
-      return;
-    }
-
-    try {
-      if (!lectorCamaraRef.current) {
-        lectorCamaraRef.current = new BrowserMultiFormatReader();
-      }
-
-      setMostrarCamara(true);
-      await new Promise<void>((resolve) => {
-        requestAnimationFrame(() => resolve());
-      });
-
-      if (!videoRef.current) {
-        setError('No se pudo inicializar la vista de cámara.');
-        setMostrarCamara(false);
-        return;
-      }
-
-      const dispositivos = await BrowserMultiFormatReader.listVideoInputDevices();
-      const camaraPreferida = dispositivos.find((d: MediaDeviceInfo) => {
-        const label = d.label.toLowerCase();
-        return /rear|back|environment|trase|posterior/.test(label);
-      })
-        ?? dispositivos.find((d: MediaDeviceInfo) => {
-          const label = d.label.toLowerCase();
-          return /integrated|internal|built|facetime|webcam/.test(label);
-        })
-        ?? dispositivos[0];
-
-      if (!camaraPreferida) {
-        setError('No se detectó ninguna cámara en este equipo.');
-        setMostrarCamara(false);
-        return;
-      }
-
-      setEstadoCamara('Iniciando cámara...');
-
-      const controls = await lectorCamaraRef.current.decodeFromVideoDevice(
-        camaraPreferida.deviceId,
-        videoRef.current,
-        (result, err) => {
-          if (result) {
-            const codigoDetectado = result.getText().trim();
-            const ahora = Date.now();
-            const esDuplicadoReciente =
-              ultimoCodigoRef.current.codigo === codigoDetectado
-              && ahora - ultimoCodigoRef.current.timestamp < 1500;
-
-            if (!codigoDetectado || esDuplicadoReciente) {
-              return;
-            }
-
-            ultimoCodigoRef.current = {
-              codigo: codigoDetectado,
-              timestamp: ahora,
-            };
-
-            setCodigo('');
-            void agregarPorCodigo(codigoDetectado);
-            return;
-          }
-
-          if (err && !(err instanceof NotFoundException)) {
-            setEstadoCamara('Cámara activa. Ajusta enfoque o iluminación para escanear.');
-          }
-        }
-      );
-
-      controlesCamaraRef.current = controls;
-      setCamaraActiva(true);
-      setEstadoCamara('Cámara activa. Apunta al código de barras.');
-    } catch {
-      setCamaraActiva(false);
-      setMostrarCamara(false);
-      setEstadoCamara('');
-      setError('No se pudo iniciar la cámara. Revisa permisos del navegador.');
-    }
-  }, [agregarPorCodigo, camaraDisponible, contextoSeguro]);
 
   useEffect(() => {
     void (async () => {
@@ -236,12 +118,6 @@ function Ventas() {
 
     enfocarScanner();
   }, [authUser?.id, enfocarScanner, isVendedor]);
-
-  useEffect(() => {
-    return () => {
-      detenerCamara();
-    };
-  }, [detenerCamara]);
 
   const totalItems = useMemo(
     () => items.reduce((acc, item) => acc + item.cantidad, 0),
@@ -323,7 +199,7 @@ function Ventas() {
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Caja / Ventas</h1>
           <p className="text-sm text-gray-500">
-            Escanea con lector USB (teclado + Enter) o con cámara desde PC/celular para agregar productos al carrito.
+            Escanea con lector tipo teclado (USB o celular como pistola) para verificar stock y agregar al carrito.
           </p>
         </div>
 
@@ -363,45 +239,9 @@ function Ventas() {
           </select>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2">
-          <button
-            type="button"
-            onClick={() => void iniciarCamara()}
-            disabled={camaraActiva}
-            className="px-4 py-2 rounded-lg text-white bg-[#0B3D2E] hover:bg-[#0a4e3a] disabled:bg-gray-400 disabled:cursor-not-allowed"
-          >
-            Iniciar cámara
-          </button>
-          <button
-            type="button"
-            onClick={detenerCamara}
-            disabled={!camaraActiva}
-            className="px-4 py-2 rounded-lg text-white bg-gray-700 hover:bg-gray-800 disabled:bg-gray-400 disabled:cursor-not-allowed"
-          >
-            Detener cámara
-          </button>
-          <span className="text-xs text-gray-600">
-            {estadoCamara || (camaraDisponible
-              ? (contextoSeguro
-                ? 'Escaneo por cámara disponible.'
-                : 'Escaneo por cámara requiere HTTPS en celular.')
-              : 'Escaneo por cámara no disponible en este navegador.')}
-          </span>
+        <div className="text-xs text-gray-600 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2">
+          Modo sin cámara activo: usa el celular como lector tipo teclado con sufijo Enter.
         </div>
-
-        {mostrarCamara && (
-          <div className="rounded-xl border border-[#0B3D2E]/20 bg-[#edf8f1] p-3">
-            <video
-              ref={videoRef}
-              className="w-full max-w-md rounded-lg border border-[#0B3D2E]/30 bg-black"
-              muted
-              playsInline
-            />
-            <p className="mt-2 text-xs text-gray-600">
-              Acerca el código a la cámara y evita reflejos para un escaneo más rápido.
-            </p>
-          </div>
-        )}
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           <div>

@@ -117,6 +117,35 @@ class UsuarioGeckoSerializer(serializers.ModelSerializer):
         model = UsuarioGecko
         fields = ['usuario_id', 'username', 'nombre', 'email', 'telefono', 'estado', 'rol_tipo', 'rol_display']
         read_only_fields = ['usuario_id', 'username', 'nombre', 'email', 'rol_tipo', 'rol_display']
+
+
+class MiPerfilSerializer(serializers.Serializer):
+    """Serializer para que el usuario actualice su propio perfil."""
+    first_name = serializers.CharField(max_length=150, required=False, allow_blank=True)
+    last_name = serializers.CharField(max_length=150, required=False, allow_blank=True)
+    email = serializers.EmailField(required=False)
+    puesto = serializers.CharField(max_length=255, required=False, allow_blank=True)
+    fecha_nacimiento = serializers.DateField(required=False, allow_null=True)
+    telefono = serializers.CharField(max_length=20, required=False, allow_blank=True)
+    direccion = serializers.CharField(max_length=500, required=False, allow_blank=True)
+    bio = serializers.CharField(required=False, allow_blank=True)
+    avatar = serializers.CharField(required=False, allow_blank=True)
+
+    def update(self, instance, validated_data):
+        # Actualizar campos de User
+        for field in ['first_name', 'last_name', 'email']:
+            if field in validated_data:
+                setattr(instance, field, validated_data[field])
+        instance.save()
+
+        # Actualizar campos de UsuarioGecko
+        perfil, _ = UsuarioGecko.objects.get_or_create(usuario=instance)
+        for field in ['puesto', 'fecha_nacimiento', 'telefono', 'direccion', 'bio', 'avatar']:
+            if field in validated_data:
+                setattr(perfil, field, validated_data[field])
+        perfil.save()
+
+        return instance
     
     def get_usuario_id(self, obj):
         return obj.usuario.id
@@ -138,10 +167,20 @@ class UsuarioSerializer(serializers.ModelSerializer):
     rol_display = serializers.SerializerMethodField()
     telefono = serializers.SerializerMethodField()
     estado = serializers.SerializerMethodField()
+    puesto = serializers.SerializerMethodField()
+    fecha_nacimiento = serializers.SerializerMethodField()
+    direccion = serializers.SerializerMethodField()
+    bio = serializers.SerializerMethodField()
+    avatar = serializers.SerializerMethodField()
     
     class Meta:
         model = User
-        fields = ['id', 'username', 'first_name', 'last_name', 'email', 'is_active', 'is_staff', 'rol_tipo', 'rol_display', 'telefono', 'estado']
+        fields = [
+            'id', 'username', 'first_name', 'last_name', 'email',
+            'is_active', 'is_staff', 'rol_tipo', 'rol_display',
+            'telefono', 'estado', 'puesto', 'fecha_nacimiento',
+            'direccion', 'bio', 'avatar',
+        ]
         read_only_fields = ['id', 'is_staff']
     
     def get_rol_tipo(self, obj):
@@ -171,6 +210,37 @@ class UsuarioSerializer(serializers.ModelSerializer):
             return obj.perfil_gecko.estado
         except UsuarioGecko.DoesNotExist:
             return 'activo'
+
+    def get_puesto(self, obj):
+        try:
+            return obj.perfil_gecko.puesto
+        except UsuarioGecko.DoesNotExist:
+            return ''
+
+    def get_fecha_nacimiento(self, obj):
+        try:
+            fn = obj.perfil_gecko.fecha_nacimiento
+            return str(fn) if fn else ''
+        except UsuarioGecko.DoesNotExist:
+            return ''
+
+    def get_direccion(self, obj):
+        try:
+            return obj.perfil_gecko.direccion
+        except UsuarioGecko.DoesNotExist:
+            return ''
+
+    def get_bio(self, obj):
+        try:
+            return obj.perfil_gecko.bio
+        except UsuarioGecko.DoesNotExist:
+            return ''
+
+    def get_avatar(self, obj):
+        try:
+            return obj.perfil_gecko.avatar
+        except UsuarioGecko.DoesNotExist:
+            return ''
 
 
 class UsuarioCreateUpdateSerializer(serializers.Serializer):
@@ -332,10 +402,17 @@ class UsuarioViewSet(viewsets.ViewSet):
         usuario.delete()
         return Response({'detail': 'Usuario eliminado.'}, status=status.HTTP_204_NO_CONTENT)
     
-    @action(detail=False, methods=['get'])
+    @action(detail=False, methods=['get', 'patch'])
     def me(self, request):
-        """Obtener datos del usuario autenticado"""
+        """Obtener o actualizar datos del usuario autenticado"""
         if not request.user or not request.user.is_authenticated:
             return Response({'detail': 'No autenticado.'}, status=401)
+
+        if request.method == 'PATCH':
+            serializer = MiPerfilSerializer(data=request.data, partial=True)
+            serializer.is_valid(raise_exception=True)
+            serializer.update(request.user, serializer.validated_data)
+            return Response(UsuarioSerializer(request.user).data)
+
         serializer = UsuarioSerializer(request.user)
         return Response(serializer.data)

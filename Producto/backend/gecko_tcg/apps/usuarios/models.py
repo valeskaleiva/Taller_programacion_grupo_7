@@ -30,6 +30,11 @@ class UsuarioGecko(models.Model):
         choices=[('activo', 'Activo'), ('inactivo', 'Inactivo')],
         default='activo'
     )
+    puesto = models.CharField(max_length=255, blank=True)
+    fecha_nacimiento = models.DateField(null=True, blank=True)
+    direccion = models.CharField(max_length=500, blank=True)
+    bio = models.TextField(blank=True)
+    avatar = models.TextField(blank=True)
     creado_en = models.DateTimeField(auto_now_add=True)
     actualizado_en = models.DateTimeField(auto_now=True)
     

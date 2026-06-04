@@ -400,3 +400,45 @@ export async function getCurrentAdmin(): Promise<AuthUser> {
   // Compatibilidad con código existente.
   return getCurrentUser();
 }
+
+// --- PERFIL DEL USUARIO AUTENTICADO ---
+
+export type UserProfileApi = {
+  id: number;
+  username: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  is_staff: boolean;
+  rol_tipo?: string | null;
+  telefono?: string;
+  estado?: string;
+  puesto?: string;
+  fecha_nacimiento?: string;
+  direccion?: string;
+  bio?: string;
+  avatar?: string;
+};
+
+export type ActualizarPerfilPayload = {
+  first_name?: string;
+  last_name?: string;
+  email?: string;
+  puesto?: string;
+  fecha_nacimiento?: string | null;
+  telefono?: string;
+  direccion?: string;
+  bio?: string;
+  avatar?: string;
+};
+
+export async function getPerfilUsuarioApi(): Promise<UserProfileApi> {
+  return request<UserProfileApi>(`${API_BASE}/usuarios/me/`);
+}
+
+export async function actualizarPerfilUsuarioApi(data: ActualizarPerfilPayload): Promise<UserProfileApi> {
+  return request<UserProfileApi>(`${API_BASE}/usuarios/me/`, {
+    method: 'PATCH',
+    body: JSON.stringify(data),
+  });
+}

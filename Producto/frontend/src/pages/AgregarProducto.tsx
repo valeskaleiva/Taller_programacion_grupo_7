@@ -1,7 +1,56 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { BrowserMultiFormatReader, type IScannerControls } from '@zxing/browser';
+import { BarcodeFormat, DecodeHintType, NotFoundException } from '@zxing/library';
 import { useNavigate } from 'react-router-dom';
 import { crearProducto } from '../services/api';
 import type { Producto } from '../types';
+
+const SCANNER_HINTS = new Map<DecodeHintType, unknown>();
+SCANNER_HINTS.set(DecodeHintType.TRY_HARDER, true);
+SCANNER_HINTS.set(DecodeHintType.POSSIBLE_FORMATS, [
+  BarcodeFormat.EAN_13,
+  BarcodeFormat.EAN_8,
+  BarcodeFormat.UPC_A,
+  BarcodeFormat.UPC_E,
+  BarcodeFormat.CODE_128,
+  BarcodeFormat.CODE_39,
+  BarcodeFormat.ITF,
+]);
+
+const normalizarCodigoEscaneado = (value: string) => value.replace(/\s+/g, '').trim();
+
+const avisarDeteccion = () => {
+  if (typeof navigator !== 'undefined' && typeof navigator.vibrate === 'function') {
+    navigator.vibrate(120);
+  }
+
+  if (typeof window === 'undefined') {
+    return;
+  }
+
+  const AudioContextClass = window.AudioContext
+    || (window as Window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+
+  if (!AudioContextClass) {
+    return;
+  }
+
+  const ctx = new AudioContextClass();
+  const oscillator = ctx.createOscillator();
+  const gainNode = ctx.createGain();
+
+  oscillator.type = 'sine';
+  oscillator.frequency.value = 1046;
+  gainNode.gain.value = 0.08;
+
+  oscillator.connect(gainNode);
+  gainNode.connect(ctx.destination);
+  oscillator.start();
+  oscillator.stop(ctx.currentTime + 0.1);
+  oscillator.onended = () => {
+    void ctx.close();
+  };
+};
 
 const productoVacio: Omit<Producto, 'id_producto'> = {
   codigo_barras: '',
@@ -24,8 +73,150 @@ const AgregarProducto: React.FC = () => {
   const [form, setForm] = useState<Omit<Producto, 'id_producto'>>(productoVacio);
   const [guardando, setGuardando] = useState(false);
   const [error, setError] = useState('');
+  const [mensajeEscaner, setMensajeEscaner] = useState('');
+  const [camaraActiva, setCamaraActiva] = useState(false);
+  const [mostrarCamara, setMostrarCamara] = useState(false);
+  const [estadoCamara, setEstadoCamara] = useState('');
+  const [dispositivos, setDispositivos] = useState<MediaDeviceInfo[]>([]);
+  const [dispositivoSeleccionado, setDispositivoSeleccionado] = useState('');
+  const [eligiendoCamara, setEligiendoCamara] = useState(false);
+  const [contextoSeguro] = useState(
+    () => typeof window !== 'undefined' && window.isSecureContext
+  );
+  const [camaraDisponible] = useState(
+    () => typeof navigator !== 'undefined' && Boolean(navigator.mediaDevices?.getUserMedia)
+  );
+
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const lectorCamaraRef = useRef<BrowserMultiFormatReader | null>(null);
+  const controlesCamaraRef = useRef<IScannerControls | null>(null);
+  const ultimoCodigoRef = useRef<{ codigo: string; timestamp: number }>({
+    codigo: '',
+    timestamp: 0,
+  });
 
   const volverInventario = () => navigate('/inventario');
+
+  const detenerCamara = useCallback(() => {
+    controlesCamaraRef.current?.stop();
+    controlesCamaraRef.current = null;
+    setCamaraActiva(false);
+    setMostrarCamara(false);
+    setEstadoCamara('');
+    setEligiendoCamara(false);
+    setDispositivos([]);
+    setDispositivoSeleccionado('');
+  }, []);
+
+  const iniciarConDispositivo = useCallback(async (deviceId: string) => {
+    setEligiendoCamara(false);
+    if (!lectorCamaraRef.current) {
+      lectorCamaraRef.current = new BrowserMultiFormatReader(SCANNER_HINTS);
+    }
+
+    setMostrarCamara(true);
+    await new Promise<void>((resolve) => {
+      requestAnimationFrame(() => resolve());
+    });
+
+    if (!videoRef.current) {
+      setError('No se pudo inicializar la vista de cámara.');
+      setMostrarCamara(false);
+      return;
+    }
+
+    setEstadoCamara('Iniciando cámara...');
+
+    try {
+      const controls = await lectorCamaraRef.current.decodeFromVideoDevice(
+        deviceId,
+        videoRef.current,
+        (result, err) => {
+          if (result) {
+            const codigoDetectado = normalizarCodigoEscaneado(result.getText());
+            const ahora = Date.now();
+            const esDuplicadoReciente =
+              ultimoCodigoRef.current.codigo === codigoDetectado
+              && ahora - ultimoCodigoRef.current.timestamp < 1500;
+
+            if (!codigoDetectado || esDuplicadoReciente) {
+              return;
+            }
+
+            ultimoCodigoRef.current = {
+              codigo: codigoDetectado,
+              timestamp: ahora,
+            };
+
+            avisarDeteccion();
+            setEstadoCamara(`Código detectado: ${codigoDetectado}`);
+
+            setForm((prev) => ({ ...prev, codigo_barras: codigoDetectado }));
+            setMensajeEscaner('Código detectado. Completa manualmente nombre, stock y precio.');
+            return;
+          }
+
+          if (err && !(err instanceof NotFoundException)) {
+            setEstadoCamara('Cámara activa. Ajusta enfoque o iluminación para escanear.');
+          }
+        }
+      );
+
+      controlesCamaraRef.current = controls;
+      setCamaraActiva(true);
+      setEstadoCamara('Cámara activa. Apunta al código de barras.');
+    } catch {
+      setCamaraActiva(false);
+      setMostrarCamara(false);
+      setEstadoCamara('');
+      setError('No se pudo iniciar la cámara. Revisa permisos del navegador.');
+    }
+  }, []);
+
+  const iniciarCamara = useCallback(async () => {
+    setError('');
+    setMensajeEscaner('');
+
+    if (!camaraDisponible) {
+      setError('Este navegador no tiene acceso a cámara para escanear.');
+      return;
+    }
+
+    if (!contextoSeguro) {
+      setError('Para usar cámara en celular debes abrir el frontend en HTTPS (o localhost).');
+      return;
+    }
+
+    try {
+      const lista = await BrowserMultiFormatReader.listVideoInputDevices();
+      if (lista.length === 0) {
+        setError('No se detectó ninguna cámara en este equipo.');
+        return;
+      }
+
+      const preferida = lista.find((d: MediaDeviceInfo) => /rear|back|environment|trase|posterior/.test(d.label.toLowerCase()))
+        ?? lista.find((d: MediaDeviceInfo) => /integrated|internal|built|facetime|webcam/.test(d.label.toLowerCase()))
+        ?? lista[0];
+
+      if (lista.length === 1) {
+        await iniciarConDispositivo(lista[0].deviceId);
+        return;
+      }
+
+      setDispositivos(lista);
+      setDispositivoSeleccionado(preferida.deviceId);
+      setMostrarCamara(true);
+      setEligiendoCamara(true);
+    } catch {
+      setError('No se pudo acceder a las cámaras. Revisa permisos del navegador.');
+    }
+  }, [camaraDisponible, contextoSeguro, iniciarConDispositivo]);
+
+  useEffect(() => {
+    return () => {
+      detenerCamara();
+    };
+  }, [detenerCamara]);
 
   const guardarProducto = async () => {
     if (!form.codigo_barras.trim() || !form.nombre.trim()) {
@@ -68,6 +259,10 @@ const AgregarProducto: React.FC = () => {
             {error}
           </div>
         )}
+
+        <div className="text-xs text-gray-600 rounded-lg border border-green-200 bg-white px-3 py-2">
+          El código de barras se ingresa con lector tipo teclado (celular como pistola) o manualmente.
+        </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
