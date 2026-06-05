@@ -13,6 +13,12 @@ import {
 import type { Producto } from '../types';
 
 type CategoriaFiltro = 'Todos' | 'Carta' | 'Sobre' | 'Caja';
+type OrdenInventario = 'default' | 'precio_asc' | 'precio_desc' | 'stock_asc' | 'stock_desc' | 'nombre_asc' | 'nombre_desc';
+const HIDDEN_PRODUCTS_STORAGE_KEY = 'gecko_hidden_product_ids';
+const SHOW_HIDDEN_STORAGE_KEY = 'gecko_show_hidden_products';
+const ONLY_HIDDEN_STORAGE_KEY = 'gecko_only_hidden_products';
+const NOTICE_TIMEOUT_MS = 4000;
+const NOTICE_BANNER_CLASS = 'text-sm px-3 py-2 rounded-2xl border border-[#0B3D2E] bg-[#0B3D2E] text-white shadow-sm';
 
 const STOCK_MINIMO = 5;
 const clpFormatter = new Intl.NumberFormat('es-CL', {
@@ -22,6 +28,13 @@ const clpFormatter = new Intl.NumberFormat('es-CL', {
 });
 
 const formatCLP = (amount: number) => clpFormatter.format(amount);
+
+const quickOrderButtons: Array<{ value: OrdenInventario; label: string }> = [
+  { value: 'precio_asc', label: 'Precio ↑' },
+  { value: 'precio_desc', label: 'Precio ↓' },
+  { value: 'stock_asc', label: 'Stock ↑' },
+  { value: 'stock_desc', label: 'Stock ↓' },
+];
 
 const SCANNER_HINTS = new Map<DecodeHintType, unknown>();
 SCANNER_HINTS.set(DecodeHintType.TRY_HARDER, true);
@@ -93,13 +106,14 @@ const Inventario: React.FC = () => {
   const [productos, setProductos] = useState<Producto[]>([]);
   const [filtroCategoria, setFiltroCategoria] = useState<CategoriaFiltro>('Todos');
   const [busqueda, setBusqueda] = useState('');
+  const [ordenInventario, setOrdenInventario] = useState<OrdenInventario>('default');
   const [productoResaltado, setProductoResaltado] = useState<number | null>(null);
-  const [camaraActiva, setCamaraActiva] = useState(false);
-  const [mostrarCamara, setMostrarCamara] = useState(false);
-  const [estadoCamara, setEstadoCamara] = useState('');
-  const [dispositivos, setDispositivos] = useState<MediaDeviceInfo[]>([]);
-  const [dispositivoSeleccionado, setDispositivoSeleccionado] = useState('');
-  const [eligiendoCamara, setEligiendoCamara] = useState(false);
+  const [, setCamaraActiva] = useState(false);
+  const [, setMostrarCamara] = useState(false);
+  const [, setEstadoCamara] = useState('');
+  const [, setDispositivos] = useState<MediaDeviceInfo[]>([]);
+  const [, setDispositivoSeleccionado] = useState('');
+  const [, setEligiendoCamara] = useState(false);
   const [contextoSeguro] = useState(
     () => typeof window !== 'undefined' && window.isSecureContext
   );
@@ -114,6 +128,41 @@ const Inventario: React.FC = () => {
   const [cargando, setCargando] = useState(true);
   const [errorGuardado, setErrorGuardado] = useState('');
   const [procesandoEliminar, setProcesandoEliminar] = useState(false);
+  const [mostrarOcultos, setMostrarOcultos] = useState(() => {
+    if (typeof window === 'undefined') {
+      return false;
+    }
+
+    return window.localStorage.getItem(SHOW_HIDDEN_STORAGE_KEY) === 'true';
+  });
+  const [soloOcultos, setSoloOcultos] = useState(() => {
+    if (typeof window === 'undefined') {
+      return false;
+    }
+
+    return window.localStorage.getItem(ONLY_HIDDEN_STORAGE_KEY) === 'true';
+  });
+  const [productosOcultos, setProductosOcultos] = useState<number[]>(() => {
+    if (typeof window === 'undefined') {
+      return [];
+    }
+
+    try {
+      const raw = window.localStorage.getItem(HIDDEN_PRODUCTS_STORAGE_KEY);
+      if (!raw) {
+        return [];
+      }
+      const parsed = JSON.parse(raw) as unknown;
+      if (!Array.isArray(parsed)) {
+        return [];
+      }
+      return parsed
+        .map((value) => Number(value))
+        .filter((value) => Number.isInteger(value) && value > 0);
+    } catch {
+      return [];
+    }
+  });
 
   const filaResaltadaRef = useRef<HTMLTableRowElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -154,6 +203,39 @@ const Inventario: React.FC = () => {
     };
   }, [cargarProductos]);
 
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    window.localStorage.setItem(HIDDEN_PRODUCTS_STORAGE_KEY, JSON.stringify(productosOcultos));
+  }, [productosOcultos]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    window.localStorage.setItem(SHOW_HIDDEN_STORAGE_KEY, String(mostrarOcultos));
+  }, [mostrarOcultos]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    window.localStorage.setItem(ONLY_HIDDEN_STORAGE_KEY, String(soloOcultos));
+  }, [soloOcultos]);
+
+  useEffect(() => {
+    if (!mensajeEscaner) return;
+    const timer = window.setTimeout(() => setMensajeEscaner(''), NOTICE_TIMEOUT_MS);
+    return () => window.clearTimeout(timer);
+  }, [mensajeEscaner]);
+
+  useEffect(() => {
+    if (!errorGuardado) return;
+    const timer = window.setTimeout(() => setErrorGuardado(''), NOTICE_TIMEOUT_MS);
+    return () => window.clearTimeout(timer);
+  }, [errorGuardado]);
+
+  useEffect(() => {
+    if (soloOcultos && !mostrarOcultos) {
+      setMostrarOcultos(true);
+    }
+  }, [soloOcultos, mostrarOcultos]);
+
   // Scroll automático al producto resaltado
   useEffect(() => {
     if (productoResaltado !== null && filaResaltadaRef.current) {
@@ -162,6 +244,16 @@ const Inventario: React.FC = () => {
   }, [productoResaltado]);
 
   const productosFiltrados = productos.filter((p) => {
+    const estaOculto = productosOcultos.includes(p.id_producto);
+
+    if (soloOcultos && !estaOculto) {
+      return false;
+    }
+
+    if (estaOculto && !mostrarOcultos) {
+      return false;
+    }
+
     const coincideCategoria = filtroCategoria === 'Todos' || p.categoria === filtroCategoria;
     const texto = busqueda.toLowerCase();
     const coincideBusqueda =
@@ -170,6 +262,61 @@ const Inventario: React.FC = () => {
       p.descripcion.toLowerCase().includes(texto);
     return coincideCategoria && coincideBusqueda;
   });
+
+  const productosFiltradosOrdenados = [...productosFiltrados].sort((a, b) => {
+    switch (ordenInventario) {
+      case 'precio_asc':
+        return a.precio_base - b.precio_base;
+      case 'precio_desc':
+        return b.precio_base - a.precio_base;
+      case 'stock_asc':
+        return a.stock - b.stock;
+      case 'stock_desc':
+        return b.stock - a.stock;
+      case 'nombre_asc':
+        return a.nombre.localeCompare(b.nombre, 'es');
+      case 'nombre_desc':
+        return b.nombre.localeCompare(a.nombre, 'es');
+      default:
+        return 0;
+    }
+  });
+
+  const alternarOculto = (productoId: number) => {
+    const producto = productos.find((p) => p.id_producto === productoId);
+    setProductosOcultos((prev) => {
+      if (prev.includes(productoId)) {
+        if (producto) {
+          setMensajeEscaner(`Producto ${producto.nombre} visible nuevamente.`);
+        }
+        return prev.filter((id) => id !== productoId);
+      }
+      if (producto) {
+        setMensajeEscaner(`Producto ${producto.nombre} ocultado.`);
+      }
+      return [...prev, productoId];
+    });
+  };
+
+  const toggleMostrarOcultos = () => {
+    setMostrarOcultos((prev) => {
+      const next = !prev;
+      if (!next) {
+        setSoloOcultos(false);
+      }
+      return next;
+    });
+  };
+
+  const toggleSoloOcultos = () => {
+    setSoloOcultos((prev) => {
+      const next = !prev;
+      if (next) {
+        setMostrarOcultos(true);
+      }
+      return next;
+    });
+  };
 
   const detenerCamara = useCallback(() => {
     controlesCamaraRef.current?.stop();
@@ -313,6 +460,8 @@ const Inventario: React.FC = () => {
     }
   }, [camaraDisponible, contextoSeguro, iniciarConDispositivo]);
 
+  void iniciarCamara;
+
   useEffect(() => {
     return () => {
       detenerCamara();
@@ -333,6 +482,7 @@ const Inventario: React.FC = () => {
   };
 
   const abrirEditar = (producto: Producto) => {
+    setMensajeEscaner(`Abriendo edición de ${producto.nombre}...`);
     const destino = `/inventario/editar/${producto.id_producto}`;
     if (typeof window === 'undefined') {
       navigate(destino);
@@ -361,11 +511,10 @@ const Inventario: React.FC = () => {
       setProcesandoEliminar(true);
       await eliminarProducto(producto.id_producto);
       await cargarProductos();
+      setMensajeEscaner(`Producto ${producto.nombre} eliminado correctamente.`);
     } catch (error) {
       const message = error instanceof Error ? error.message : 'No se pudo eliminar el producto.';
-      if (typeof window !== 'undefined') {
-        window.alert(message);
-      }
+      setMensajeEscaner(message);
     } finally {
       setProcesandoEliminar(false);
     }
@@ -447,6 +596,12 @@ const Inventario: React.FC = () => {
       </div>
 
       {/* Búsqueda y filtros */}
+      {mensajeEscaner && (
+        <div className={NOTICE_BANNER_CLASS}>
+          {mensajeEscaner}
+        </div>
+      )}
+
       <div className="flex flex-col sm:flex-row gap-3">
         {/* Búsqueda manual */}
         <div className="flex-1 relative">
@@ -473,7 +628,61 @@ const Inventario: React.FC = () => {
               {cat}
             </button>
           ))}
+          {canManageInventory && (
+            <button
+              onClick={toggleMostrarOcultos}
+              className={`px-3 py-2 rounded-lg text-xs font-semibold border transition ${
+                mostrarOcultos
+                  ? 'bg-[#0B3D2E] text-white border-[#0B3D2E]'
+                  : 'bg-white text-gray-600 border-gray-300'
+              }`}
+            >
+              {mostrarOcultos ? 'Ocultos visibles' : 'Ver ocultos'}
+            </button>
+          )}
+          {canManageInventory && (
+            <button
+              onClick={toggleSoloOcultos}
+              className={`px-3 py-2 rounded-lg text-xs font-semibold border transition ${
+                soloOcultos
+                  ? 'bg-[#0B3D2E] text-white border-[#0B3D2E]'
+                  : 'bg-white text-gray-600 border-gray-300'
+              }`}
+            >
+              {soloOcultos ? 'Viendo ocultos' : `Ocultos (${productosOcultos.length})`}
+            </button>
+          )}
         </div>
+      </div>
+
+      <div className="flex flex-wrap items-center gap-2">
+        <span className="text-xs font-semibold text-gray-500">Orden rápido:</span>
+        {quickOrderButtons.map((item) => {
+          const isActive = ordenInventario === item.value;
+          return (
+            <button
+              key={item.value}
+              onClick={() => setOrdenInventario(item.value)}
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold border transition ${
+                isActive
+                  ? 'bg-[#0B3D2E] text-white border-[#0B3D2E]'
+                  : 'bg-white text-gray-600 border-gray-300 hover:bg-gray-50'
+              }`}
+            >
+              {item.label}
+            </button>
+          );
+        })}
+        <button
+          onClick={() => setOrdenInventario('default')}
+          className={`px-3 py-1.5 rounded-lg text-xs font-semibold border transition ${
+            ordenInventario === 'default'
+              ? 'bg-[#0B3D2E] text-white border-[#0B3D2E]'
+              : 'bg-white text-gray-600 border-gray-300 hover:bg-gray-50'
+          }`}
+        >
+          Limpiar orden
+        </button>
       </div>
 
       {/* Tabla estilo Excel */}
@@ -499,15 +708,16 @@ const Inventario: React.FC = () => {
                   Cargando productos...
                 </td>
               </tr>
-            ) : productosFiltrados.length === 0 ? (
+            ) : productosFiltradosOrdenados.length === 0 ? (
               <tr>
                 <td colSpan={20} className="text-center py-10 text-gray-400">
                   No se encontraron productos.
                 </td>
               </tr>
             ) : (
-              productosFiltrados.map((p, i) => {
+              productosFiltradosOrdenados.map((p, i) => {
                 const esResaltado = productoResaltado === p.id_producto;
+                const estaOculto = productosOcultos.includes(p.id_producto);
                 return (
                   <tr
                     key={p.id_producto}
@@ -518,7 +728,7 @@ const Inventario: React.FC = () => {
                         : i % 2
                           ? 'bg-white hover:bg-[#edf8f1]'
                           : 'bg-[#edf8f1] hover:bg-[#e3f3e9]'
-                    }`}
+                    } ${estaOculto ? 'opacity-55' : ''}`}
                   >
                     <td className="px-3 py-2 font-mono text-xs text-gray-600 whitespace-nowrap border-r border-gray-100 text-center">{p.codigo_barras}</td>
                     <td className="px-3 py-2 font-medium text-gray-800 border-r border-gray-100 text-center">{p.nombre}</td>
@@ -533,6 +743,7 @@ const Inventario: React.FC = () => {
                           <button
                             onClick={() => abrirEditar(p)}
                             disabled={procesandoEliminar}
+                            title={`Editar ${p.nombre}`}
                             className="inline-flex min-w-[74px] items-center justify-center px-4 py-2 text-xs font-semibold rounded-full border-2 border-[#0B3D2E] bg-[#0B3D2E] text-white shadow-sm hover:bg-[#0a4e3a] hover:border-[#0a4e3a] transition-colors disabled:bg-[#0B3D2E] disabled:text-white disabled:opacity-100 disabled:cursor-not-allowed"
                           >
                             Editar
@@ -540,9 +751,18 @@ const Inventario: React.FC = () => {
                           <button
                             onClick={() => confirmarEliminar(p)}
                             disabled={procesandoEliminar}
+                            title={`Eliminar ${p.nombre}`}
                             className="inline-flex min-w-[74px] items-center justify-center px-4 py-2 text-xs font-semibold rounded-full border-2 border-[#0B3D2E] bg-[#0B3D2E] text-white shadow-sm hover:bg-[#0a4e3a] hover:border-[#0a4e3a] transition-colors disabled:bg-[#0B3D2E] disabled:text-white disabled:opacity-100 disabled:cursor-not-allowed"
                           >
                             {procesandoEliminar ? 'Eliminando...' : 'Eliminar'}
+                          </button>
+                          <button
+                            onClick={() => alternarOculto(p.id_producto)}
+                            disabled={procesandoEliminar}
+                            title={estaOculto ? `Mostrar ${p.nombre}` : `Ocultar ${p.nombre}`}
+                            className="inline-flex min-w-[74px] items-center justify-center px-4 py-2 text-xs font-semibold rounded-full border-2 border-gray-400 bg-white text-gray-700 shadow-sm hover:bg-gray-100 transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
+                          >
+                            {estaOculto ? 'Mostrar' : 'Ocultar'}
                           </button>
                         </div>
                       </td>
@@ -558,6 +778,7 @@ const Inventario: React.FC = () => {
       {/* Resumen pie de tabla */}
       <div className="flex flex-wrap gap-3 sm:gap-4 text-xs text-gray-500">
         <span>Mostrando {productosFiltrados.length} de {productos.length} productos</span>
+        <span className="text-gray-600">Ocultos: {productosOcultos.length}</span>
         <span className="text-red-500">
           Sin stock: {productos.filter((p) => p.stock === 0).length}
         </span>
@@ -578,7 +799,7 @@ const Inventario: React.FC = () => {
             </div>
             <div className="px-6 py-4 space-y-3">
               {errorGuardado && (
-                <div className="text-sm px-3 py-2 rounded-lg border border-red-200 bg-red-50 text-red-700">
+                <div className={NOTICE_BANNER_CLASS}>
                   {errorGuardado}
                 </div>
               )}

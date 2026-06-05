@@ -6,6 +6,8 @@ import { crearProducto } from '../services/api';
 import type { Producto } from '../types';
 
 const SCANNER_HINTS = new Map<DecodeHintType, unknown>();
+const NOTICE_TIMEOUT_MS = 1000;
+const NOTICE_BANNER_CLASS = 'text-sm px-3 py-2 rounded-2xl border border-[#0B3D2E] bg-[#0B3D2E] text-white shadow-sm';
 SCANNER_HINTS.set(DecodeHintType.TRY_HARDER, true);
 SCANNER_HINTS.set(DecodeHintType.POSSIBLE_FORMATS, [
   BarcodeFormat.EAN_13,
@@ -218,6 +220,18 @@ const AgregarProducto: React.FC = () => {
     };
   }, [detenerCamara]);
 
+  useEffect(() => {
+    if (!error) return;
+    const timer = window.setTimeout(() => setError(''), NOTICE_TIMEOUT_MS);
+    return () => window.clearTimeout(timer);
+  }, [error]);
+
+  useEffect(() => {
+    if (!mensajeEscaner) return;
+    const timer = window.setTimeout(() => setMensajeEscaner(''), NOTICE_TIMEOUT_MS);
+    return () => window.clearTimeout(timer);
+  }, [mensajeEscaner]);
+
   const guardarProducto = async () => {
     if (!form.codigo_barras.trim() || !form.nombre.trim()) {
       setError('Completa Código de Barras y Nombre.');
@@ -255,8 +269,14 @@ const AgregarProducto: React.FC = () => {
 
       <div className="bg-green-50 rounded-2xl border border-green-200 shadow-lg p-4 sm:p-6 space-y-4">
         {error && (
-          <div className="text-sm px-3 py-2 rounded-lg border border-red-200 bg-red-50 text-red-700">
+          <div className={NOTICE_BANNER_CLASS}>
             {error}
+          </div>
+        )}
+
+        {mensajeEscaner && (
+          <div className={NOTICE_BANNER_CLASS}>
+            {mensajeEscaner}
           </div>
         )}
 

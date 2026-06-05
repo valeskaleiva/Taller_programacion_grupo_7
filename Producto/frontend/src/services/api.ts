@@ -219,7 +219,17 @@ async function request<T>(url: string, init?: RequestInit): Promise<T> {
     throw new Error(message || `Error HTTP ${response.status}`);
   }
 
-  return (await response.json()) as T;
+  // Some endpoints (for example DELETE) return 204 No Content.
+  if (response.status === 204) {
+    return undefined as T;
+  }
+
+  const raw = await response.text();
+  if (!raw) {
+    return undefined as T;
+  }
+
+  return JSON.parse(raw) as T;
 }
 
 function toList<T>(payload: unknown): T[] {
@@ -232,6 +242,33 @@ function toList<T>(payload: unknown): T[] {
   }
 
   return [];
+}
+
+async function getPaginatedListAll<T>(initialUrl: string): Promise<T[]> {
+  const aggregated: T[] = [];
+  let nextUrl: string | null = initialUrl;
+
+  while (nextUrl) {
+    const pageData = await request<unknown>(nextUrl);
+
+    if (Array.isArray(pageData)) {
+      aggregated.push(...(pageData as T[]));
+      break;
+    }
+
+    if (pageData && typeof pageData === 'object') {
+      const asPaginated = pageData as { results?: unknown[]; next?: string | null };
+      if (Array.isArray(asPaginated.results)) {
+        aggregated.push(...(asPaginated.results as T[]));
+        nextUrl = asPaginated.next ?? null;
+        continue;
+      }
+    }
+
+    break;
+  }
+
+  return aggregated;
 }
 
 export async function getProductos(): Promise<Producto[]> {
@@ -320,6 +357,10 @@ export async function getVentas(): Promise<VentaResumen[]> {
   return toList<VentaResumen>(data);
 }
 
+export async function getVentasHistoricas(): Promise<VentaResumen[]> {
+  return getPaginatedListAll<VentaResumen>(`${API_BASE}/ventas/`);
+}
+
 export async function getUsuariosVenta(): Promise<UsuarioVenta[]> {
   const data = await request<unknown>(`${API_BASE}/usuarios/`);
   return toList<UsuarioVenta>(data);
@@ -344,8 +385,8 @@ export async function actualizarUsuarioGestion(id: number, payload: UsuarioGesti
   });
 }
 
-export async function eliminarUsuarioGestion(id: number): Promise<void> {
-  await request(`${API_BASE}/usuarios/${id}/`, {
+export async function eliminarUsuarioGestion(id: number): Promise<{ detail?: string } | void> {
+  return request<{ detail?: string }>(`${API_BASE}/usuarios/${id}/`, {
     method: 'DELETE',
   });
 }
@@ -355,6 +396,18 @@ export async function crearVenta(payload: CrearVentaPayload): Promise<VentaCread
     method: 'POST',
     body: JSON.stringify(payload),
   });
+}
+
+export async function anularVenta(id: number): Promise<void> {
+  await request(`${API_BASE}/ventas/${id}/anular/`, {
+    method: 'POST',
+  });
+
+  const current = readSalePaymentMethods();
+  if (String(id) in current) {
+    delete current[String(id)];
+    writeSalePaymentMethods(current);
+  }
 }
 
 export async function buscarPrecioTcgPlayer(nombreCarta: string, numeroSerie?: string): Promise<TcgPlayerCard[]> {

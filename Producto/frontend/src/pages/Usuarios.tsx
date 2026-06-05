@@ -26,8 +26,10 @@ type UsuarioFila = {
   telefono?: string;
   estado: 'activo' | 'inactivo';
   rol: 'admin' | 'vendedor';
-  creado_en: string;
 };
+
+const NOTICE_TIMEOUT_MS = 4000;
+const NOTICE_BANNER_CLASS = 'text-sm px-3 py-2 rounded-2xl border border-[#0B3D2E] bg-[#0B3D2E] text-white shadow-sm';
 
 const EMPTY_FORM: FormNuevo = {
   nombre: '',
@@ -79,7 +81,6 @@ const toUsuarioFila = (u: UsuarioGestion): UsuarioFila => ({
   telefono: u.telefono ?? '',
   estado: (u.estado ?? (u.is_active ? 'activo' : 'inactivo')) as 'activo' | 'inactivo',
   rol: (u.rol_tipo === 'admin' || u.is_staff) ? 'admin' : 'vendedor',
-  creado_en: '—',
 });
 
 const BTN_BASE =
@@ -99,6 +100,7 @@ export default function Usuarios() {
   const [form, setForm] = useState<FormNuevo>(EMPTY_FORM);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
+  const [aviso, setAviso] = useState('');
   const [modalPosition, setModalPosition] = useState<{ x: number; y: number } | null>(null);
 
   const modalRef = useRef<HTMLDivElement>(null);
@@ -116,6 +118,12 @@ export default function Usuarios() {
   };
 
   useEffect(() => { void cargar(); }, []);
+
+  useEffect(() => {
+    if (!aviso) return;
+    const timer = window.setTimeout(() => setAviso(''), NOTICE_TIMEOUT_MS);
+    return () => window.clearTimeout(timer);
+  }, [aviso]);
 
   useEffect(() => {
     if (!showModal) {
@@ -208,10 +216,12 @@ export default function Usuarios() {
         estado: form.estado,
         rol_tipo: form.rol,
       });
+      setAviso(`Usuario ${form.nombre_usuario} creado correctamente.`);
       setForm(EMPTY_FORM);
       setShowModal(false);
       void cargar();
     } catch (e) {
+      setAviso('');
       setError(e instanceof Error ? e.message : 'No se pudo guardar el usuario.');
     } finally {
       setSaving(false);
@@ -259,11 +269,13 @@ export default function Usuarios() {
         estado: form.estado,
         rol_tipo: form.rol,
       });
+      setAviso(`Usuario ${form.nombre_usuario} actualizado correctamente.`);
       setEditingId(null);
       setForm(EMPTY_FORM);
       setShowModal(false);
       void cargar();
     } catch (e) {
+      setAviso('');
       setError(e instanceof Error ? e.message : 'No se pudo actualizar el usuario.');
     } finally {
       setSaving(false);
@@ -278,9 +290,12 @@ export default function Usuarios() {
 
     if (!confirm('¿Eliminar este usuario?')) return;
     try {
-      await eliminarUsuarioGestion(id);
+      const result = await eliminarUsuarioGestion(id);
+      setError('');
+      setAviso(result?.detail ?? 'Usuario eliminado correctamente.');
       void cargar();
     } catch (e) {
+      setAviso('');
       setError(e instanceof Error ? e.message : 'No se pudo eliminar el usuario.');
     }
   };
@@ -318,12 +333,18 @@ export default function Usuarios() {
         </div>
       )}
 
+      {aviso && (
+        <div className={NOTICE_BANNER_CLASS}>
+          {aviso}
+        </div>
+      )}
+
       {/* Tabla */}
       <div className="bg-white rounded-xl border border-gray-200 shadow overflow-x-auto">
         <table className="w-full min-w-[760px] text-sm border-collapse">
           <thead>
             <tr className="bg-[#0a4e3a] border-b border-[#0B3D2E]/25 text-white">
-              {['#', 'Nombre', 'Usuario', 'Correo', 'Teléfono', 'Rol', 'Estado', 'Creado', ...(canManageUsers ? ['Acciones'] : [])].map((col) => (
+              {['#', 'Nombre', 'Usuario', 'Correo', 'Teléfono', 'Rol', 'Estado', ...(canManageUsers ? ['Acciones'] : [])].map((col) => (
                 <th
                   key={col}
                   className="text-center text-xs font-semibold text-[#e4f3eb] uppercase tracking-wide px-4 py-3 border-r border-[#0B3D2E]/30 last:border-r-0"
@@ -336,11 +357,11 @@ export default function Usuarios() {
           <tbody>
             {loading ? (
               <tr>
-                <td colSpan={8} className="text-center py-10 text-gray-400">Cargando...</td>
+                <td colSpan={canManageUsers ? 8 : 7} className="text-center py-10 text-gray-400">Cargando...</td>
               </tr>
             ) : usuarios.length === 0 ? (
               <tr>
-                <td colSpan={canManageUsers ? 9 : 8} className="text-center py-10 text-gray-400">No hay usuarios registrados.</td>
+                <td colSpan={canManageUsers ? 8 : 7} className="text-center py-10 text-gray-400">No hay usuarios registrados.</td>
               </tr>
             ) : (
               usuarios.map((u, i) => (
@@ -375,7 +396,6 @@ export default function Usuarios() {
                       {u.estado === 'activo' ? 'Activo' : 'Inactivo'}
                     </span>
                   </td>
-                  <td className="px-4 py-3 text-gray-400 whitespace-nowrap text-center border-r border-gray-100">{u.creado_en}</td>
                   {canManageUsers && (
                     <td className="px-4 py-3">
                       <div className="flex items-center justify-center gap-2 flex-wrap">
@@ -401,7 +421,7 @@ export default function Usuarios() {
           </tbody>
           <tfoot>
             <tr>
-              <td colSpan={canManageUsers ? 9 : 8} className="px-5 py-3 text-xs text-gray-500 bg-gray-50">
+              <td colSpan={canManageUsers ? 8 : 7} className="px-5 py-3 text-xs text-gray-500 bg-gray-50">
                 {usuarios.filter((u) => u.estado === 'activo').length} activos ·{' '}
                 {usuarios.filter((u) => u.estado === 'inactivo').length} inactivos
               </td>

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import Card from "../components/Card";
 import SalesChart from "../components/SalesChart";
 import TopProducts from "../components/TopProducts";
@@ -9,7 +9,7 @@ import {
   getProductos,
   getProductosBajoStock,
   getTopProductosVendidos,
-  getVentas,
+  getVentasHistoricas,
   type VentaResumen,
 } from "../services/api";
 import type { Producto } from "../types";
@@ -21,58 +21,131 @@ const clpFormatter = new Intl.NumberFormat('es-CL', {
 });
 
 const formatCLP = (amount: number) => clpFormatter.format(amount);
+const HIDDEN_PRODUCTS_STORAGE_KEY = 'gecko_hidden_product_ids';
+
+const readHiddenProductIds = (): number[] => {
+  if (typeof window === 'undefined') {
+    return [];
+  }
+
+  try {
+    const raw = window.localStorage.getItem(HIDDEN_PRODUCTS_STORAGE_KEY);
+    if (!raw) {
+      return [];
+    }
+
+    const parsed = JSON.parse(raw) as unknown;
+    if (!Array.isArray(parsed)) {
+      return [];
+    }
+
+    return parsed
+      .map((value) => Number(value))
+      .filter((value) => Number.isInteger(value) && value > 0);
+  } catch {
+    return [];
+  }
+};
 
 export default function Home() {
   const [productos, setProductos] = useState<Producto[]>([]);
+  const [productosOcultos, setProductosOcultos] = useState<number[]>(() => readHiddenProductIds());
   const [topVendidos, setTopVendidos] = useState<Array<{ nombre: string; cantidad_vendida: number }>>([]);
   const [bajoStock, setBajoStock] = useState<Array<{ id_producto: number; nombre: string; categoria: string; stock: number }>>([]);
   const [ventas, setVentas] = useState<VentaResumen[]>([]);
 
-  useEffect(() => {
-    async function load() {
-      const [productosData, topData, bajoStockData, ventasData] = await Promise.all([
-        getProductos(),
-        getTopProductosVendidos(),
-        getProductosBajoStock(),
-        getVentas(),
-      ]);
+  const loadDashboard = useCallback(async () => {
+    const [productosData, topData, bajoStockData, ventasData] = await Promise.all([
+      getProductos(),
+      getTopProductosVendidos(),
+      getProductosBajoStock(),
+      getVentasHistoricas(),
+    ]);
 
-      setProductos(productosData);
+    setProductos(productosData);
 
-      const categoriaPorId = new Map<number, string>(
-        productosData.map((p) => [p.id_producto, p.categoria])
-      );
+    const categoriaPorId = new Map<number, string>(
+      productosData.map((p) => [p.id_producto, p.categoria])
+    );
 
-      setTopVendidos(
-        topData.map((item) => ({
-          nombre: item.id_producto__nombre,
-          cantidad_vendida: item.cantidad_vendida,
-        }))
-      );
-      setBajoStock(
-        bajoStockData.map((item) => ({
-          id_producto: item.id_producto,
-          nombre: item.nombre,
-          categoria: categoriaPorId.get(item.id_producto) ?? 'Producto',
-          stock: item.stock,
-        }))
-      );
-      setVentas(
-        ventasData.map((venta) => ({
-          ...venta,
-          metodo_pago: getVentaMetodoPago(venta.id_venta) ?? venta.metodo_pago,
-        }))
-      );
-    }
-
-    void load();
+    setTopVendidos(
+      topData.map((item) => ({
+        nombre: item.id_producto__nombre,
+        cantidad_vendida: item.cantidad_vendida,
+      }))
+    );
+    setBajoStock(
+      bajoStockData.map((item) => ({
+        id_producto: item.id_producto,
+        nombre: item.nombre,
+        categoria: categoriaPorId.get(item.id_producto) ?? 'Producto',
+        stock: item.stock,
+      }))
+    );
+    setVentas(
+      ventasData.map((venta) => ({
+        ...venta,
+        metodo_pago: getVentaMetodoPago(venta.id_venta) ?? venta.metodo_pago,
+      }))
+    );
   }, []);
 
-  const totalStock = useMemo(() => productos.reduce((acc, p) => acc + p.stock, 0), [productos]);
-  const totalProductos = productos.length;
+  useEffect(() => {
+    void loadDashboard();
+  }, [loadDashboard]);
+
+  useEffect(() => {
+    const onFocus = () => {
+      void loadDashboard();
+    };
+
+    if (typeof window !== 'undefined') {
+      window.addEventListener('focus', onFocus);
+    }
+
+    return () => {
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('focus', onFocus);
+      }
+    };
+  }, [loadDashboard]);
+
+  useEffect(() => {
+    const syncHiddenProducts = () => {
+      setProductosOcultos(readHiddenProductIds());
+    };
+
+    if (typeof window !== 'undefined') {
+      window.addEventListener('focus', syncHiddenProducts);
+      window.addEventListener('storage', syncHiddenProducts);
+    }
+
+    return () => {
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('focus', syncHiddenProducts);
+        window.removeEventListener('storage', syncHiddenProducts);
+      }
+    };
+  }, []);
+
+  const productosVisibles = useMemo(
+    () => productos.filter((p) => !productosOcultos.includes(p.id_producto)),
+    [productos, productosOcultos]
+  );
+
+  const totalStock = useMemo(() => productosVisibles.reduce((acc, p) => acc + p.stock, 0), [productosVisibles]);
+  const totalProductos = productosVisibles.length;
+  const ventasActivas = useMemo(
+    () => ventas.filter((venta) => {
+      const value = typeof venta.total_pagado === 'string' ? Number(venta.total_pagado) : venta.total_pagado;
+      return Number.isFinite(value) && value > 0;
+    }),
+    [ventas]
+  );
+
   const ventasHoy = useMemo(() => {
     const hoy = new Date();
-    return ventas.reduce((acc, v) => {
+    return ventasActivas.reduce((acc, v) => {
       const fecha = new Date(v.fecha_venta);
       if (Number.isNaN(fecha.getTime())) return acc;
 
@@ -85,15 +158,18 @@ export default function Home() {
       const value = typeof v.total_pagado === 'string' ? Number(v.total_pagado) : v.total_pagado;
       return acc + (Number.isFinite(value) ? value : 0);
     }, 0);
-  }, [ventas]);
+  }, [ventasActivas]);
 
   const ultimasVentas = useMemo(
     () => [...ventas].sort((a, b) => new Date(b.fecha_venta).getTime() - new Date(a.fecha_venta).getTime()).slice(0, 5),
     [ventas]
   );
-  const valorInventario = useMemo(
-    () => productos.reduce((acc, p) => acc + p.precio_base * p.stock, 0),
-    [productos]
+  const ventasHistoricas = useMemo(
+    () => ventasActivas.reduce((acc, venta) => {
+      const value = typeof venta.total_pagado === 'string' ? Number(venta.total_pagado) : venta.total_pagado;
+      return acc + (Number.isFinite(value) ? value : 0);
+    }, 0),
+    [ventasActivas]
   );
 
   return (
@@ -107,7 +183,7 @@ export default function Home() {
           <Card title=" Ventas hoy" value={formatCLP(ventasHoy)} extra="Actualizado en tiempo real" />
           <Card title="Unidades en stock" value={totalStock} />
           <Card title="Productos" value={totalProductos} />
-          <Card title="Valor inventario" value={formatCLP(valorInventario)} />
+          <Card title="Venta historica" value={formatCLP(ventasHistoricas)} />
         </div>
       </div>
 

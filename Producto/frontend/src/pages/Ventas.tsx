@@ -1,11 +1,14 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
+  anularVenta,
   crearVenta,
+  getVentas,
   getStoredAuthUser,
   getProductoPorCodigo,
   getUsuariosVenta,
   setVentaMetodoPago,
   type CrearVentaPayload,
+  type VentaResumen,
   type UsuarioVenta,
 } from '../services/api';
 import type { Producto } from '../types';
@@ -19,6 +22,8 @@ type CartItem = {
 };
 
 const USUARIO_VENTA_DEFAULT = 1;
+const NOTICE_TIMEOUT_MS = 1000;
+const NOTICE_BANNER_CLASS = 'text-sm px-3 py-2 rounded-2xl border border-[#0B3D2E] bg-[#0B3D2E] text-white shadow-sm';
 const clpFormatter = new Intl.NumberFormat('es-CL', {
   style: 'currency',
   currency: 'CLP',
@@ -38,6 +43,7 @@ function Ventas() {
   const [guardando, setGuardando] = useState(false);
   const [usuarios, setUsuarios] = useState<UsuarioVenta[]>([]);
   const [usuarioVentaId, setUsuarioVentaId] = useState<number>(USUARIO_VENTA_DEFAULT);
+  const [ultimaVenta, setUltimaVenta] = useState<VentaResumen | null>(null);
 
   const inputScannerRef = useRef<HTMLInputElement>(null);
 
@@ -160,6 +166,32 @@ function Ventas() {
     setItems((prev) => prev.filter((item) => item.producto.id_producto !== idProducto));
   };
 
+  const cargarUltimaVentaActiva = useCallback(async () => {
+    try {
+      const ventas = await getVentas();
+      const ultima = ventas.find((venta: VentaResumen) => Number(venta.total_pagado) > 0) ?? null;
+      setUltimaVenta(ultima);
+    } catch {
+      setUltimaVenta(null);
+    }
+  }, []);
+
+  useEffect(() => {
+    void cargarUltimaVentaActiva();
+  }, [cargarUltimaVentaActiva]);
+
+  useEffect(() => {
+    if (!mensaje) return;
+    const timer = window.setTimeout(() => setMensaje(''), NOTICE_TIMEOUT_MS);
+    return () => window.clearTimeout(timer);
+  }, [mensaje]);
+
+  useEffect(() => {
+    if (!error) return;
+    const timer = window.setTimeout(() => setError(''), NOTICE_TIMEOUT_MS);
+    return () => window.clearTimeout(timer);
+  }, [error]);
+
   const confirmarVenta = async () => {
     if (items.length === 0) {
       setError('Debes escanear al menos un producto para vender.');
@@ -184,12 +216,47 @@ function Ventas() {
       setVentaMetodoPago(venta.id_venta, metodoPago);
       setItems([]);
       setMensaje(`Venta #${venta.id_venta} registrada correctamente (${metodoPago}).`);
+      await cargarUltimaVentaActiva();
       enfocarScanner();
     } catch (e) {
       const message = e instanceof Error ? e.message : 'No se pudo registrar la venta.';
       setError(message);
     } finally {
       setGuardando(false);
+    }
+  };
+
+  const anularUltimaVenta = async () => {
+    setError('');
+    setMensaje('');
+
+    try {
+      setGuardando(true);
+      const ventas = await getVentas();
+      const ultimaVentaActiva = ventas.find((venta: VentaResumen) => Number(venta.total_pagado) > 0);
+
+      if (!ultimaVentaActiva) {
+        setError('No hay ventas activas para anular.');
+        return;
+      }
+
+      const confirmar = typeof window === 'undefined'
+        ? true
+        : window.confirm(`¿Anular la venta #${ultimaVentaActiva.id_venta}?`);
+
+      if (!confirmar) {
+        return;
+      }
+
+      await anularVenta(ultimaVentaActiva.id_venta);
+      setMensaje(`Venta #${ultimaVentaActiva.id_venta} anulada correctamente.`);
+      await cargarUltimaVentaActiva();
+    } catch (e) {
+      const message = e instanceof Error ? e.message : 'No se pudo anular la última venta.';
+      setError(message);
+    } finally {
+      setGuardando(false);
+      enfocarScanner();
     }
   };
 
@@ -281,14 +348,37 @@ function Ventas() {
           </button>
         </div>
 
+        <div className="rounded-lg border border-[#0B3D2E]/20 bg-[#edf8f1] px-4 py-3">
+          <p className="text-xs uppercase tracking-wide font-semibold text-[#0B3D2E]">Ultima venta activa</p>
+          {ultimaVenta ? (
+            <div className="mt-2 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+              <div className="text-sm text-gray-700">
+                <span className="mr-3"><strong>ID:</strong> #{ultimaVenta.id_venta}</span>
+                <span className="mr-3"><strong>Total:</strong> {formatCLP(Number(ultimaVenta.total_pagado || 0))}</span>
+                <span><strong>Fecha:</strong> {String(ultimaVenta.fecha_venta ?? '').replace('T', ' ').slice(0, 16)}</span>
+              </div>
+              <button
+                type="button"
+                onClick={() => void anularUltimaVenta()}
+                className="px-3 py-1.5 rounded-lg text-white bg-[#0B3D2E] border border-[#0B3D2E] hover:bg-[#0a4e3a] disabled:opacity-60"
+                disabled={guardando}
+              >
+                Anular esta venta
+              </button>
+            </div>
+          ) : (
+            <p className="mt-1 text-sm text-gray-600">No hay ventas activas para anular.</p>
+          )}
+        </div>
+
         {mensaje && (
-          <div className="text-sm px-3 py-2 rounded-lg border border-green-200 bg-green-50 text-green-700">
+          <div className={NOTICE_BANNER_CLASS}>
             {mensaje}
           </div>
         )}
 
         {error && (
-          <div className="text-sm px-3 py-2 rounded-lg border border-red-200 bg-red-50 text-red-700">
+          <div className={NOTICE_BANNER_CLASS}>
             {error}
           </div>
         )}

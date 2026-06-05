@@ -1,7 +1,11 @@
 import { useEffect, useMemo, useState } from 'react';
 import {
+  anularVenta,
+  getStoredAuthUser,
+  getVentas,
   getTopProductosVendidosPorRango,
   getVentasDiarias,
+  type VentaResumen,
   type VentaDiaria,
 } from '../services/api';
 
@@ -36,6 +40,8 @@ const toSafeNumber = (value: unknown): number => {
 
 const todayIso = new Date().toISOString().slice(0, 10);
 const firstDayOfMonthIso = `${todayIso.slice(0, 8)}01`;
+const NOTICE_TIMEOUT_MS = 1000;
+const NOTICE_BANNER_CLASS = 'mt-4 text-sm px-3 py-2 rounded-2xl border border-[#0B3D2E] bg-[#0B3D2E] text-white shadow-sm';
 
 const escapeCsv = (value: string | number) => {
   const raw = String(value ?? '');
@@ -61,38 +67,70 @@ const normalizeErrorMessage = (message: string) => {
 };
 
 function Reportes() {
+  const authUser = getStoredAuthUser();
+  const puedeAnularVentas = Boolean(authUser);
   const [fromDate, setFromDate] = useState(firstDayOfMonthIso);
   const [toDate, setToDate] = useState(todayIso);
   const [metrics, setMetrics] = useState<VentaDiaria[]>([]);
   const [topProductos, setTopProductos] = useState<Array<{ id_producto__nombre: string; cantidad_vendida: number }>>([]);
+  const [ventasRecientes, setVentasRecientes] = useState<VentaResumen[]>([]);
   const [loading, setLoading] = useState(false);
+  const [anulandoVentaId, setAnulandoVentaId] = useState<number | null>(null);
   const [error, setError] = useState('');
+  const [aviso, setAviso] = useState('');
 
-  const cargarReportes = async () => {
+  const lanzarAviso = (texto: string) => {
+    setAviso('');
+    if (typeof window !== 'undefined') {
+      window.requestAnimationFrame(() => setAviso(texto));
+      return;
+    }
+    setAviso(texto);
+  };
+
+  const cargarReportes = async (mostrarAviso = true) => {
     try {
       setLoading(true);
       setError('');
 
-      const [ventasDiarias, top] = await Promise.all([
+      const [ventasDiarias, top, ventas] = await Promise.all([
         getVentasDiarias(fromDate, toDate),
         getTopProductosVendidosPorRango(fromDate, toDate),
+        getVentas(),
       ]);
 
       setMetrics(ventasDiarias);
       setTopProductos(top);
+      setVentasRecientes(ventas);
+      if (mostrarAviso) {
+        lanzarAviso('Reporte generado correctamente.');
+      }
     } catch (e) {
       const message = e instanceof Error ? e.message : 'No se pudieron cargar los reportes.';
       setError(normalizeErrorMessage(message));
       setMetrics([]);
       setTopProductos([]);
+      setVentasRecientes([]);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    void cargarReportes();
+    void cargarReportes(false);
   }, []);
+
+  useEffect(() => {
+    if (!aviso) return;
+    const timer = window.setTimeout(() => setAviso(''), NOTICE_TIMEOUT_MS);
+    return () => window.clearTimeout(timer);
+  }, [aviso]);
+
+  useEffect(() => {
+    if (!error) return;
+    const timer = window.setTimeout(() => setError(''), NOTICE_TIMEOUT_MS);
+    return () => window.clearTimeout(timer);
+  }, [error]);
 
   const filtered = useMemo(() => metrics, [metrics]);
 
@@ -119,6 +157,49 @@ function Reportes() {
     () => [...topProductos].sort((a, b) => toSafeNumber(b.cantidad_vendida) - toSafeNumber(a.cantidad_vendida)),
     [topProductos]
   );
+
+  const ventasEnRango = useMemo(
+    () => ventasRecientes
+      .filter((venta) => {
+        const fecha = String(venta.fecha_venta ?? '').slice(0, 10);
+        if (!fecha) return false;
+        if (fromDate && fecha < fromDate) return false;
+        if (toDate && fecha > toDate) return false;
+        return true;
+      })
+      .sort((a, b) => String(b.fecha_venta).localeCompare(String(a.fecha_venta))),
+    [ventasRecientes, fromDate, toDate]
+  );
+
+  const anularVentaSeleccionada = async (venta: VentaResumen) => {
+    if (!venta?.id_venta) {
+      return;
+    }
+
+    const anulada = toSafeNumber(venta.total_pagado) <= 0;
+    if (anulada) {
+      return;
+    }
+
+    const confirmar = typeof window === 'undefined'
+      ? true
+      : window.confirm(`¿Seguro que deseas anular la venta #${venta.id_venta}?`);
+
+    if (!confirmar) return;
+
+    try {
+      setAnulandoVentaId(venta.id_venta);
+      setError('');
+      await anularVenta(venta.id_venta);
+      lanzarAviso(`Venta #${venta.id_venta} anulada correctamente.`);
+      await cargarReportes(false);
+    } catch (e) {
+      const message = e instanceof Error ? e.message : 'No se pudo anular la venta.';
+      setError(normalizeErrorMessage(message));
+    } finally {
+      setAnulandoVentaId(null);
+    }
+  };
 
   const exportarCsv = () => {
     const rows: string[] = [];
@@ -162,10 +243,20 @@ function Reportes() {
     link.click();
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
+    lanzarAviso('CSV exportado correctamente.');
   };
 
   return (
     <div className="space-y-6 text-left">
+      {aviso && (
+        <div className="fixed left-1/2 top-5 z-[9999] w-[min(92vw,420px)] -translate-x-1/2">
+          <div className="rounded-2xl border border-[#0B3D2E] bg-[#0B3D2E] px-4 py-3 shadow-[0_14px_34px_rgba(11,61,46,0.24)]">
+            <p className="text-xs font-semibold uppercase tracking-[0.12em] text-white">Aviso</p>
+            <p className="text-sm text-white">{aviso}</p>
+          </div>
+        </div>
+      )}
+
       <section className="bg-white border rounded-2xl p-5 shadow-sm">
         <h2 className="text-2xl font-bold">Panel Ejecutivo</h2>
         <p className="text-sm text-gray-600 mt-1">
@@ -186,7 +277,7 @@ function Reportes() {
             onChange={(e) => setToDate(e.target.value)}
           />
           <button
-            onClick={() => void cargarReportes()}
+            onClick={() => void cargarReportes(true)}
             disabled={loading}
             className="bg-[#0B3D2E] hover:bg-[#0a4e3a] disabled:opacity-60 text-white font-semibold rounded-lg px-4 py-2"
           >
@@ -202,7 +293,7 @@ function Reportes() {
         </div>
 
         {error && (
-          <div className="mt-4 text-sm px-3 py-2 rounded-lg border border-red-200 bg-red-50 text-red-700">
+          <div className={NOTICE_BANNER_CLASS}>
             {error}
           </div>
         )}
@@ -367,6 +458,78 @@ function Reportes() {
                 <td className="px-3 py-2 text-center font-semibold border-r border-gray-100">{topProducto?.cantidad_vendida ?? 0}</td>
                 <td className="px-3 py-2 text-gray-600">{topProducto?.id_producto__nombre ?? 'Sin datos para el rango'}</td>
               </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section className="bg-white border rounded-xl p-5 shadow-sm">
+        <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h3 className="text-lg font-semibold text-gray-900">Ventas del periodo</h3>
+            <p className="text-sm text-gray-500">Consulta de ventas dentro del rango seleccionado y anulación individual.</p>
+          </div>
+        </div>
+        <div className="overflow-x-auto mt-4">
+          <table className="w-full text-sm border border-[#0B3D2E]/20 rounded-lg overflow-hidden">
+            <thead>
+              <tr className="bg-[#0a4e3a] border-b border-[#0B3D2E]/25 text-white">
+                <th className="text-center text-xs font-semibold text-[#e4f3eb] uppercase tracking-wide px-3 py-2 border-r border-[#0B3D2E]/30">Venta #</th>
+                <th className="text-center text-xs font-semibold text-[#e4f3eb] uppercase tracking-wide px-3 py-2 border-r border-[#0B3D2E]/30">Fecha</th>
+                <th className="text-center text-xs font-semibold text-[#e4f3eb] uppercase tracking-wide px-3 py-2 border-r border-[#0B3D2E]/30">Usuario</th>
+                <th className="text-center text-xs font-semibold text-[#e4f3eb] uppercase tracking-wide px-3 py-2 border-r border-[#0B3D2E]/30">Total (CLP)</th>
+                <th className="text-center text-xs font-semibold text-[#e4f3eb] uppercase tracking-wide px-3 py-2 border-r border-[#0B3D2E]/30">Estado</th>
+                <th className="text-center text-xs font-semibold text-[#e4f3eb] uppercase tracking-wide px-3 py-2">Acción</th>
+              </tr>
+            </thead>
+            <tbody>
+              {loading ? (
+                <tr>
+                  <td colSpan={6} className="px-3 py-6 text-center text-gray-500">Cargando ventas...</td>
+                </tr>
+              ) : ventasEnRango.length === 0 ? (
+                <tr>
+                  <td colSpan={6} className="px-3 py-6 text-center text-gray-500">No hay ventas para el rango seleccionado.</td>
+                </tr>
+              ) : ventasEnRango.map((venta, idx) => (
+                <tr key={venta.id_venta} className={`border-b border-[#0B3D2E]/10 transition-colors ${idx % 2 ? 'bg-white hover:bg-[#edf8f1]' : 'bg-[#edf8f1] hover:bg-[#e3f3e9]'}`}>
+                  {(() => {
+                    const anulada = toSafeNumber(venta.total_pagado) <= 0;
+                    return (
+                      <>
+                  <td className="px-3 py-2 text-center border-r border-gray-100 font-semibold">{venta.id_venta}</td>
+                  <td className="px-3 py-2 text-center border-r border-gray-100">{String(venta.fecha_venta ?? '').replace('T', ' ').slice(0, 16)}</td>
+                  <td className="px-3 py-2 text-center border-r border-gray-100">{venta.usuario?.username ?? '-'}</td>
+                  <td className="px-3 py-2 text-center border-r border-gray-100">{formatCLP(toSafeNumber(venta.total_pagado))}</td>
+                  <td className="px-3 py-2 text-center border-r border-gray-100">
+                    {anulada ? (
+                      <span className="inline-flex items-center rounded-full bg-gray-200 px-2 py-0.5 text-xs font-semibold text-gray-700">Anulada</span>
+                    ) : (
+                      <span className="inline-flex items-center rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-semibold text-emerald-700">Activa</span>
+                    )}
+                  </td>
+                  <td className="px-3 py-2 text-center">
+                    {puedeAnularVentas ? (
+                      <button
+                        onClick={() => void anularVentaSeleccionada(venta)}
+                        disabled={anulada || anulandoVentaId === venta.id_venta}
+                        className="px-3 py-1 rounded-lg text-white font-semibold bg-[#0B3D2E] border border-[#0B3D2E] hover:bg-[#0a4e3a] disabled:opacity-60"
+                      >
+                        {anulada
+                          ? 'Anulada'
+                          : anulandoVentaId === venta.id_venta
+                            ? 'Anulando...'
+                            : 'Anular'}
+                      </button>
+                    ) : (
+                      <span className="text-xs text-gray-500">Sin permisos</span>
+                    )}
+                  </td>
+                      </>
+                    );
+                  })()}
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>

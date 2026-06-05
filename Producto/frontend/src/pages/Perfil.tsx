@@ -3,6 +3,9 @@ import type { ChangeEvent } from 'react';
 import { getPerfilUsuarioApi, actualizarPerfilUsuarioApi } from '../services/api';
 import type { UserProfileApi } from '../services/api';
 
+const NOTICE_TIMEOUT_MS = 1000;
+const NOTICE_BANNER_CLASS = 'text-sm px-3 py-2 rounded-2xl border border-[#0B3D2E] bg-[#0B3D2E] text-white shadow-sm';
+
 type FormState = {
   nombre: string;
   nombre_usuario: string;
@@ -44,6 +47,11 @@ const formatTelefonoInput = (localDigits: string): string => {
   return `${localDigits.slice(0, 4)} ${localDigits.slice(4)}`;
 };
 
+const isUploadedAvatar = (value?: string): boolean => {
+  const avatar = (value ?? '').trim();
+  return avatar.startsWith('data:image/');
+};
+
 function toFormState(profile: UserProfileApi): FormState {
   const nombre = [profile.first_name, profile.last_name].filter(Boolean).join(' ') || profile.username;
   return {
@@ -52,7 +60,7 @@ function toFormState(profile: UserProfileApi): FormState {
     puesto: profile.puesto ?? '',
     fecha_nacimiento: profile.fecha_nacimiento ?? '',
     email: profile.email,
-    avatar: profile.avatar ?? '',
+    avatar: isUploadedAvatar(profile.avatar) ? profile.avatar ?? '' : '',
     telefono: extractTelefonoLocal(profile.telefono),
     direccion: profile.direccion ?? '',
     bio: profile.bio ?? '',
@@ -64,6 +72,13 @@ function Perfil() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState('');
+  const hasUploadedAvatar = isUploadedAvatar(form.avatar);
+
+  useEffect(() => {
+    if (!message) return;
+    const timer = window.setTimeout(() => setMessage(''), NOTICE_TIMEOUT_MS);
+    return () => window.clearTimeout(timer);
+  }, [message]);
 
   useEffect(() => {
     async function loadProfile() {
@@ -141,7 +156,18 @@ function Perfil() {
           <p className="text-sm text-gray-500 mt-1"></p>{/*borre la descripcion porque se ve raro con el header, pero se puede volver a poner si se quiere*/}
 
           <div className="mt-6 flex flex-col items-center gap-3">
-            {/* Imagen de avatar eliminada por solicitud: no mostrar foto en el perfil */}
+            {hasUploadedAvatar ? (
+              <img
+                src={form.avatar}
+                alt="Foto de perfil"
+                className="h-24 w-20 rounded-md object-cover border-2 border-emerald-300 shadow"
+                style={{ width: '80px', height: '96px', maxWidth: '80px', objectFit: 'cover', flexShrink: 0 }}
+              />
+            ) : (
+              <div className="h-24 w-20 rounded-md border-2 border-dashed border-emerald-400 bg-emerald-100 flex items-center justify-center text-[10px] font-semibold text-emerald-800 text-center px-1 leading-tight">
+                Sin foto subida
+              </div>
+            )}
             <p className="text-lg font-bold text-emerald-900">{form.nombre || 'Sin nombre'}</p>
             <p className="text-sm text-emerald-700 font-medium">@{form.nombre_usuario || 'usuario'}</p>
             <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-emerald-200 text-emerald-900 border border-emerald-400">
@@ -210,7 +236,14 @@ function Perfil() {
                 onChange={handleAvatarFile}
               />
               <span className="text-xs text-gray-500 mt-1">Puedes subir una imagen JPG, PNG o GIF.</span>
-              {/* Previsualización eliminada por solicitud: no mostrar imagen al editar */}
+              {hasUploadedAvatar && (
+                <img
+                  src={form.avatar}
+                  alt="Previsualizacion de foto"
+                  className="mt-2 h-20 w-16 rounded-md object-cover border-2 border-emerald-300"
+                  style={{ width: '64px', height: '80px', maxWidth: '64px', objectFit: 'cover', flexShrink: 0 }}
+                />
+              )}
             </label>
 
             <label className="flex flex-col gap-1 text-base text-emerald-900 font-medium">
@@ -257,8 +290,13 @@ function Perfil() {
             >
               {saving ? 'Guardando...' : 'Guardar perfil'}
             </button>
-            {message && <p className="text-sm text-emerald-700 font-medium">{message}</p>}
           </div>
+
+          {message && (
+            <div className="mt-3">
+              <div className={NOTICE_BANNER_CLASS}>{message}</div>
+            </div>
+          )}
 
           <div className="mt-6 p-4 rounded-xl bg-amber-50 border-2 border-amber-300">
             <p className="text-sm text-amber-900 font-semibold">
