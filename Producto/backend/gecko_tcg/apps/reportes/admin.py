@@ -14,7 +14,4 @@ class ReporteAdmin(admin.ModelAdmin):
         ('Información del Reporte', {
             'fields': ('id_reporte', 'tipo_reporte', 'fecha_reporte', 'id_usuario')
         }),
-        ('Contenido', {
-            'fields': ('descripcion', 'datos_json')
-        }),
     )

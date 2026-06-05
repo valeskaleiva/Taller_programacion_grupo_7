@@ -22,10 +22,10 @@ class Reporte(models.Model):
     id_usuario = models.ForeignKey(
         User,
         on_delete=models.PROTECT,  
-        related_name='reportes'
+        related_name='reportes',
+        db_column='ID_USUARIO'
     )
-    descripcion = models.TextField(blank=True, null=True)
-    datos_json = models.JSONField(blank=True, null=True) #datos 
+    # La tabla legacy REPORTE no tiene columnas de detalle adicionales.
     
     class Meta:
         db_table = 'REPORTE'

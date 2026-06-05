@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from .models import Venta, DetalleVenta
 from .serializers import VentaSerializer, VentaCreateSerializer, DetalleVentaSerializer
 from django.db.models import Sum
+from django.db import transaction
 from django.utils import timezone
 from datetime import timedelta
 
@@ -78,7 +79,7 @@ class VentaViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['get'])
     def resumen_diario(self, request):
         hoy = timezone.now().date()
-        ventas_hoy = self.get_queryset().filter(fecha_venta__date=hoy)
+        ventas_hoy = self.get_queryset().filter(fecha_venta__date=hoy, total_pagado__gt=0)
 
         total_vendido = ventas_hoy.aggregate(total=Sum('total_pagado'))['total'] or 0
         cantidad_ventas = ventas_hoy.count()
@@ -94,7 +95,7 @@ class VentaViewSet(viewsets.ModelViewSet):
     def resumen_mes(self, request):
         hoy = timezone.now().date()
         primer_dia = hoy.replace(day=1)
-        ventas_mes = self.get_queryset().filter(fecha_venta__date__gte=primer_dia)
+        ventas_mes = self.get_queryset().filter(fecha_venta__date__gte=primer_dia, total_pagado__gt=0)
         total_vendido = ventas_mes.aggregate(Sum('total_pagado'))['total_pagado__sum'] or 0
         cantidad_ventas = ventas_mes.count()
     
@@ -112,6 +113,35 @@ class VentaViewSet(viewsets.ModelViewSet):
         detalles = venta.detalles.all()
         serializer = DetalleVentaSerializer(detalles, many=True)
         return Response(serializer.data)
+
+    @action(detail=True, methods=['post'])
+    def anular(self, request, pk=None):
+        venta = self.get_object()
+
+        with transaction.atomic():
+            detalles = list(
+                venta.detalles.select_related('id_producto').select_for_update()
+            )
+
+            if not detalles and float(venta.total_pagado or 0) == 0:
+                return Response(
+                    {'mensaje': f'La venta #{pk} ya estaba anulada.'},
+                    status=status.HTTP_409_CONFLICT,
+                )
+
+            for detalle in detalles:
+                producto = detalle.id_producto
+                producto.stock = int(producto.stock or 0) + int(detalle.cantidad or 0)
+                producto.save(update_fields=['stock'])
+
+            venta.detalles.all().delete()
+            venta.total_pagado = 0
+            venta.save(update_fields=['total_pagado'])
+
+        return Response(
+            {'mensaje': f'Venta #{pk} anulada y stock restituido correctamente.'},
+            status=status.HTTP_200_OK,
+        )
     
 
 class DetalleVentaViewSet(viewsets.ModelViewSet):

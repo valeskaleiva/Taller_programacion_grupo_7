@@ -31,7 +31,5 @@ class ReporteSerializer(serializers.ModelSerializer):
             'fecha_reporte',
             'usuario_id',
             'usuario_username',
-            'descripcion',
-            'datos_json'
         ]
         read_only_fields = ['id_reporte', 'fecha_reporte', 'tipo_reporte_display']

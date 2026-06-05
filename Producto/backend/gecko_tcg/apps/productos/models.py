@@ -51,7 +51,8 @@ class ProductoCarta(models.Model):
         Producto, 
         on_delete=models.CASCADE, 
         primary_key=True,
-        related_name='carta'
+        related_name='carta',
+        db_column='ID_PRODUCTO'
     )
     rareza = models.CharField(max_length=50, choices=RAREZA_CHOICES)
     edicion = models.CharField(max_length=100)
@@ -74,7 +75,8 @@ class ProductoSobre(models.Model):
         Producto,
         on_delete=models.CASCADE,
         primary_key=True,
-        related_name='sobre'
+        related_name='sobre',
+        db_column='ID_PRODUCTO'
     )
     cant_cartas = models.IntegerField(validators=[MinValueValidator(1)])
     serie = models.CharField(max_length=200)
@@ -95,7 +97,8 @@ class ProductoCaja(models.Model):
         Producto,
         on_delete=models.CASCADE,
         primary_key=True,
-        related_name='caja'
+        related_name='caja',
+        db_column='ID_PRODUCTO'
     )
     cant_sobres = models.IntegerField(validators=[MinValueValidator(1)])
     

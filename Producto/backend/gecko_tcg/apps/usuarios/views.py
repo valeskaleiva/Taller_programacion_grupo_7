@@ -1,4 +1,6 @@
 from django.contrib.auth.models import User
+from django.db import DatabaseError
+from django.db.models.deletion import ProtectedError
 from rest_framework import serializers, viewsets, filters, status
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.decorators import action
@@ -398,9 +400,23 @@ class UsuarioViewSet(viewsets.ViewSet):
             usuario = User.objects.get(pk=pk)
         except User.DoesNotExist:
             return Response({'detail': 'No encontrado.'}, status=status.HTTP_404_NOT_FOUND)
-        
-        usuario.delete()
-        return Response({'detail': 'Usuario eliminado.'}, status=status.HTTP_204_NO_CONTENT)
+
+        if request.user and request.user.id == usuario.id:
+            return Response({'detail': 'No puedes eliminar tu propio usuario.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            usuario.delete()
+            return Response({'detail': 'Usuario eliminado correctamente.'}, status=status.HTTP_200_OK)
+        except ProtectedError:
+            return Response(
+                {'detail': 'No se puede eliminar: el usuario tiene registros asociados (ventas/reportes).'},
+                status=status.HTTP_409_CONFLICT,
+            )
+        except DatabaseError as exc:
+            return Response(
+                {'detail': f'Error de base de datos al eliminar usuario: {exc}'},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
     
     @action(detail=False, methods=['get', 'patch'])
     def me(self, request):

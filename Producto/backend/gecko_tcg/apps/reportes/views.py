@@ -132,6 +132,7 @@ class ReporteViewSet(viewsets.ModelViewSet): # gestionar reportes
         dt_desde, dt_hasta_exclusiva = self._date_to_datetime_range(fecha_desde, fecha_hasta)
 
         ventas_qs = Venta.objects.all()
+        ventas_qs = ventas_qs.filter(total_pagado__gt=0)
         if dt_desde:
             ventas_qs = ventas_qs.filter(fecha_venta__gte=dt_desde)
         if dt_hasta_exclusiva:

@@ -1,4 +1,6 @@
 from django.shortcuts import render
+from django.db import DatabaseError, IntegrityError
+from django.db.models.deletion import ProtectedError
 from rest_framework import viewsets, filters, status, permissions
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -33,6 +35,22 @@ class ProductoViewSet(viewsets.ModelViewSet):
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['nombre', 'descripcion', 'codigo_barras']
     ordering_fields = ['precio', 'fecha_lanzamiento']
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        try:
+            self.perform_destroy(instance)
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except ProtectedError:
+            return Response(
+                {'error': 'No se puede eliminar el producto porque tiene ventas asociadas.'},
+                status=status.HTTP_409_CONFLICT,
+            )
+        except (IntegrityError, DatabaseError):
+            return Response(
+                {'error': 'No se puede eliminar el producto porque está relacionado con otros registros.'},
+                status=status.HTTP_409_CONFLICT,
+            )
 
     @action(detail=False, methods=['get'])
     def por_codigo(self, request):
