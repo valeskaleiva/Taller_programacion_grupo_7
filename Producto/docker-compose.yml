@@ -1,0 +1,22 @@
+services:
+  backend:
+    build: ./backend/gecko_tcg
+    container_name: django_backend
+    volumes:
+      - ./backend/gecko_tcg:/app
+      - C:\Users\valei\Wallet_DBPROYECTO:/app/wallet
+    ports:
+      - "8000:8000"
+    environment:
+      - DEBUG=True
+
+  frontend:
+    build: ./frontend
+    container_name: react_frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    depends_on:
+      - backend

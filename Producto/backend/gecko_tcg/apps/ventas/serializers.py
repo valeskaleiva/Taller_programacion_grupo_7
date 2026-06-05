@@ -5,6 +5,17 @@ from apps.productos.models import Producto
 from apps.productos.serializers import ProductoSerializer
 from django.db.models import F, Max
 from django.db import transaction
+from decimal import Decimal, ROUND_HALF_UP
+
+
+IVA_RATE = Decimal('0.19')
+
+
+def calcular_montos_con_iva(subtotal):
+    subtotal_neto = Decimal(subtotal).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
+    iva = (subtotal_neto * IVA_RATE).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
+    total = (subtotal_neto + iva).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
+    return subtotal_neto, iva, total
 
 
 #usuario 
@@ -56,6 +67,9 @@ class VentaSerializer(serializers.ModelSerializer):
     
     
     detalles = DetalleVentaSerializer(many=True, read_only=True)
+    subtotal_neto = serializers.SerializerMethodField()
+    iva = serializers.SerializerMethodField()
+    total_con_iva = serializers.SerializerMethodField()
     
     class Meta:
         model = Venta
@@ -64,10 +78,28 @@ class VentaSerializer(serializers.ModelSerializer):
             'fecha_venta',
             'usuario',
             'usuario_id',
+            'subtotal_neto',
+            'iva',
+            'total_con_iva',
             'total_pagado',
             'detalles'
         ]
         read_only_fields = ['id_venta', 'fecha_venta']
+
+    def get_subtotal_neto(self, obj):
+        subtotal = sum((detalle.cantidad or 0) * (detalle.precio_unitario or 0) for detalle in obj.detalles.all())
+        subtotal_neto, _, _ = calcular_montos_con_iva(Decimal(subtotal or 0))
+        return subtotal_neto
+
+    def get_iva(self, obj):
+        subtotal = sum((detalle.cantidad or 0) * (detalle.precio_unitario or 0) for detalle in obj.detalles.all())
+        _, iva, _ = calcular_montos_con_iva(Decimal(subtotal or 0))
+        return iva
+
+    def get_total_con_iva(self, obj):
+        subtotal = sum((detalle.cantidad or 0) * (detalle.precio_unitario or 0) for detalle in obj.detalles.all())
+        _, _, total = calcular_montos_con_iva(Decimal(subtotal or 0))
+        return total
 
 
 #crea ventas 
@@ -80,9 +112,13 @@ class VentaCreateSerializer(serializers.ModelSerializer):
         queryset=User.objects.all()
     )
     
+    subtotal_neto = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
+    iva = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
+    total_con_iva = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
+
     class Meta:
         model = Venta
-        fields = ['id_venta', 'fecha_venta', 'usuario_id', 'total_pagado', 'detalles']
+        fields = ['id_venta', 'fecha_venta', 'usuario_id', 'subtotal_neto', 'iva', 'total_con_iva', 'total_pagado', 'detalles']
         read_only_fields = ['id_venta', 'fecha_venta', 'total_pagado']
 
     def validate(self, attrs):
@@ -128,8 +164,9 @@ class VentaCreateSerializer(serializers.ModelSerializer):
                         {'detalles': f'Stock insuficiente para {producto.nombre}. Disponible: {producto.stock}.'}
                     )
 
-            # Calcula el total automáticamente
-            total = sum(d['cantidad'] * d['precio_unitario'] for d in detalles_data)
+            # Calcula subtotal + IVA (19%) y persiste total final.
+            subtotal = sum(Decimal(d['cantidad']) * Decimal(d['precio_unitario']) for d in detalles_data)
+            subtotal_neto, iva, total = calcular_montos_con_iva(subtotal)
             validated_data['total_pagado'] = total
 
             # Generate next ID for Venta
@@ -149,5 +186,9 @@ class VentaCreateSerializer(serializers.ModelSerializer):
                 producto_db = productos_db[detalle_data['id_producto'].id_producto]
                 producto_db.stock -= int(detalle_data['cantidad'])
                 producto_db.save(update_fields=['stock'])
+
+            venta.subtotal_neto = subtotal_neto
+            venta.iva = iva
+            venta.total_con_iva = total
 
         return venta

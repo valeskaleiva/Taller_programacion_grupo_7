@@ -28,7 +28,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'True').lower() == 'true'
 
-ALLOWED_HOSTS = [h.strip() for h in os.getenv('ALLOWED_HOSTS', 'localhost').split(',') if h.strip()]
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'backend', '*']
 
 
 # Application definition
@@ -253,3 +253,16 @@ LOG_DIR.mkdir(exist_ok=True)
 
 
 STATIC_URL = 'static/'
+
+# Docker Patch: Convierte los links de paginación internos a localhost para el navegador.
+from django.http import HttpRequest
+
+if not getattr(HttpRequest, '_gecko_host_patch_applied', False):
+    _original_get_host = HttpRequest.get_host
+
+    def _patched_get_host(self, _original=_original_get_host):
+        host = _original(self)
+        return 'localhost:8000' if host == 'backend:8000' else host
+
+    HttpRequest.get_host = _patched_get_host
+    HttpRequest._gecko_host_patch_applied = True

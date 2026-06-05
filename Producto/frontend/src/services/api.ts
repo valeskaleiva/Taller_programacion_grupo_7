@@ -57,6 +57,9 @@ export type VentaDiaria = {
 export type VentaResumen = {
   id_venta: number;
   fecha_venta: string;
+  subtotal_neto?: number | string;
+  iva?: number | string;
+  total_con_iva?: number | string;
   total_pagado: number | string;
   metodo_pago?: string;
   usuario?: {
@@ -93,6 +96,9 @@ export type CrearVentaPayload = {
 export type VentaCreada = {
   id_venta: number;
   fecha_venta: string;
+  subtotal_neto?: number | string;
+  iva?: number | string;
+  total_con_iva?: number | string;
   total_pagado: number | string;
 };
 

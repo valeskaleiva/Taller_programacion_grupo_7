@@ -24,6 +24,7 @@ type CartItem = {
 const USUARIO_VENTA_DEFAULT = 1;
 const NOTICE_TIMEOUT_MS = 1000;
 const NOTICE_BANNER_CLASS = 'text-sm px-3 py-2 rounded-2xl border border-[#0B3D2E] bg-[#0B3D2E] text-white shadow-sm';
+const IVA_RATE = 0.19;
 const clpFormatter = new Intl.NumberFormat('es-CL', {
   style: 'currency',
   currency: 'CLP',
@@ -133,6 +134,16 @@ function Ventas() {
   const totalVenta = useMemo(
     () => items.reduce((acc, item) => acc + item.cantidad * Number(item.precio_unitario), 0),
     [items]
+  );
+
+  const ivaVenta = useMemo(
+    () => Math.round(totalVenta * IVA_RATE),
+    [totalVenta]
+  );
+
+  const totalConIva = useMemo(
+    () => totalVenta + ivaVenta,
+    [totalVenta, ivaVenta]
   );
 
   const handleScannerEnter = async (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -337,7 +348,9 @@ function Ventas() {
 
         <div className="flex flex-wrap gap-4 text-sm">
           <span className="text-gray-600">Items: <strong>{totalItems}</strong></span>
-          <span className="text-gray-600">Total (CLP): <strong>{formatCLP(totalVenta)}</strong></span>
+          <span className="text-gray-600">Subtotal neto: <strong>{formatCLP(totalVenta)}</strong></span>
+          <span className="text-gray-600">IVA (19%): <strong>{formatCLP(ivaVenta)}</strong></span>
+          <span className="text-gray-600">Total con IVA: <strong>{formatCLP(totalConIva)}</strong></span>
           <button
             type="button"
             onClick={enfocarScanner}
@@ -353,9 +366,21 @@ function Ventas() {
           {ultimaVenta ? (
             <div className="mt-2 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
               <div className="text-sm text-gray-700">
-                <span className="mr-3"><strong>ID:</strong> #{ultimaVenta.id_venta}</span>
-                <span className="mr-3"><strong>Total:</strong> {formatCLP(Number(ultimaVenta.total_pagado || 0))}</span>
-                <span><strong>Fecha:</strong> {String(ultimaVenta.fecha_venta ?? '').replace('T', ' ').slice(0, 16)}</span>
+                {(() => {
+                  const subtotal = Number(ultimaVenta.subtotal_neto ?? 0);
+                  const iva = Number(ultimaVenta.iva ?? 0);
+                  const total = Number(ultimaVenta.total_con_iva ?? ultimaVenta.total_pagado ?? 0);
+
+                  return (
+                    <>
+                      <span className="mr-3"><strong>ID:</strong> #{ultimaVenta.id_venta}</span>
+                      <span className="mr-3"><strong>Subtotal:</strong> {formatCLP(subtotal)}</span>
+                      <span className="mr-3"><strong>IVA:</strong> {formatCLP(iva)}</span>
+                      <span className="mr-3"><strong>Total:</strong> {formatCLP(total)}</span>
+                      <span><strong>Fecha:</strong> {String(ultimaVenta.fecha_venta ?? '').replace('T', ' ').slice(0, 16)}</span>
+                    </>
+                  );
+                })()}
               </div>
               <button
                 type="button"
