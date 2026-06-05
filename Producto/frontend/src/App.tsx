@@ -11,7 +11,9 @@ import AgregarProducto from "./pages/AgregarProducto"
 import EditarProducto from "./pages/EditarProducto"
 import Ventas from "./pages/Ventas"
 import Usuarios from "./pages/Usuarios"
+
 import BuscadorTCGPlayer from "./pages/BuscadorTCGPlayer"
+import Busqueda from "./pages/Busqueda"
 import { Routes, Route, useLocation, Navigate } from "react-router-dom"
 import { clearAuthTokens, getCurrentUser, getStoredAuthUser } from "./services/api"
 
@@ -114,7 +116,8 @@ function App() {
           <Route path="/reportes" element={<Reportes />} />
           <Route path="/perfil" element={<Perfil />} />
           <Route path="/usuarios" element={<Usuarios />} />
-          <Route path="/tcgplayer" element={<BuscadorTCGPlayer />} />
+<Route path="/tcgplayer" element={<BuscadorTCGPlayer />} />
+          <Route path="/busqueda" element={<Busqueda />} />
         </Routes>
       </div>
         </div>

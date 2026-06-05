@@ -251,4 +251,5 @@ LOGGING = {
 LOG_DIR  = BASE_DIR/'logs'
 LOG_DIR.mkdir(exist_ok=True)
 
+
 STATIC_URL = 'static/'

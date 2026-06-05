@@ -1,0 +1,34 @@
+# Variables de entorno - NO subir al repositorio
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.db
+*.sqlite3
+
+# Django
+/staticfiles/
+/media/
+
+# Virtual environment
+venv/
+env/
+.venv/
+
+# Node
+node_modules/
+dist/
+build/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Wallet Oracle - NO subir al repositorio
+Wallet_*/
+*.sso
+*.p12
+*.pem
