@@ -15,10 +15,24 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
-from core import views as core_views
+from django.urls import path, include
+from rest_framework_simplejwt.views import TokenRefreshView
+from apps.usuarios.views import AdminTokenObtainPairView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/precio-carta/', core_views.search_card_price, name='precio-carta'),
+
+    #este es del swagger 
+   # path('docs/', include_docs_urls(title='Gecko TCG API')),
+
+    #APIs de cada app bajo /api/
+    path('api/', include('apps.productos.urls')),
+    path('api/', include('apps.ventas.urls')),
+    path('api/', include('apps.reportes.urls')),
+    path('api/', include('apps.usuarios.urls')),
+    path('api/tcgplayer/', include('apps.tcgplayer.urls')),
+
+    path('api/auth/token/', AdminTokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/auth/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('api/auth/', include('rest_framework.urls'))
 ]

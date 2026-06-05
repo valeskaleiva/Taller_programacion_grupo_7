@@ -1,0 +1,17 @@
+# Variables de entorno
+.env
+.env.local
+.env.*.local
+
+# Python
+*.pyc
+__pycache__/
+*.egg-info/
+dist/
+build/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+debug.log

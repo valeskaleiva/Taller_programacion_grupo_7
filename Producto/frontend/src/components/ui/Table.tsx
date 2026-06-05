@@ -35,12 +35,17 @@ const Table = <T,>({ data, columns, itemsPerPage = 10 }: TableProps<T>) => {
     const totalPages = Math.ceil(data.length / itemsPerPage);
 
     return (
-        <div>
-            <table>
+        <div className="space-y-3">
+            <div className="overflow-x-auto rounded-lg border border-[#0B3D2E]/20">
+            <table className="w-full text-sm">
                 <thead>
-                    <tr>
+                    <tr className="bg-[#0a4e3a] border-b border-[#0B3D2E]/25 text-white">
                         {columns.map((column) => (
-                            <th key={column.accessor.toString()} onClick={() => handleSort(column.accessor)}>
+                            <th
+                                key={column.accessor.toString()}
+                                onClick={() => handleSort(column.accessor)}
+                                className="text-left text-xs font-semibold text-[#e4f3eb] uppercase tracking-wide px-4 py-2 border-r border-[#0B3D2E]/30 last:border-r-0 cursor-pointer"
+                            >
                                 {column.header} {sortBy === column.accessor ? (sortDirection === 'asc' ? '▲' : '▼') : ''}
                             </th>
                         ))}
@@ -48,14 +53,15 @@ const Table = <T,>({ data, columns, itemsPerPage = 10 }: TableProps<T>) => {
                 </thead>
                 <tbody>
                     {paginatedData.map((item, index) => (
-                        <tr key={index}>
+                        <tr key={index} className={`border-b border-[#0B3D2E]/10 transition-colors ${index % 2 ? 'bg-white hover:bg-[#edf8f1]' : 'bg-[#edf8f1] hover:bg-[#e3f3e9]'}`}>
                             {columns.map((column) => (
-                                <td key={column.accessor.toString()}>{item[column.accessor]}</td>
+                                <td key={column.accessor.toString()} className="px-4 py-2 text-gray-700 border-r border-gray-100 last:border-r-0">{item[column.accessor] as React.ReactNode}</td>
                             ))}
                         </tr>
                     ))}
                 </tbody>
             </table>
+            </div>
             <div>
                 <button onClick={() => setCurrentPage(Math.max(0, currentPage - 1))} disabled={currentPage === 0}>Previous</button>
                 <span>{currentPage + 1} of {totalPages}</span>

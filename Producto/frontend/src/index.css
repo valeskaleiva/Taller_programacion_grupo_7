@@ -1,3 +1,31 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@500;600;700&display=swap');
+
+/* Botón verde global para toda la app */
+.btn-verde {
+  background-color: #059669 !important; /* emerald-600 */
+  color: #fff !important;
+  border: 1.5px solid #047857 !important; /* emerald-700 */
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(11, 61, 46, 0.10);
+  transition: background 0.18s, box-shadow 0.18s, filter 0.18s;
+}
+.btn-verde:hover:not(:disabled) {
+  background-color: #047857 !important; /* emerald-700 */
+  filter: brightness(0.97);
+}
+.btn-verde:active:not(:disabled) {
+  background-color: #065f46 !important; /* emerald-800 */
+  filter: brightness(0.93);
+}
+.btn-verde:disabled {
+  opacity: 0.7;
+  background-color: #059669 !important;
+  color: #fff !important;
+  filter: grayscale(0.1) brightness(0.98);
+  cursor: not-allowed;
+}
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -18,13 +46,13 @@
   --shadow:
     rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
 
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --sans: 'Montserrat', 'Segoe UI', Tahoma, sans-serif;
+  --heading: 'Montserrat', 'Segoe UI', Tahoma, sans-serif;
   --mono: ui-monospace, Consolas, monospace;
 
   font: 18px/145% var(--sans);
   letter-spacing: 0.18px;
-  color-scheme: light dark;
+  color-scheme: light;
   color: var(--text);
   background: var(--bg);
   font-synthesis: none;
@@ -61,6 +89,36 @@
 
 body {
   margin: 0;
+  font-family: var(--sans);
+  color: #0f172a;
+}
+
+/* Sombras globales con tinte verde para todos los componentes */
+.shadow {
+  box-shadow: 0 10px 24px rgba(11, 61, 46, 0.22), 0 4px 10px rgba(11, 61, 46, 0.12) !important;
+}
+
+.shadow-md {
+  box-shadow: 0 14px 30px rgba(11, 61, 46, 0.24), 0 6px 14px rgba(11, 61, 46, 0.14) !important;
+}
+
+.shadow-lg {
+  box-shadow: 0 18px 36px rgba(11, 61, 46, 0.26), 0 8px 18px rgba(11, 61, 46, 0.16) !important;
+}
+
+.shadow-xl,
+.shadow-2xl {
+  box-shadow: 0 24px 46px rgba(11, 61, 46, 0.3), 0 10px 24px rgba(11, 61, 46, 0.18) !important;
+}
+
+.sidebar-modern-font {
+  font-family: 'Outfit', 'Montserrat', sans-serif;
+  letter-spacing: 0.2px;
+}
+
+.dashboard-panel-font {
+  font-family: 'Source Sans 3', 'Montserrat', sans-serif;
+  letter-spacing: 0.05px;
 }
 
 #app {
@@ -71,7 +129,7 @@ h1,
 h2 {
   font-family: var(--heading);
   font-weight: 500;
-  color: var(--text-h);
+  color: #0f172a;
 }
 
 h1 {
@@ -286,6 +344,34 @@ code {
       justify-content: center;
       box-sizing: border-box;
     }
+  }
+}
+
+button {
+  cursor: pointer;
+}
+
+@layer components {
+  .btn-primary {
+    background-color: var(--primary);
+    color: #ffffff;
+    border: 1px solid var(--primary);
+    cursor: pointer;
+    transition: background-color 0.2s ease, opacity 0.2s ease, transform 0.02s ease;
+  }
+
+  .btn-primary:hover:not(:disabled) {
+    background-color: var(--primary-dark);
+    opacity: 0.9;
+  }
+
+  .btn-primary:active:not(:disabled) {
+    transform: translateY(1px);
+  }
+
+  .btn-primary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
   }
 }
 

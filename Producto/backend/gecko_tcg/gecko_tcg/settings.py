@@ -10,14 +10,14 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 from pathlib import Path
+import os 
 from dotenv import load_dotenv
-import os
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent #Aqui tiene que ir direccion del proyecto 
 
-load_dotenv(BASE_DIR / '.env')
-
+load_dotenv(BASE_DIR / '.env', override=True)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
@@ -26,9 +26,9 @@ load_dotenv(BASE_DIR / '.env')
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG', 'True').lower() == 'true'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [h.strip() for h in os.getenv('ALLOWED_HOSTS', 'localhost').split(',') if h.strip()]
 
 
 # Application definition
@@ -40,10 +40,17 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'core',
+    'rest_framework',
+    'corsheaders',
+    'apps.productos',
+    'apps.ventas',
+    'apps.reportes',
+    'apps.usuarios',
+    'apps.tcgplayer',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -53,7 +60,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'gecko_tcg.urls'
+ROOT_URLCONF = 'gecko_tcg.urls' #este archivo tiene las rutas de la app
 
 TEMPLATES = [
     {
@@ -76,17 +83,23 @@ WSGI_APPLICATION = 'gecko_tcg.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
+DB_WALLET_DIR = os.getenv('DB_WALLET_DIR', r'C:\Wallet_DBPROYECTO')
+DB_LOG_FILE = os.getenv('DJANGO_LOG_FILE', str(BASE_DIR / 'logs' / 'debug.log'))
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.oracle',
         'NAME': os.getenv('DB_NAME'),
         'USER': os.getenv('DB_USER'),
         'PASSWORD': os.getenv('DB_PASSWORD'),
+        # Si DB_PORT esta vacio, Django usa NAME directamente como DSN (alias TNS).
+        'HOST': os.getenv('DB_HOST', ''),
+        'PORT': os.getenv('DB_PORT', ''),
         'OPTIONS': {
-            'config_dir': os.getenv('DB_WALLET_DIR'),
-            'wallet_location': os.getenv('DB_WALLET_DIR'),
+            'config_dir': DB_WALLET_DIR,
+            'wallet_location': DB_WALLET_DIR,
             'wallet_password': os.getenv('DB_WALLET_PASSWORD'),
-        }
+        },
     }
 }
 
@@ -113,9 +126,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'en-es'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Santiago'
 
 USE_I18N = True
 
@@ -124,5 +137,119 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
+
+
+
+REST_FRAMEWORK ={
+    'DEFAULT_AUTHENTICATION_CLASSES':[
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAdminUser',
+    ],
+
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 20, #carga hasta 20 y para continuar se da al siguiente
+
+    'DEFAULT_FILTER_BACKENDS': [
+    'rest_framework.filters.SearchFilter', 
+    'rest_framework.filters.OrderingFilter',  
+    ],
+
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.AnonRateThrottle',
+        'rest_framework.throttling.UserRateThrottle'
+    ],
+    
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '100/hour',
+        'user': '1000/hour'
+    }
+}
+
+CORS_ALLOWED_ORIGINS = [
+    origin.strip()
+    for origin in os.getenv(
+        'CORS_ALLOWED_ORIGINS',
+        'http://localhost:3000,http://localhost:5173,http://localhost:5174,http://127.0.0.1:5173,http://127.0.0.1:5174,http://localhost:8000'
+    ).split(',')
+    if origin.strip()
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    origin.strip()
+    for origin in os.getenv(
+        'CSRF_TRUSTED_ORIGINS',
+        'http://localhost:3000,http://localhost:5173,http://localhost:5174,http://127.0.0.1:5173,http://127.0.0.1:5174,http://localhost:8000,http://127.0.0.1:8000'
+    ).split(',')
+    if origin.strip()
+]
+
+
+CORS_ALLOW_CREDENTIALS = True  
+
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization', #JWT
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+]
+
+# confi del token de autenticacion 
+
+from datetime import timedelta
+
+SIMPLE_JWT = {
+
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=8),#tiempo para que auto se cierre la sesion
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=30), #tiempo para que se relogee nuevamente
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True
+}
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters':{
+        'verbose': {
+            'format': '{levelname} {asctime} {module}{process:d}{thread:d}{message}',
+            'style': '{',
+        },
+        'simple': {
+            'format': '{levelname} {message}',
+            'style': '{',
+        },
+    },
+
+    'handlers':{
+        'file':{
+                'level': 'INFO',
+                'class': 'logging.FileHandler',
+            'filename': DB_LOG_FILE,
+                'formatter': 'verbose',
+            'delay': True,
+        }, 
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple',
+        }
+    },
+
+    'root' : {
+        'handlers': ['file', 'console'],
+        'level': 'INFO',
+    }
+}
+
+LOG_DIR  = BASE_DIR/'logs'
+LOG_DIR.mkdir(exist_ok=True)
+
 
 STATIC_URL = 'static/'
