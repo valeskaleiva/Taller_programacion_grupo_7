@@ -1,26 +1,34 @@
 import { useState, useEffect } from 'react';
 
-const useAuth = () => {
-    const [user, setUser] = useState(null);
+type Credentials = {
+    username: string;
+    password: string;
+};
 
-    const login = async (credentials) => {
-        // Replace with your authentication logic
-        const userData = await fakeAuthApi.login(credentials);
+type HookUser = {
+    username: string;
+};
+
+const useAuth = () => {
+    const [user, setUser] = useState<HookUser | null>(null);
+
+    const login = async (credentials: Credentials) => {
+        // Stub mínimo tipado para evitar dependencia faltante.
+        const userData: HookUser = { username: credentials.username };
         setUser(userData);
     };
 
     const logout = async () => {
-        // Replace with your logout logic
-        await fakeAuthApi.logout();
+        await Promise.resolve();
         setUser(null);
     };
 
     useEffect(() => {
         const fetchUser = async () => {
-            const userData = await fakeAuthApi.getCurrentUser();
+            const userData = await Promise.resolve<HookUser | null>(null);
             setUser(userData);
         };
-        fetchUser();
+        void fetchUser();
     }, []);
 
     return { user, login, logout };

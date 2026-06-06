@@ -1,16 +1,30 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
 
-const AuthContext = createContext(null);
+type AuthUser = {
+    name: string;
+    email: string;
+};
 
-export const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState(null);
+type AuthContextValue = {
+    user: AuthUser | null;
+    loading: boolean;
+};
+
+const AuthContext = createContext<AuthContextValue | undefined>(undefined);
+
+type AuthProviderProps = {
+    children: ReactNode;
+};
+
+export const AuthProvider = ({ children }: AuthProviderProps) => {
+    const [user, setUser] = useState<AuthUser | null>(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         // Replace with your authentication logic
         const fetchUser = async () => {
             // Simulating an API call
-            const userData = await new Promise((resolve) => setTimeout(() => resolve({ name: 'John Doe', email: 'john.doe@example.com' }), 1000));
+            const userData = await new Promise<AuthUser>((resolve) => setTimeout(() => resolve({ name: 'John Doe', email: 'john.doe@example.com' }), 1000));
             setUser(userData);
             setLoading(false);
         };
@@ -26,5 +40,9 @@ export const AuthProvider = ({ children }) => {
 };
 
 export const useAuth = () => {
-    return useContext(AuthContext);
+    const context = useContext(AuthContext);
+    if (!context) {
+        throw new Error('useAuth must be used within AuthProvider');
+    }
+    return context;
 };

@@ -1,4 +1,3 @@
-import React from 'react';
 import './Loading.css'; // Import your CSS for styling
 
 // Loading Spinner Component
@@ -11,7 +10,12 @@ const LoadingSpinner = () => {
 };
 
 // Skeleton Loader Component
-const SkeletonLoader = ({ width = '100%', height = '20px' }) => {
+type SkeletonLoaderProps = {
+    width?: string;
+    height?: string;
+};
+
+const SkeletonLoader = ({ width = '100%', height = '20px' }: SkeletonLoaderProps) => {
     return (
         <div className="skeleton-loader" style={{ width, height }}></div>
     );

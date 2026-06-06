@@ -76,12 +76,12 @@ const AgregarProducto: React.FC = () => {
   const [guardando, setGuardando] = useState(false);
   const [error, setError] = useState('');
   const [mensajeEscaner, setMensajeEscaner] = useState('');
-  const [camaraActiva, setCamaraActiva] = useState(false);
-  const [mostrarCamara, setMostrarCamara] = useState(false);
-  const [estadoCamara, setEstadoCamara] = useState('');
-  const [dispositivos, setDispositivos] = useState<MediaDeviceInfo[]>([]);
-  const [dispositivoSeleccionado, setDispositivoSeleccionado] = useState('');
-  const [eligiendoCamara, setEligiendoCamara] = useState(false);
+  const [, setCamaraActiva] = useState(false);
+  const [, setMostrarCamara] = useState(false);
+  const [, setEstadoCamara] = useState('');
+  const [, setDispositivos] = useState<MediaDeviceInfo[]>([]);
+  const [, setDispositivoSeleccionado] = useState('');
+  const [, setEligiendoCamara] = useState(false);
   const [contextoSeguro] = useState(
     () => typeof window !== 'undefined' && window.isSecureContext
   );
@@ -213,6 +213,8 @@ const AgregarProducto: React.FC = () => {
       setError('No se pudo acceder a las cámaras. Revisa permisos del navegador.');
     }
   }, [camaraDisponible, contextoSeguro, iniciarConDispositivo]);
+
+  void iniciarCamara;
 
   useEffect(() => {
     return () => {

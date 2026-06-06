@@ -16,6 +16,9 @@ function normalizeSerial(value: string): string {
   return value.replace(/^#/, '').trim();
 }
 
+void extractSerial;
+void normalizeSerial;
+
 function parseCardName(rawName: string): ParsedCardName {
   const source = rawName.replace(/\s+/g, ' ').trim();
 
@@ -52,6 +55,8 @@ function parseCardName(rawName: string): ParsedCardName {
 
   return { nombre, rareza, numero };
 }
+
+void parseCardName;
 
 export default function BuscadorTCGPlayer() {
   const [query, setQuery] = useState('');

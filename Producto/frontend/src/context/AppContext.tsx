@@ -1,13 +1,20 @@
-import React, { createContext, useContext, useReducer } from 'react';
+import { createContext, useContext, useReducer, type ReactNode } from 'react';
 
 // Initial state
-const initialState = {};
+type AppState = Record<string, unknown>;
+type AppAction = { type: string; payload?: unknown };
+type AppContextValue = {
+    state: AppState;
+    dispatch: React.Dispatch<AppAction>;
+};
+
+const initialState: AppState = {};
 
 // Create context
-const AppContext = createContext(initialState);
+const AppContext = createContext<AppContextValue | undefined>(undefined);
 
 // Reducer function
-const appReducer = (state, action) => {
+const appReducer = (state: AppState, action: AppAction): AppState => {
     switch (action.type) {
         // Define your action cases here
         default:
@@ -16,7 +23,11 @@ const appReducer = (state, action) => {
 };
 
 // Provider component
-export const AppProvider = ({ children }) => {
+type AppProviderProps = {
+    children: ReactNode;
+};
+
+export const AppProvider = ({ children }: AppProviderProps) => {
     const [state, dispatch] = useReducer(appReducer, initialState);
 
     return (
@@ -28,5 +39,9 @@ export const AppProvider = ({ children }) => {
 
 // Custom hook to use the AppContext
 export const useAppContext = () => {
-    return useContext(AppContext);
+    const context = useContext(AppContext);
+    if (!context) {
+        throw new Error('useAppContext must be used within AppProvider');
+    }
+    return context;
 };

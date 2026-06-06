@@ -1,7 +1,11 @@
-import React from 'react';
+import type { ReactNode } from 'react';
 import './Layout.css';  // Import layout styles
 
-const Layout = ({ children }) => {
+type LayoutProps = {
+    children: ReactNode;
+};
+
+const Layout = ({ children }: LayoutProps) => {
     return (
         <div className="layout">
             <header className="header">
