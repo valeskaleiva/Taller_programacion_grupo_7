@@ -20,7 +20,7 @@ def main() -> int:
         return 2
 
     aliases = [
-        os.getenv('DB_NAME', 'dbproyecto_low'),
+        os.getenv('DB_NAME', 'dbproyecto_medium'),
         'dbproyecto_low',
         'dbproyecto_medium',
         'dbproyecto_high',

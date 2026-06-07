@@ -10,6 +10,7 @@ RUN npm run build  # Esto genera la carpeta 'dist' que acabas de probar
 FROM nginx:alpine
 # Copiamos lo que construimos en la etapa anterior a la carpeta de Nginx
 COPY --from=build /app/dist /usr/share/nginx/html
-# Copiamos una configuración básica de Nginx (opcional pero recomendado)
+# Usar configuración personalizada para SPA + proxy /api al backend.
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]

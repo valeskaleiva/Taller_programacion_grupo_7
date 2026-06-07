@@ -4,13 +4,13 @@ services:
     container_name: django_backend
     volumes:
       - ./backend/gecko_tcg:/app
-      - /home/ubuntu/Wallet_DBPROYECTO:/app/wallet
+      - ./backend/gecko_tcg/wallet:/app/wallet:ro
     ports:
       - "8000:8000"
     environment:
       - DEBUG=True
     env_file:
-      - .env
+      - ./backend/gecko_tcg/.env
     networks:
       - gecko_network
 
