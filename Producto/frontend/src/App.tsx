@@ -15,7 +15,7 @@ import Usuarios from "./pages/Usuarios"
 import BuscadorTCGPlayer from "./pages/BuscadorTCGPlayer"
 import Busqueda from "./pages/Busqueda"
 import { Routes, Route, useLocation, Navigate } from "react-router-dom"
-import { clearAuthTokens, getCurrentUser, getStoredAuthUser } from "./services/api"
+import { clearAuthTokens, getStoredAuthUser } from "./services/api"
 
 const ACCESS_TOKEN_KEY = "gecko_access_token"
 
@@ -27,7 +27,7 @@ function App() {
   const [rol, setRol] = useState<"admin" | "vendedor">("admin")
 
   useEffect(() => {
-    async function validateAdminSession() {
+    function validateAdminSession() {
       const hasToken = Boolean(localStorage.getItem(ACCESS_TOKEN_KEY))
       if (!hasToken) {
         setIsAuthenticated(false)
@@ -39,22 +39,12 @@ function App() {
       if (localUser?.rol) {
         setRol(localUser.rol)
       }
-      setIsAuthenticated(true)
 
-      try {
-        const user = await getCurrentUser()
-        setRol(user.rol === "vendedor" ? "vendedor" : "admin")
-        setIsAuthenticated(true)
-      } catch {
-        // Si el token no es valido, limpiamos sesion para forzar login solo al ingresar.
-        clearAuthTokens()
-        setIsAuthenticated(false)
-      } finally {
-        setAuthLoading(false)
-      }
+      setIsAuthenticated(true)
+      setAuthLoading(false)
     }
 
-    void validateAdminSession()
+    validateAdminSession()
   }, [isLogin])
 
   useEffect(() => {

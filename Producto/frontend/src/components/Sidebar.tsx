@@ -21,8 +21,7 @@ function Sidebar() {
   const menuItems = [
     { icon: "🏠", label: "Inicio", path: "/" },
     { icon: "📦", label: "Inventario", path: "/inventario" },
-    { icon: "🧭", label: "Buscador TCG", path: "/tcgplayer" },
-    { icon: "🔎", label: "Busqueda", path: "/busqueda" },
+    { icon: "🔎", label: "Buscador TCG", path: "/busqueda" },
     { icon: "📊", label: "Reportes", path: "/reportes" },
     { icon: "💰", label: "Ventas", path: "/ventas" },
     { icon: "👤", label: "Perfil", path: "/perfil" },

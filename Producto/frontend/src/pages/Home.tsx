@@ -9,8 +9,10 @@ import {
   getProductos,
   getProductosBajoStock,
   getTopProductosVendidos,
-  getVentasHistoricas,
+  getVentas,
+  getVentasDiarias,
   type VentaResumen,
+  type VentaDiaria,
 } from "../services/api";
 import type { Producto } from "../types";
 
@@ -22,6 +24,13 @@ const clpFormatter = new Intl.NumberFormat('es-CL', {
 
 const formatCLP = (amount: number) => clpFormatter.format(amount);
 const HIDDEN_PRODUCTS_STORAGE_KEY = 'gecko_hidden_product_ids';
+
+const toLocalIsoDate = (date: Date): string => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
 
 const readHiddenProductIds = (): number[] => {
   if (typeof window === 'undefined') {
@@ -53,13 +62,18 @@ export default function Home() {
   const [topVendidos, setTopVendidos] = useState<Array<{ nombre: string; cantidad_vendida: number }>>([]);
   const [bajoStock, setBajoStock] = useState<Array<{ id_producto: number; nombre: string; categoria: string; stock: number }>>([]);
   const [ventas, setVentas] = useState<VentaResumen[]>([]);
+  const [ventasDiarias, setVentasDiarias] = useState<VentaDiaria[]>([]);
 
   const loadDashboard = useCallback(async () => {
-    const [productosData, topData, bajoStockData, ventasData] = await Promise.all([
+    const hoy = new Date();
+    const desde = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate() - 6);
+
+    const [productosData, topData, bajoStockData, ventasData, ventasDiariasData] = await Promise.all([
       getProductos(),
       getTopProductosVendidos(),
       getProductosBajoStock(),
-      getVentasHistoricas(),
+      getVentas(),
+      getVentasDiarias(toLocalIsoDate(desde), toLocalIsoDate(hoy)),
     ]);
 
     setProductos(productosData);
@@ -88,6 +102,7 @@ export default function Home() {
         metodo_pago: getVentaMetodoPago(venta.id_venta) ?? venta.metodo_pago,
       }))
     );
+    setVentasDiarias(ventasDiariasData);
   }, []);
 
   useEffect(() => {
@@ -160,18 +175,25 @@ export default function Home() {
     }, 0);
   }, [ventasActivas]);
 
+  const ventasDiariasTotal = useMemo(() => {
+    const hoy = toLocalIsoDate(new Date());
+    const todayRow = ventasDiarias.find((item) => item.fecha === hoy);
+    return Number(todayRow?.transacciones ?? 0);
+  }, [ventasDiarias]);
+
+  const datosVentasDiarias = useMemo(
+    () => ventasDiarias.map((item) => ({
+      dia: new Date(item.fecha).toLocaleDateString("es-CL", { weekday: "short", day: "2-digit" }),
+      etiqueta: new Date(item.fecha).toLocaleDateString("es-CL", { weekday: "long", day: "2-digit", month: "short" }),
+      ventas: Number(item.ventas) || 0,
+    })),
+    [ventasDiarias]
+  );
+
   const ultimasVentas = useMemo(
     () => [...ventas].sort((a, b) => new Date(b.fecha_venta).getTime() - new Date(a.fecha_venta).getTime()).slice(0, 5),
     [ventas]
   );
-  const ventasHistoricas = useMemo(
-    () => ventasActivas.reduce((acc, venta) => {
-      const value = typeof venta.total_pagado === 'string' ? Number(venta.total_pagado) : venta.total_pagado;
-      return acc + (Number.isFinite(value) ? value : 0);
-    }, 0),
-    [ventasActivas]
-  );
-
   return (
     <div className="p-3 sm:p-5">
       {/* FILA 1: 4 KPIs en una sola fila */}
@@ -183,13 +205,13 @@ export default function Home() {
           <Card title=" Ventas hoy" value={formatCLP(ventasHoy)} extra="Actualizado en tiempo real" />
           <Card title="Unidades en stock" value={totalStock} />
           <Card title="Productos" value={totalProductos} />
-          <Card title="Venta historica" value={formatCLP(ventasHistoricas)} />
+          <Card title="Venta del día" value={ventasDiariasTotal} />
         </div>
       </div>
 
       {/* FILA 2: Gráfico ancho completo */}
       <div>
-        <SalesChart ventas={ventas} />
+        <SalesChart data={datosVentasDiarias} />
       </div>
 
       {/* FILA 3: Top Cartas + Stock Crítico */}

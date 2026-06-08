@@ -1,7 +1,6 @@
 import { useNavigate, useLocation } from "react-router-dom";
-import { useEffect, useState } from 'react';
-import { clearAuthTokens, getPerfilUsuarioApi } from "../services/api";
-import type { UserProfileApi } from '../services/api';
+import { useState } from 'react';
+import { clearAuthTokens, getStoredAuthUser } from "../services/api";
 
 const TITULOS: Record<string, string> = {
   "/": "DASHBOARD",
@@ -22,27 +21,15 @@ function Header({ titulo }: Props) {
   const navigate = useNavigate();
   const location = useLocation();
   const tituloActual = titulo ?? TITULOS[location.pathname] ?? "DASHBOARD";
-  const [profile, setProfile] = useState<UserProfileApi | null>(null);
+  const [profile] = useState(() => getStoredAuthUser());
 
-  const hasUploadedAvatar = (profile?.avatar ?? '').trim().startsWith('data:image/');
+  const username = profile?.username ?? 'ADMIN';
+  const hasAvatar = false;
 
   const handleLogout = () => {
     clearAuthTokens();
     navigate('/login', { replace: true });
   };
-
-  useEffect(() => {
-    async function loadProfile() {
-      try {
-        const data = await getPerfilUsuarioApi();
-        setProfile(data);
-      } catch {
-        setProfile(null);
-      }
-    }
-
-    void loadProfile();
-  }, [location.pathname]);
 
   return (
     <div className="
@@ -65,9 +52,9 @@ function Header({ titulo }: Props) {
 
       {/* Mini barra de sesion */}
       <div className="flex items-center gap-2 sm:gap-3 rounded-full border border-emerald-200 bg-emerald-50 px-2 py-1 sm:px-3 sm:py-1.5">
-        {hasUploadedAvatar ? (
+        {hasAvatar ? (
           <img
-            src={profile?.avatar}
+            src=""
             alt="perfil"
             className="rounded-full border border-emerald-300 object-cover"
             style={{
@@ -95,12 +82,12 @@ function Header({ titulo }: Props) {
               flexShrink: 0,
             }}
           >
-            {(profile?.username?.[0] ?? 'U').toUpperCase()}
+            {username[0].toUpperCase()}
           </div>
         )}
 
         <span className="hidden sm:block text-xs sm:text-sm font-semibold tracking-wide text-emerald-900 truncate max-w-[130px]">
-          {profile?.username?.toUpperCase() || "ADMIN"}
+          {username.toUpperCase()}
         </span>
 
         <button
