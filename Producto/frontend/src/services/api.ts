@@ -25,6 +25,7 @@ function toProductoBasePayload(data: Partial<Omit<Producto, 'id_producto'>>): Pr
     stock: Number(data.stock ?? 0),
     precio_base: Number(data.precio_base ?? 0),
     categoria: (data.categoria ?? 'Carta') as Producto['categoria'],
+    // note: only base product fields are sent here
   };
 }
 

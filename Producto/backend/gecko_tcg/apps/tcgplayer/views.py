@@ -183,7 +183,18 @@ def search_card_price(request):
                 
             except Exception as e:
                 continue
-        
+
+        # Eliminar duplicados por URL/nombre/precio manteniendo el primer resultado
+        unique_cards = []
+        seen_keys = set()
+        for card in cards:
+            key = f"{card.get('url')}|{card.get('name')}|{card.get('price')}"
+            if key in seen_keys:
+                continue
+            seen_keys.add(key)
+            unique_cards.append(card)
+        cards = unique_cards
+
         if serial_number:
             cards = [
                 card

@@ -82,7 +82,6 @@ export default function BuscadorTCGPlayer() {
       <div>
         <h1 className="text-2xl font-bold text-gray-800">Consultor precios y cartas TCG</h1>
         <p className="text-sm text-gray-500">Aplicación independiente para consultar precios y cartas.</p>
-        <p className="text-xs text-amber-700 mt-1">Búsqueda por número de serie desactivada temporalmente. Usa nombre de carta por ahora.</p>
       </div>
 
       <div className="flex flex-col sm:flex-row gap-2">
