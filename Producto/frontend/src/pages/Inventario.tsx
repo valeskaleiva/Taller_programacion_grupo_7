@@ -99,6 +99,23 @@ const productoVacio: Omit<Producto, 'id_producto'> = {
   cant_sobres: 0,
 };
 
+const artificialProduct: Producto = {
+  id_producto: -1,
+  codigo_barras: '0000000000000',
+  nombre: 'Producto Artificial',
+  descripcion: 'Producto artificial de demostración',
+  stock: 1,
+  precio_base: 1000,
+  categoria: 'Carta',
+  rareza: 'Rara',
+  edicion: 'Demo',
+  estado: 'Nuevo',
+  precio_mercado: 1000,
+  cant_cartas: 1,
+  serie: 'Demo',
+  cant_sobres: 0,
+};
+
 const Inventario: React.FC = () => {
   const authUser = getStoredAuthUser();
   const canManageInventory = (authUser?.rol ?? 'admin') === 'admin';
@@ -177,7 +194,9 @@ const Inventario: React.FC = () => {
     setCargando(true);
     try {
       const data = await getProductos();
-      setProductos(data);
+      setProductos(data.length > 0 ? data : [artificialProduct]);
+    } catch (error) {
+      setProductos([artificialProduct]);
     } finally {
       setCargando(false);
     }

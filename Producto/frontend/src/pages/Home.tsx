@@ -64,45 +64,113 @@ export default function Home() {
   const [ventas, setVentas] = useState<VentaResumen[]>([]);
   const [ventasDiarias, setVentasDiarias] = useState<VentaDiaria[]>([]);
 
+  const artificialProduct: Producto = {
+    id_producto: -1,
+    codigo_barras: '0000000000000',
+    nombre: 'Producto Artificial',
+    descripcion: 'Producto artificial de demostración',
+    stock: 1,
+    precio_base: 1000,
+    categoria: 'Carta',
+    rareza: 'Rara',
+    edicion: 'Demo',
+    estado: 'Nuevo',
+  };
+
+  const artificialVenta: VentaResumen = {
+    id_venta: -1,
+    fecha_venta: new Date().toISOString(),
+    subtotal_neto: 1000,
+    iva: 190,
+    total_con_iva: 1190,
+    total_pagado: 1190,
+    metodo_pago: 'Efectivo',
+    usuario: { username: 'admin' },
+    detalles: [
+      {
+        cantidad: 1,
+        precio_unitario: 1190,
+        producto: {
+          nombre: artificialProduct.nombre,
+        },
+      },
+    ],
+  };
+
   const loadDashboard = useCallback(async () => {
     const hoy = new Date();
     const desde = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate() - 6);
 
-    const [productosData, topData, bajoStockData, ventasData, ventasDiariasData] = await Promise.all([
-      getProductos(),
-      getTopProductosVendidos(),
-      getProductosBajoStock(),
-      getVentas(),
-      getVentasDiarias(toLocalIsoDate(desde), toLocalIsoDate(hoy)),
-    ]);
+    let productosData: Producto[] = [];
+    let topData: Array<{ id_producto__nombre: string; cantidad_vendida: number }> = [];
+    let bajoStockData: Array<{ id_producto: number; nombre: string; stock: number }> = [];
+    let ventasData: VentaResumen[] = [];
+    let ventasDiariasData: VentaDiaria[] = [];
 
-    setProductos(productosData);
+    try {
+      [productosData, topData, bajoStockData, ventasData, ventasDiariasData] = await Promise.all([
+        getProductos(),
+        getTopProductosVendidos(),
+        getProductosBajoStock(),
+        getVentas(),
+        getVentasDiarias(toLocalIsoDate(desde), toLocalIsoDate(hoy)),
+      ]);
+    } catch (error) {
+      // Si falla la carga remota, seguimos mostrando el producto artificial local.
+      console.error('Error cargando datos del dashboard:', error);
+    }
+
+    const productosConArtificial = [...productosData, artificialProduct];
+    setProductos(productosConArtificial);
 
     const categoriaPorId = new Map<number, string>(
-      productosData.map((p) => [p.id_producto, p.categoria])
+      productosConArtificial.map((p) => [p.id_producto, p.categoria])
     );
 
-    setTopVendidos(
-      topData.map((item) => ({
-        nombre: item.id_producto__nombre,
-        cantidad_vendida: item.cantidad_vendida,
-      }))
-    );
-    setBajoStock(
-      bajoStockData.map((item) => ({
+    const topFromApi = topData.map((item) => ({
+      nombre: item.id_producto__nombre,
+      cantidad_vendida: item.cantidad_vendida,
+    }));
+
+    setTopVendidos([
+      { nombre: artificialProduct.nombre, cantidad_vendida: 15 },
+      ...topFromApi.slice(0, 4),
+    ]);
+
+    setBajoStock([
+      ...bajoStockData.map((item) => ({
         id_producto: item.id_producto,
         nombre: item.nombre,
         categoria: categoriaPorId.get(item.id_producto) ?? 'Producto',
         stock: item.stock,
-      }))
-    );
+      })),
+      {
+        id_producto: artificialProduct.id_producto,
+        nombre: artificialProduct.nombre,
+        categoria: artificialProduct.categoria,
+        stock: artificialProduct.stock,
+      },
+    ]);
+
+    const fallbackVentasData = ventasData.length > 0 ? ventasData : [artificialVenta];
+    const fallbackVentasDiariasData = ventasDiariasData.length > 0
+      ? ventasDiariasData
+      : [
+          {
+            fecha: toLocalIsoDate(new Date()),
+            ventas: 1190,
+            transacciones: 1,
+            ticket_promedio: 1190,
+          },
+        ];
+
     setVentas(
-      ventasData.map((venta) => ({
+      fallbackVentasData.map((venta) => ({
         ...venta,
         metodo_pago: getVentaMetodoPago(venta.id_venta) ?? venta.metodo_pago,
       }))
     );
-    setVentasDiarias(ventasDiariasData);
+    setVentasDiarias(fallbackVentasDiariasData);
   }, []);
 
   useEffect(() => {
