@@ -1,8 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
-import { BrowserMultiFormatReader, type IScannerControls } from '@zxing/browser';
-import { BarcodeFormat, DecodeHintType, NotFoundException } from '@zxing/library';
 import {
   actualizarProducto,
   crearProducto,
@@ -36,52 +34,6 @@ const quickOrderButtons: Array<{ value: OrdenInventario; label: string }> = [
   { value: 'stock_desc', label: 'Stock ↓' },
 ];
 
-const SCANNER_HINTS = new Map<DecodeHintType, unknown>();
-SCANNER_HINTS.set(DecodeHintType.TRY_HARDER, true);
-SCANNER_HINTS.set(DecodeHintType.POSSIBLE_FORMATS, [
-  BarcodeFormat.EAN_13,
-  BarcodeFormat.EAN_8,
-  BarcodeFormat.UPC_A,
-  BarcodeFormat.UPC_E,
-  BarcodeFormat.CODE_128,
-  BarcodeFormat.CODE_39,
-  BarcodeFormat.ITF,
-]);
-
-const normalizarCodigoEscaneado = (value: string) => value.replace(/\s+/g, '').trim();
-
-const avisarDeteccion = () => {
-  if (typeof navigator !== 'undefined' && typeof navigator.vibrate === 'function') {
-    navigator.vibrate(120);
-  }
-
-  if (typeof window === 'undefined') {
-    return;
-  }
-
-  const AudioContextClass = window.AudioContext
-    || (window as Window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
-
-  if (!AudioContextClass) {
-    return;
-  }
-
-  const ctx = new AudioContextClass();
-  const oscillator = ctx.createOscillator();
-  const gainNode = ctx.createGain();
-
-  oscillator.type = 'sine';
-  oscillator.frequency.value = 1046;
-  gainNode.gain.value = 0.08;
-
-  oscillator.connect(gainNode);
-  gainNode.connect(ctx.destination);
-  oscillator.start();
-  oscillator.stop(ctx.currentTime + 0.1);
-  oscillator.onended = () => {
-    void ctx.close();
-  };
-};
 
 const productoVacio: Omit<Producto, 'id_producto'> = {
   codigo_barras: '',
@@ -125,18 +77,6 @@ const Inventario: React.FC = () => {
   const [busqueda, setBusqueda] = useState('');
   const [ordenInventario, setOrdenInventario] = useState<OrdenInventario>('default');
   const [productoResaltado, setProductoResaltado] = useState<number | null>(null);
-  const [, setCamaraActiva] = useState(false);
-  const [, setMostrarCamara] = useState(false);
-  const [, setEstadoCamara] = useState('');
-  const [, setDispositivos] = useState<MediaDeviceInfo[]>([]);
-  const [, setDispositivoSeleccionado] = useState('');
-  const [, setEligiendoCamara] = useState(false);
-  const [contextoSeguro] = useState(
-    () => typeof window !== 'undefined' && window.isSecureContext
-  );
-  const [camaraDisponible] = useState(
-    () => typeof navigator !== 'undefined' && Boolean(navigator.mediaDevices?.getUserMedia)
-  );
   const [modalAbierto, setModalAbierto] = useState(false);
   const [modoEdicion, setModoEdicion] = useState(false);
   const [form, setForm] = useState<Omit<Producto, 'id_producto'>>(productoVacio);
@@ -182,13 +122,6 @@ const Inventario: React.FC = () => {
   });
 
   const filaResaltadaRef = useRef<HTMLTableRowElement>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const lectorCamaraRef = useRef<BrowserMultiFormatReader | null>(null);
-  const controlesCamaraRef = useRef<IScannerControls | null>(null);
-  const ultimoCodigoRef = useRef<{ codigo: string; timestamp: number }>({
-    codigo: '',
-    timestamp: 0,
-  });
 
   const cargarProductos = useCallback(async () => {
     setCargando(true);
@@ -337,155 +270,6 @@ const Inventario: React.FC = () => {
     });
   };
 
-  const detenerCamara = useCallback(() => {
-    controlesCamaraRef.current?.stop();
-    controlesCamaraRef.current = null;
-    setCamaraActiva(false);
-    setMostrarCamara(false);
-    setEstadoCamara('');
-    setEligiendoCamara(false);
-    setDispositivos([]);
-    setDispositivoSeleccionado('');
-  }, []);
-
-  const procesarCodigoEscaneado = useCallback((codigoRaw: string) => {
-    const codigo = codigoRaw.trim();
-    if (!codigo) return;
-
-    const encontrado = productos.find((p) => p.codigo_barras === codigo);
-    if (encontrado) {
-      setFiltroCategoria('Todos');
-      setBusqueda('');
-      setProductoResaltado(encontrado.id_producto);
-      setMensajeEscaner(`⚠ El código ${codigo} ya existe (${encontrado.nombre}).`);
-      setTimeout(() => {
-        setProductoResaltado(null);
-        setMensajeEscaner('');
-      }, 3000);
-      return;
-    }
-
-    if (canManageInventory) {
-      setMensajeEscaner(`✓ Código detectado (${codigo}). Completa los datos del producto.`);
-      setForm({ ...productoVacio, codigo_barras: codigo });
-      setModoEdicion(false);
-      setModalAbierto(true);
-      detenerCamara();
-      return;
-    }
-
-    setMensajeEscaner(`⚠ Código ${codigo} no encontrado.`);
-  }, [canManageInventory, detenerCamara, productos]);
-
-  const iniciarConDispositivo = useCallback(async (deviceId: string) => {
-    setEligiendoCamara(false);
-    if (!lectorCamaraRef.current) {
-      lectorCamaraRef.current = new BrowserMultiFormatReader(SCANNER_HINTS);
-    }
-
-    setMostrarCamara(true);
-    await new Promise<void>((resolve) => {
-      requestAnimationFrame(() => resolve());
-    });
-
-    if (!videoRef.current) {
-      setMensajeEscaner('⚠ No se pudo inicializar la vista de cámara.');
-      setMostrarCamara(false);
-      return;
-    }
-
-    setEstadoCamara('Iniciando cámara...');
-
-    try {
-      const controls = await lectorCamaraRef.current.decodeFromVideoDevice(
-        deviceId,
-        videoRef.current,
-        (result, err) => {
-          if (result) {
-            const codigoDetectado = normalizarCodigoEscaneado(result.getText());
-            const ahora = Date.now();
-            const esDuplicadoReciente =
-              ultimoCodigoRef.current.codigo === codigoDetectado
-              && ahora - ultimoCodigoRef.current.timestamp < 1500;
-
-            if (!codigoDetectado || esDuplicadoReciente) {
-              return;
-            }
-
-            ultimoCodigoRef.current = {
-              codigo: codigoDetectado,
-              timestamp: ahora,
-            };
-
-            avisarDeteccion();
-            setEstadoCamara(`Código detectado: ${codigoDetectado}`);
-
-            procesarCodigoEscaneado(codigoDetectado);
-            return;
-          }
-
-          if (err && !(err instanceof NotFoundException)) {
-            setEstadoCamara('Cámara activa. Ajusta enfoque o iluminación para escanear.');
-          }
-        }
-      );
-
-      controlesCamaraRef.current = controls;
-      setCamaraActiva(true);
-      setEstadoCamara('Cámara activa. Apunta al código de barras.');
-    } catch {
-      setCamaraActiva(false);
-      setMostrarCamara(false);
-      setEstadoCamara('');
-      setMensajeEscaner('⚠ No se pudo iniciar la cámara. Revisa permisos del navegador.');
-    }
-  }, [procesarCodigoEscaneado]);
-
-  const iniciarCamara = useCallback(async () => {
-    setMensajeEscaner('');
-
-    if (!camaraDisponible) {
-      setMensajeEscaner('⚠ Este navegador no tiene acceso a cámara para escanear.');
-      return;
-    }
-
-    if (!contextoSeguro) {
-      setMensajeEscaner('⚠ Para usar cámara en celular debes abrir el frontend en HTTPS (o localhost).');
-      return;
-    }
-
-    try {
-      const lista = await BrowserMultiFormatReader.listVideoInputDevices();
-      if (lista.length === 0) {
-        setMensajeEscaner('⚠ No se detectó ninguna cámara en este equipo.');
-        return;
-      }
-
-      const preferida = lista.find((d) => /rear|back|environment|trase|posterior/.test(d.label.toLowerCase()))
-        ?? lista.find((d) => /integrated|internal|built|facetime|webcam/.test(d.label.toLowerCase()))
-        ?? lista[0];
-
-      if (lista.length === 1) {
-        await iniciarConDispositivo(lista[0].deviceId);
-        return;
-      }
-
-      setDispositivos(lista);
-      setDispositivoSeleccionado(preferida.deviceId);
-      setMostrarCamara(true);
-      setEligiendoCamara(true);
-    } catch {
-      setMensajeEscaner('⚠ No se pudo acceder a las cámaras. Revisa permisos del navegador.');
-    }
-  }, [camaraDisponible, contextoSeguro, iniciarConDispositivo]);
-
-  void iniciarCamara;
-
-  useEffect(() => {
-    return () => {
-      detenerCamara();
-    };
-  }, [detenerCamara]);
 
   const abrirAgregarEnVentana = () => {
     const destino = '/inventario/agregar';
