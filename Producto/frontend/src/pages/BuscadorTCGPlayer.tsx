@@ -141,7 +141,7 @@ export default function BuscadorTCGPlayer() {
         <div className="flex flex-col gap-2">
           <h1 className="text-2xl font-bold text-gray-800">Buscador TCGPlayer</h1>
           <div className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-emerald-700">
-            Diseño actualizado · Resultados compactos en tarjetas
+         
           </div>
         </div>
         <p className="text-sm text-gray-500">Busca cartas y precios por nombre o número de serie.</p>
@@ -192,7 +192,7 @@ export default function BuscadorTCGPlayer() {
       <div className="space-y-4">
         {results.length === 0 ? (
           <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-8 text-center text-sm text-slate-600">
-            {loading ? 'Consultando TCGPlayer...' : 'Sin resultados por mostrar. Realiza una búsqueda para ver resultados en tarjetas compactas.'}
+            {loading ? 'Consultando TCGPlayer...' : 'Sin resultados por mostrar. Realiza una búsqueda para ver resultados.'}
           </div>
         ) : (
           <div className="space-y-3">
