@@ -61,7 +61,6 @@ export default function LastSales({ ventas = [] }: Props) {
       style={{
         border: "2px solid rgba(11, 61, 46, 0.35)",
         boxShadow: "0 38px 88px rgba(0, 0, 0, 0.42), 0 18px 42px rgba(11, 61, 46, 0.34)",
-        transform: "translateY(-2px)",
       }}
     >
       <div className="flex items-center justify-between mb-4">
@@ -96,8 +95,8 @@ export default function LastSales({ ventas = [] }: Props) {
                 return (
                   <tr
                     key={venta.id_venta}
-                    className={`border-b border-[#0B3D2E]/10 transition-colors ${
-                      index % 2 ? "bg-white hover:bg-[#edf8f1]" : "bg-[#edf8f1] hover:bg-[#e3f3e9]"
+                    className={`border-b border-[#0B3D2E]/10 ${
+                      index % 2 ? "bg-white" : "bg-[#edf8f1]"
                     }`}
                   >
                     <td className="px-3 py-2 text-center border-r border-gray-100">{index + 1}</td>

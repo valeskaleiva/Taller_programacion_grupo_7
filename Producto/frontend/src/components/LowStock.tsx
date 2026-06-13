@@ -24,7 +24,6 @@ export default function LowStock({ productos = [] }: Props) {
       style={{
         border: "2px solid rgba(11, 61, 46, 0.35)",
         boxShadow: "0 38px 88px rgba(0, 0, 0, 0.42), 0 18px 42px rgba(11, 61, 46, 0.34)",
-        transform: "translateY(-2px)",
       }}
     >
       <div className="flex items-center justify-between mb-4">
@@ -44,7 +43,7 @@ export default function LowStock({ productos = [] }: Props) {
           </thead>
           <tbody>
             {bajoStock.map((p) => (
-              <tr key={p.id_producto} className={`border-b border-[#0B3D2E]/10 transition-colors ${p.stock === 0 ? 'bg-[#b7e4c7] hover:bg-[#a3dcba]' : 'bg-white hover:bg-[#f6faf8]'}`}>
+              <tr key={p.id_producto} className={`border-b border-[#0B3D2E]/10 ${p.stock === 0 ? 'bg-[#b7e4c7]' : 'bg-white'}`}>
                 <td className="py-2.5 px-3 border-r border-gray-100 font-medium text-gray-800 text-center">{p.nombre}</td>
                 <td className="py-2.5 px-3 border-r border-gray-100 text-gray-500 text-xs text-center">{p.categoria}</td>
                 <td className="py-2.5 px-3 text-center">

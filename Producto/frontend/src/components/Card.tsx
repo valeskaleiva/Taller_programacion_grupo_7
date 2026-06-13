@@ -18,63 +18,43 @@ export default function Card({ title, value, extra }: CardProps) {
 
   
 
-  // 👇 lógica de color
-  const getColor = () => {
-    if (isZeroValue()) return "bg-[#b7e4c7]";
-
-    if (typeof value === "number") {
-      if (value <= 3) return "bg-red-500"
-      if (value <= 10) return "bg-[#145c43]" // verde medio
-      return "bg-[#0B3D2E]" // verde fuerte
+  const getCardStyle = () => {
+    if (isZeroValue()) {
+      return {
+        backgroundColor: '#bbf7d0',
+        color: '#0f172a',
+      } as const;
     }
-    return "bg-[#0B3D2E]"
-  }
 
-  
+    return {
+      backgroundColor: '#047857',
+      color: '#ffffff',
+    } as const;
+  };
+
+  const cardStyle = getCardStyle();
 
   return (
     <div
-
-  className={`
-    w-[250px]
-    p-6
-    rounded-3xl
-    text-center
-    ${isZeroValue() ? "text-[#073b2a]" : "text-white"}
-    shadow-md
-    min-h-[140px]
-
-    transition-all duration-300 ease-in-out
-
-    hover:-translate-y-2
-    hover:scale-105
-    hover:shadow-2xl
-    hover:shadow-black/30 
-    hover:brightness-110
-
-    ${getColor()}
-  `}
->
-  
+      className="w-[250px] p-6 rounded-3xl text-center shadow-md min-h-[140px]"
+      style={cardStyle}
+    >
       <h4 className="font-semibold">{title}</h4>
 
-      <h2 className="text-2xl font-bold mt-2">
-        {value}
-      </h2>
+      <h2 className="text-2xl font-bold mt-2">{value}</h2>
 
       {extra && (
-        <p className={`${isZeroValue() ? "text-[#145c43]" : "text-green-300"} font-semibold mt-1`}>
+        <p className={`font-semibold mt-1 ${isZeroValue() ? 'text-[#145c43]' : 'text-green-200'}`}>
           {extra}
         </p>
       )}
 
-      {typeof value === "number" && value <= 3 && (
+      {typeof value === 'number' && value <= 3 && (
         <p className="text-yellow-300 text-sm mt-1">
           ⚠️ Stock bajo
         </p>
       )}
     </div>
-    
   );
 }
 
