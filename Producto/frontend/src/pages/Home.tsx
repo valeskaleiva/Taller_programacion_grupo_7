@@ -32,6 +32,16 @@ const toLocalIsoDate = (date: Date): string => {
   return `${year}-${month}-${day}`;
 };
 
+const parseIsoDateAsLocal = (value: string): Date => {
+  const match = value.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (!match) {
+    return new Date(value);
+  }
+
+  const [, year, month, day] = match;
+  return new Date(Number(year), Number(month) - 1, Number(day));
+};
+
 const readHiddenProductIds = (): number[] => {
   if (typeof window === 'undefined') {
     return [];
@@ -64,39 +74,6 @@ export default function Home() {
   const [ventas, setVentas] = useState<VentaResumen[]>([]);
   const [ventasDiarias, setVentasDiarias] = useState<VentaDiaria[]>([]);
 
-  const artificialProduct: Producto = {
-    id_producto: -1,
-    codigo_barras: '0000000000000',
-    nombre: 'Producto Artificial',
-    descripcion: 'Producto artificial de demostración',
-    stock: 1,
-    precio_base: 1000,
-    categoria: 'Carta',
-    rareza: 'Rara',
-    edicion: 'Demo',
-    estado: 'Nuevo',
-  };
-
-  const artificialVenta: VentaResumen = {
-    id_venta: -1,
-    fecha_venta: new Date().toISOString(),
-    subtotal_neto: 1000,
-    iva: 190,
-    total_con_iva: 1190,
-    total_pagado: 1190,
-    metodo_pago: 'Efectivo',
-    usuario: { username: 'admin' },
-    detalles: [
-      {
-        cantidad: 1,
-        precio_unitario: 1190,
-        producto: {
-          nombre: artificialProduct.nombre,
-        },
-      },
-    ],
-  };
-
   const loadDashboard = useCallback(async () => {
     const hoy = new Date();
     const desde = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate() - 6);
@@ -116,15 +93,13 @@ export default function Home() {
         getVentasDiarias(toLocalIsoDate(desde), toLocalIsoDate(hoy)),
       ]);
     } catch (error) {
-      // Si falla la carga remota, seguimos mostrando el producto artificial local.
       console.error('Error cargando datos del dashboard:', error);
     }
 
-    const productosConArtificial = [...productosData, artificialProduct];
-    setProductos(productosConArtificial);
+    setProductos(productosData);
 
     const categoriaPorId = new Map<number, string>(
-      productosConArtificial.map((p) => [p.id_producto, p.categoria])
+      productosData.map((p) => [p.id_producto, p.categoria])
     );
 
     const topFromApi = topData.map((item) => ({
@@ -132,45 +107,24 @@ export default function Home() {
       cantidad_vendida: item.cantidad_vendida,
     }));
 
-    setTopVendidos([
-      { nombre: artificialProduct.nombre, cantidad_vendida: 15 },
-      ...topFromApi.slice(0, 4),
-    ]);
+    setTopVendidos(topFromApi.slice(0, 5));
 
-    setBajoStock([
-      ...bajoStockData.map((item) => ({
+    setBajoStock(
+      bajoStockData.map((item) => ({
         id_producto: item.id_producto,
         nombre: item.nombre,
         categoria: categoriaPorId.get(item.id_producto) ?? 'Producto',
         stock: item.stock,
-      })),
-      {
-        id_producto: artificialProduct.id_producto,
-        nombre: artificialProduct.nombre,
-        categoria: artificialProduct.categoria,
-        stock: artificialProduct.stock,
-      },
-    ]);
-
-    const fallbackVentasData = ventasData.length > 0 ? ventasData : [artificialVenta];
-    const fallbackVentasDiariasData = ventasDiariasData.length > 0
-      ? ventasDiariasData
-      : [
-          {
-            fecha: toLocalIsoDate(new Date()),
-            ventas: 1190,
-            transacciones: 1,
-            ticket_promedio: 1190,
-          },
-        ];
+      }))
+    );
 
     setVentas(
-      fallbackVentasData.map((venta) => ({
+      ventasData.map((venta) => ({
         ...venta,
         metodo_pago: getVentaMetodoPago(venta.id_venta) ?? venta.metodo_pago,
       }))
     );
-    setVentasDiarias(fallbackVentasDiariasData);
+    setVentasDiarias(ventasDiariasData);
   }, []);
 
   useEffect(() => {
@@ -216,6 +170,11 @@ export default function Home() {
     [productos, productosOcultos]
   );
 
+  const bajoStockVisible = useMemo(
+    () => bajoStock.filter((item) => !productosOcultos.includes(item.id_producto)),
+    [bajoStock, productosOcultos]
+  );
+
   const totalStock = useMemo(() => productosVisibles.reduce((acc, p) => acc + p.stock, 0), [productosVisibles]);
   const totalProductos = productosVisibles.length;
   const ventasActivas = useMemo(
@@ -251,8 +210,8 @@ export default function Home() {
 
   const datosVentasDiarias = useMemo(
     () => ventasDiarias.map((item) => ({
-      dia: new Date(item.fecha).toLocaleDateString("es-CL", { weekday: "short", day: "2-digit" }),
-      etiqueta: new Date(item.fecha).toLocaleDateString("es-CL", { weekday: "long", day: "2-digit", month: "short" }),
+      dia: parseIsoDateAsLocal(item.fecha).toLocaleDateString("es-CL", { weekday: "short", day: "2-digit" }),
+      etiqueta: parseIsoDateAsLocal(item.fecha).toLocaleDateString("es-CL", { weekday: "long", day: "2-digit", month: "short" }),
       ventas: Number(item.ventas) || 0,
     })),
     [ventasDiarias]
@@ -285,7 +244,7 @@ export default function Home() {
       {/* FILA 3: Top Cartas + Stock Crítico */}
       <div className="mt-20 grid grid-cols-1 xl:grid-cols-2 gap-x-5 gap-y-20 xl:gap-y-5">
         <TopProducts topVendidos={topVendidos} />
-        <LowStock productos={bajoStock} />
+        <LowStock productos={bajoStockVisible} />
       </div>
 
       {/* FILA 4: Últimas Ventas ancho completo */}

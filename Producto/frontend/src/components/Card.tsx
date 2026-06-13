@@ -51,7 +51,7 @@ export default function Card({ title, value, extra }: CardProps) {
 
       {typeof value === 'number' && value <= 3 && (
         <p className="text-yellow-300 text-sm mt-1">
-          ⚠️ Stock bajo
+          
         </p>
       )}
     </div>

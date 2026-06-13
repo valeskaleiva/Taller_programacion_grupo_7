@@ -1,4 +1,4 @@
-import './Badge.css'; // Assuming you have some CSS for the Badge styling
+import './Badge.css'; 
 
 type BadgeVariant = 'success' | 'warning' | 'error' | 'info';
 

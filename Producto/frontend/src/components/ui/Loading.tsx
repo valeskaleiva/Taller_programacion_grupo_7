@@ -1,6 +1,6 @@
-import './Loading.css'; // Import your CSS for styling
+import './Loading.css'; 
 
-// Loading Spinner Component
+//  Se usa mientras espera la respuesta del backend
 const LoadingSpinner = () => {
     return (
         <div className="loading-spinner">
@@ -9,7 +9,7 @@ const LoadingSpinner = () => {
     );
 };
 
-// Skeleton Loader Component
+// Reemplaza las cards mientras espera la API
 type SkeletonLoaderProps = {
     width?: string;
     height?: string;

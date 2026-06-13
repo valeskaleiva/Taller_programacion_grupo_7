@@ -1,6 +1,6 @@
 import { useNavigate, useLocation } from "react-router-dom";
-import { useState } from 'react';
-import { clearAuthTokens, getStoredAuthUser } from "../services/api";
+import { useEffect, useState } from 'react';
+import { clearAuthTokens, getPerfilUsuarioApi, getStoredAuthUser } from "../services/api";
 
 const TITULOS: Record<string, string> = {
   "/": "DASHBOARD",
@@ -21,10 +21,41 @@ function Header({ titulo }: Props) {
   const navigate = useNavigate();
   const location = useLocation();
   const tituloActual = titulo ?? TITULOS[location.pathname] ?? "DASHBOARD";
-  const [profile] = useState(() => getStoredAuthUser());
+  const [profile, setProfile] = useState(() => getStoredAuthUser());
+  const [avatarUrl, setAvatarUrl] = useState<string>(() => getStoredAuthUser()?.avatar ?? '');
 
   const username = profile?.username ?? 'ADMIN';
-  const hasAvatar = false;
+  const hasAvatar = Boolean(avatarUrl.trim());
+
+  useEffect(() => {
+    const refreshHeaderProfile = async () => {
+      const stored = getStoredAuthUser();
+      setProfile(stored);
+      setAvatarUrl(stored?.avatar ?? '');
+
+      try {
+        const perfil = await getPerfilUsuarioApi();
+        if (typeof perfil.avatar === 'string' && perfil.avatar.trim()) {
+          setAvatarUrl(perfil.avatar);
+        }
+      } catch {
+        // Keep using stored avatar when profile endpoint is not available.
+      }
+    };
+
+    const handleProfileUpdated = () => {
+      void refreshHeaderProfile();
+    };
+
+    void refreshHeaderProfile();
+    window.addEventListener('gecko-profile-updated', handleProfileUpdated);
+    window.addEventListener('focus', handleProfileUpdated);
+
+    return () => {
+      window.removeEventListener('gecko-profile-updated', handleProfileUpdated);
+      window.removeEventListener('focus', handleProfileUpdated);
+    };
+  }, [location.pathname]);
 
   const handleLogout = () => {
     clearAuthTokens();
@@ -54,7 +85,7 @@ function Header({ titulo }: Props) {
       <div className="flex items-center gap-2 sm:gap-3 rounded-full border border-emerald-200 bg-emerald-50 px-2 py-1 sm:px-3 sm:py-1.5">
         {hasAvatar ? (
           <img
-            src=""
+            src={avatarUrl}
             alt="perfil"
             className="rounded-full border border-emerald-300 object-cover"
             style={{

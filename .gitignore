@@ -1,5 +1,6 @@
 # Variables de entorno - NO subir al repositorio
 .env
+**/.env
 
 # Python
 __pycache__/
@@ -32,3 +33,8 @@ Wallet_*/
 *.sso
 *.p12
 *.pem
+Producto/backend/gecko_tcg/wallet/
+
+# Temporales de pruebas Oracle
+.tmp_oracle_probe.py
+.tmp_oracle_probe2.py

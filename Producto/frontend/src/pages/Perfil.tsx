@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import type { ChangeEvent } from 'react';
-import { getPerfilUsuarioApi, actualizarPerfilUsuarioApi } from '../services/api';
+import { getPerfilUsuarioApi, actualizarPerfilUsuarioApi, updateStoredAuthUserAvatar } from '../services/api';
 import type { UserProfileApi } from '../services/api';
 
 const NOTICE_TIMEOUT_MS = 1000;
@@ -136,6 +136,8 @@ function Perfil() {
         bio: form.bio,
         avatar: form.avatar,
       });
+      updateStoredAuthUserAvatar(form.avatar);
+      window.dispatchEvent(new Event('gecko-profile-updated'));
       setMessage('Perfil guardado correctamente.');
     } catch {
       setMessage('No se pudo guardar el perfil. Intenta nuevamente.');

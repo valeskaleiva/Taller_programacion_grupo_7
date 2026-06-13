@@ -142,6 +142,7 @@ type AuthUser = {
   username: string;
   is_staff: boolean;
   rol?: UserRole | null;
+  avatar?: string;
 };
 
 type LoginResponse = {
@@ -173,6 +174,16 @@ export function getStoredAuthUser(): AuthUser | null {
 
 function saveAuthUser(user: AuthUser) {
   localStorage.setItem(AUTH_USER_KEY, JSON.stringify(user));
+}
+
+export function updateStoredAuthUserAvatar(avatar: string) {
+  try {
+    const current = getStoredAuthUser();
+    if (!current) return;
+    saveAuthUser({ ...current, avatar });
+  } catch {
+    // Ignore storage parse errors.
+  }
 }
 
 function readSalePaymentMethods(): Record<string, string> {

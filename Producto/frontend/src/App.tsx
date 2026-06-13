@@ -91,7 +91,7 @@ function App() {
       {/* HEADER */}
       {!isLogin && <Header />}
 
-      {/* CONTENIDO REAL */}
+      {/* PAGINAS */}
       <main className="flex-1 bg-gray-100 p-3 sm:p-6">
         <div className="bg-white rounded-2xl shadow p-3 sm:p-6 h-full flex flex-col min-w-0 overflow-x-hidden">
         <div className="flex-1"> 

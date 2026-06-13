@@ -1,7 +1,7 @@
-// Formatting utility functions
+
 
 /**
- * Format a number to currency
+ * Formatea un número como precio con símbolo de moneda
  * @param {number} amount - The amount of money
  * @param {string} currency - The currency symbol
  * @returns {string} Formatted currency string
