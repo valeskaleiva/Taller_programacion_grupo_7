@@ -60,4 +60,4 @@ El sistema se basa en una arquitectura **cliente-servidor**, donde:
 
 ## 📌 Estado del Proyecto
 
-🚧 En desarrollo
+🚧 Finalizado
